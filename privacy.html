@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>นโยบายความเป็นส่วนตัว — Move Assessment</title>
+<style>
+  :root{--teal:#0f9b78;--gray-900:#1a1d1f;--gray-700:#41474d;--gray-400:#8a9199;--gray-200:#e4e7eb;--gray-50:#f7f8f9;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Noto Sans Thai',system-ui,-apple-system,sans-serif;color:var(--gray-900);line-height:1.75;background:#fff}
+  .wrap{max-width:720px;margin:0 auto;padding:32px 20px 64px}
+  h1{font-size:24px;margin:0 0 4px}
+  h2{font-size:16px;margin:32px 0 8px;color:var(--teal)}
+  .updated{color:var(--gray-400);font-size:13px;margin-bottom:28px}
+  ul{padding-left:20px}
+  li{margin-bottom:4px}
+  .box{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:16px 18px;margin-top:8px}
+  a{color:var(--teal)}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+  .back{font-size:13px}
+  .lang-btn{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;color:var(--gray-700);cursor:pointer;font-family:inherit}
+  .lang-btn:hover{background:var(--gray-200)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="index.html" data-i18n="back">← กลับหน้าแบบทดสอบ</a>
+    <button type="button" class="lang-btn" id="lang-btn" onclick="toggleLang()">EN</button>
+  </div>
+  <h1 data-i18n="title">นโยบายความเป็นส่วนตัว</h1>
+  <div class="updated" data-i18n="updated">ระบบแบบทดสอบผู้สมัครงาน — ปรับปรุงล่าสุด 3 สิงหาคม 2569</div>
+
+  <h2 data-i18n="h_controller">ผู้ควบคุมข้อมูลส่วนบุคคล</h2>
+  <p data-i18n="p_controller">บริษัท ฮีโน่ มอเตอร์ส เอเซีย จำกัด (Hino Motors Asia Ltd. — HMA) ฝ่ายทรัพยากรบุคคล</p>
+  <div class="box" id="hr-contact"></div>
+
+  <h2 data-i18n="h_collect">ข้อมูลที่เราเก็บ</h2>
+  <ul id="collect-list">
+    <li data-i18n="c_name">ชื่อ-นามสกุล</li>
+    <li data-i18n="c_email">อีเมล</li>
+    <li data-i18n="c_phone">เบอร์โทรศัพท์</li>
+    <li data-i18n="c_age">อายุ</li>
+    <li data-i18n="c_exp">ประสบการณ์ทำงาน (จำนวนปี)</li>
+    <li data-i18n="c_pos">ตำแหน่งที่สมัคร</li>
+    <li data-i18n="c_results">คำตอบและผลการทดสอบ</li>
+    <li data-i18n="c_leaves">บันทึกการออกจากหน้าต่างแบบทดสอบ (สลับแท็บ/หน้าต่าง) หรือพยายามคัดลอกข้อความระหว่างทำแบบทดสอบ — ฝ่ายทรัพยากรบุคคลเห็นข้อมูลนี้ได้</li>
+  </ul>
+  <p data-i18n="p_nocollect">เราไม่เก็บเลขประจำตัวประชาชน สำเนาบัตรประชาชน หรือข้อมูลทางการเงินใด ๆ
+     และจะไม่ขอรหัสผ่านจากท่านไม่ว่ากรณีใด</p>
+
+  <h2 data-i18n="h_purpose">วัตถุประสงค์และฐานทางกฎหมาย</h2>
+  <p data-i18n-html="p_purpose">ใช้เพื่อประกอบการพิจารณาคัดเลือกบุคลากรเท่านั้น โดยอาศัย<strong>ความยินยอม</strong>ของท่าน
+     ที่ให้ไว้ก่อนเริ่มทำแบบทดสอบ ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562</p>
+
+  <h2 data-i18n="h_storage">ที่จัดเก็บ</h2>
+  <p data-i18n="p_storage">ข้อมูลถูกจัดเก็บบน Google Firestore และในเครื่องของผู้ใช้งานระบบ
+     เข้าถึงได้เฉพาะเจ้าหน้าที่ฝ่ายทรัพยากรบุคคลที่ได้รับสิทธิ์</p>
+
+  <h2 data-i18n="h_retention">ระยะเวลาเก็บรักษา</h2>
+  <p data-i18n="p_retention">ไม่เกิน 2 ปีนับจากวันที่ท่านทำแบบทดสอบ</p>
+
+  <h2 data-i18n="h_rights">สิทธิของท่าน</h2>
+  <ul>
+    <li data-i18n="r_access">ขอเข้าถึงและขอสำเนาข้อมูลของท่าน</li>
+    <li data-i18n="r_correct">ขอแก้ไขข้อมูลที่ไม่ถูกต้อง</li>
+    <li data-i18n="r_delete">ขอให้ลบข้อมูล</li>
+    <li data-i18n="r_withdraw">ถอนความยินยอมเมื่อใดก็ได้</li>
+    <li data-i18n="r_complain">ร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล</li>
+  </ul>
+  <p data-i18n="p_userights">ใช้สิทธิได้โดยติดต่อผู้รับผิดชอบตามข้อมูลด้านบน</p>
+</div>
+<script>
+// ต้องตรงกับ HR_CONTACT ใน index.html — ดู Task 5
+const HR_CONTACT = {
+  name:  'ภัทราวุธ ย.',
+  email: 'pattarawut_y@hinomotorsasia.com',
+};
+
+// ชุดเดียวกับ index.html — หน้านี้ต่อค่า HR_CONTACT เข้า innerHTML เหมือนกัน
+// จึงต้อง escape เหมือนกัน (ชื่อที่มี & หรือ < ทำ markup พัง และอีเมลที่มี "
+// จะหลุดออกจาก attribute ของ href="mailto:...")
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+    ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+// ค่าว่างนับเป็น placeholder ด้วย — ตรรกะเดียวกับ hrContactIsPlaceholder() ใน index.html
+function hrContactIsPlaceholder(){
+  return Object.values(HR_CONTACT)
+    .some(v => !String(v ?? '').trim() || String(v).startsWith('ยังไม่ระบุ'));
+}
+
+// ── Bilingual (th/en) — same localStorage key + toggle pattern as index.html,
+// so switching language on either page stays in sync with the other.
+const I18N = {
+  back:         { th:'← กลับหน้าแบบทดสอบ', en:'← Back to the exam' },
+  title:        { th:'นโยบายความเป็นส่วนตัว', en:'Privacy Notice' },
+  updated:      { th:'ระบบแบบทดสอบผู้สมัครงาน — ปรับปรุงล่าสุด 3 สิงหาคม 2569', en:'Candidate assessment system — last updated 3 August 2026' },
+  h_controller: { th:'ผู้ควบคุมข้อมูลส่วนบุคคล', en:'Data Controller' },
+  p_controller: { th:'บริษัท ฮีโน่ มอเตอร์ส เอเซีย จำกัด (Hino Motors Asia Ltd. — HMA) ฝ่ายทรัพยากรบุคคล', en:'Hino Motors Asia Ltd. (HMA), Human Resources Department' },
+  hr_officer:   { th:'ผู้รับผิดชอบ', en:'Responsible officer' },
+  hr_email:     { th:'อีเมล', en:'Email' },
+  hr_placeholder: { th:'⚠️ ยังไม่ได้ใส่ข้อมูลผู้รับผิดชอบจริง — เอกสารนี้ยังไม่พร้อมใช้', en:'⚠️ The responsible officer’s details have not been filled in yet — this notice is not ready for use.' },
+  h_collect:    { th:'ข้อมูลที่เราเก็บ', en:'Data We Collect' },
+  c_name:       { th:'ชื่อ-นามสกุล', en:'Full name' },
+  c_email:      { th:'อีเมล', en:'Email' },
+  c_phone:      { th:'เบอร์โทรศัพท์', en:'Phone number' },
+  c_age:        { th:'อายุ', en:'Age' },
+  c_exp:        { th:'ประสบการณ์ทำงาน (จำนวนปี)', en:'Work experience (years)' },
+  c_pos:        { th:'ตำแหน่งที่สมัคร', en:'Position applied for' },
+  c_results:    { th:'คำตอบและผลการทดสอบ', en:'Test answers and results' },
+  c_leaves:     { th:'บันทึกการออกจากหน้าต่างแบบทดสอบ (สลับแท็บ/หน้าต่าง) หรือพยายามคัดลอกข้อความระหว่างทำแบบทดสอบ — ฝ่ายทรัพยากรบุคคลเห็นข้อมูลนี้ได้',
+                   en:'A log of when you switch away from the exam window (tab/window switching) or attempt to copy text during the test — visible to HR' },
+  p_nocollect:  { th:'เราไม่เก็บเลขประจำตัวประชาชน สำเนาบัตรประชาชน หรือข้อมูลทางการเงินใด ๆ และจะไม่ขอรหัสผ่านจากท่านไม่ว่ากรณีใด',
+                   en:'We do not collect your national ID number, a copy of your ID card, or any financial information. We will never ask you for a password.' },
+  h_purpose:    { th:'วัตถุประสงค์และฐานทางกฎหมาย', en:'Purpose and Legal Basis' },
+  p_purpose:    { th:'ใช้เพื่อประกอบการพิจารณาคัดเลือกบุคลากรเท่านั้น โดยอาศัย<strong>ความยินยอม</strong>ของท่าน ที่ให้ไว้ก่อนเริ่มทำแบบทดสอบ ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562',
+                   en:'Used solely for recruitment consideration, based on your <strong>consent</strong> given before starting the assessment, in accordance with the Personal Data Protection Act B.E. 2562.' },
+  h_storage:    { th:'ที่จัดเก็บ', en:'Where It Is Stored' },
+  p_storage:    { th:'ข้อมูลถูกจัดเก็บบน Google Firestore และในเครื่องของผู้ใช้งานระบบ เข้าถึงได้เฉพาะเจ้าหน้าที่ฝ่ายทรัพยากรบุคคลที่ได้รับสิทธิ์',
+                   en:'Data is stored on Google Firestore and on the device of whoever is using the system. Access is limited to authorized HR staff.' },
+  h_retention:  { th:'ระยะเวลาเก็บรักษา', en:'Retention Period' },
+  p_retention:  { th:'ไม่เกิน 2 ปีนับจากวันที่ท่านทำแบบทดสอบ', en:'No longer than 2 years from the date you took the assessment.' },
+  h_rights:     { th:'สิทธิของท่าน', en:'Your Rights' },
+  r_access:     { th:'ขอเข้าถึงและขอสำเนาข้อมูลของท่าน', en:'Request access to and a copy of your data' },
+  r_correct:    { th:'ขอแก้ไขข้อมูลที่ไม่ถูกต้อง', en:'Request correction of inaccurate data' },
+  r_delete:     { th:'ขอให้ลบข้อมูล', en:'Request deletion of your data' },
+  r_withdraw:   { th:'ถอนความยินยอมเมื่อใดก็ได้', en:'Withdraw your consent at any time' },
+  r_complain:   { th:'ร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล', en:'File a complaint with the Personal Data Protection Committee Office' },
+  p_userights:  { th:'ใช้สิทธิได้โดยติดต่อผู้รับผิดชอบตามข้อมูลด้านบน', en:'To exercise these rights, contact the officer listed above.' },
+};
+
+let LANG = (() => { try { return localStorage.getItem('hma_lang') || 'th'; } catch(e){ return 'th'; } })();
+
+function applyLang(){
+  document.documentElement.setAttribute('lang', LANG);
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (I18N[k]) el.textContent = I18N[k][LANG] || I18N[k].th;
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const k = el.getAttribute('data-i18n-html');
+    if (I18N[k]) el.innerHTML = I18N[k][LANG] || I18N[k].th;
+  });
+  document.title = (LANG==='th' ? I18N.title.th : I18N.title.en) + ' — Move Assessment';
+  const btn = document.getElementById('lang-btn');
+  if (btn) btn.textContent = LANG==='th' ? 'EN' : 'ไทย';
+  // หน้านี้ระบุ "ผู้ควบคุมข้อมูลส่วนบุคคล" ตามกฎหมาย — ถ้ายังไม่ได้ใส่ข้อมูลจริง
+  // ต้องเตือนแบบเดียวกับหน้าแรก ไม่ใช่แสดง placeholder เป็นชื่อผู้รับผิดชอบ
+  // และเป็นที่อยู่สำหรับใช้สิทธิ์ตาม PDPA
+  const warn = hrContactIsPlaceholder()
+    ? `<div id="hr-contact-warning" style="background:#fcebeb;border:1px solid #e84060;color:#791f1f;border-radius:6px;padding:8px 10px;margin-bottom:10px;font-weight:600">${I18N.hr_placeholder[LANG]}</div>`
+    : '';
+  document.getElementById('hr-contact').innerHTML = warn +
+    `<div><strong>${I18N.hr_officer[LANG]}:</strong> ${esc(HR_CONTACT.name)}</div>` +
+    `<div><strong>${I18N.hr_email[LANG]}:</strong> <a href="mailto:${encodeURIComponent(HR_CONTACT.email)}">${esc(HR_CONTACT.email)}</a></div>`;
+}
+
+function toggleLang(){
+  LANG = (LANG==='th') ? 'en' : 'th';
+  try { localStorage.setItem('hma_lang', LANG); } catch(e){}
+  applyLang();
+}
+
+applyLang();
+</script>
+</body>
+</html>

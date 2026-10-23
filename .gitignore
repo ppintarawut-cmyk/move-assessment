@@ -1,0 +1,17 @@
+﻿.claude/
+tests/__pycache__/
+.pytest_cache/
+.superpowers/
+
+# ข้อมูลผู้สมัคร/ตำแหน่งงานจาก ATS — repo นี้เป็นสาธารณะ ห้าม commit ไฟล์เหล่านี้เด็ดขาด
+# ไฟล์สำรอง (ปุ่ม Backup / ดาวน์โหลด JSON): hma-ats-backup.json, hma-ats-backup-YYYY-MM-DD.json
+hma-ats-backup*.json
+# ไฟล์ Export CSV: hma-ats-candidates-*.csv, hma-ats-jobs-*.csv, hma-ats-dashboard-*.csv
+hma-ats-*.csv
+
+# ไฟล์ export ของระบบสอบ (hma-testing-system.html / index.html) และแบบทดสอบบุคลิกภาพ (hma-personality.html)
+# มีผลสอบรายบุคคล ชื่อ และเลขบัตรประชาชนของผู้สมัคร — ห้าม commit เด็ดขาด
+# เช่น HMA_Results_YYYY-MM-DD.csv/.xlsx, HMA_Compare_YYYY-MM-DD.xlsx, HMA_<ชื่อ>_YYYY-MM-DD.xlsx/.csv, HMA_<ชื่อ>.json
+HMA_*.csv
+HMA_*.xlsx
+HMA_*.json
