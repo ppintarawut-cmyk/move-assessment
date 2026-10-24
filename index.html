@@ -768,16 +768,6 @@ textarea.q-inp:focus{border-color:var(--teal)}
         <div class="err-msg" id="e-pdpa" style="display:none;margin-top:6px">กรุณายอมรับเงื่อนไขการเก็บข้อมูล</div>
       </div>
       <button class="btn btn-primary btn-full" id="reg-btn" data-i18n="reg_btn" onclick="submitReg()" style="margin-top:4px">ยืนยันและเริ่มทดสอบ →</button>
-      <div id="confirm-email-box" style="display:none;margin-top:14px;background:var(--gray-50);border:1.5px solid var(--teal);border-radius:var(--radius);padding:16px">
-        <div data-i18n="confirm_email_lead" style="font-size:13px;color:var(--gray-700);margin-bottom:8px">
-          ผลการทดสอบจะถูกส่งไปที่อีเมลนี้ กรุณาตรวจสอบให้ถูกต้อง
-        </div>
-        <div id="confirm-email-value" style="font-size:18px;font-weight:700;color:var(--gray-900);word-break:break-all;margin-bottom:14px"></div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button id="confirm-email-yes" class="btn" data-i18n="confirm_email_yes" onclick="confirmEmailAndStart()">ถูกต้อง เริ่มทดสอบ →</button>
-          <button id="confirm-email-edit" class="btn btn-secondary" data-i18n="confirm_email_edit" onclick="cancelEmailConfirm()">แก้ไขอีเมล</button>
-        </div>
-      </div>
     </div>
   </div>
 </div>
@@ -1423,9 +1413,6 @@ const I18N = {
   trust_contact: { th:'ผู้รับผิดชอบ', en:'Responsible officer' },
   trust_verify:  { th:'ไม่แน่ใจว่าลิงก์นี้ของจริง? อีเมลไปที่ที่อยู่ข้างต้นเพื่อยืนยันก่อนกรอกข้อมูล หรือติดต่อฝ่ายทรัพยากรบุคคลตามช่องทางที่ท่านใช้สมัครงาน — เราจะไม่ขอรหัสผ่านหรือข้อมูลทางการเงินจากท่าน', en:'Not sure this link is genuine? Email the address above to verify before entering anything, or contact HR through whichever channel you applied by — we will never ask you for a password or financial details.' },
   trust_privacy_link: { th:'อ่านนโยบายความเป็นส่วนตัว →', en:'Read the privacy notice →' },
-  confirm_email_lead: { th:'ผลการทดสอบจะถูกส่งไปที่อีเมลนี้ กรุณาตรวจสอบให้ถูกต้อง', en:'Your results will be sent to this address. Please check that it is correct.' },
-  confirm_email_yes:  { th:'ถูกต้อง เริ่มทดสอบ →', en:'Correct — start the test →' },
-  confirm_email_edit: { th:'แก้ไขอีเมล',           en:'Edit email' },
   // ── Dashboard ──
   d_total:       { th:'ชุดสอบทั้งหมด',        en:'Total tests' },
   d_done:        { th:'เสร็จแล้ว',           en:'Completed' },
@@ -1730,14 +1717,12 @@ let pendingReg = null;
 function nav(id) {
   // The score dashboard (p-results) is HR/admin-only. Candidates can never reach it.
   if (id === 'p-results' && !adminViewingResults) id = 'p-dash';
-  // Leaving the registration page with the email-confirm box still open (e.g. via
-  // "← กลับ") must not leave it — or the pending form data behind it — stale for
-  // whenever the candidate returns to p-register.
+  // Leaving the registration page must not leave half-filled form data behind for
+  // whenever the candidate returns to p-register. (It is normally consumed the
+  // moment submitReg() runs; this is for the candidate who walks away instead.)
   const prevActive = document.querySelector('.page.active');
   if (prevActive && prevActive.id === 'p-register' && id !== 'p-register') {
     pendingReg = null;
-    const box = document.getElementById('confirm-email-box');
-    if (box) box.style.display = 'none';
   }
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -1831,24 +1816,21 @@ function submitReg() {
     exp: Number(document.getElementById('r-exp')?.value) || 0,
     preset,
   };
-  document.getElementById('confirm-email-value').textContent = email;
-  document.getElementById('confirm-email-box').style.display = 'block';
-  document.getElementById('confirm-email-box').scrollIntoView({behavior:'smooth', block:'nearest'});
-  btn.innerHTML = t18n('reg_btn'); btn.disabled=false;
+  // ลงทะเบียนเสร็จแล้วเข้าหน้าชุดสอบเลย
+  //
+  // เดิมมีขั้นยืนยันอีเมลคั่นอีกหนึ่งคลิก ซึ่งบอกว่า "ผลการทดสอบจะถูกส่งไปที่อีเมลนี้"
+  // ทั้งที่ระบบไม่เคยส่งอีเมลหาใครเลย ผู้สมัครจึงรอเมลที่ไม่มีวันมา
+  //
+  // สิ่งที่หายไปพร้อมกันคือการทักเมื่อพิมพ์อีเมลผิด ซึ่งอีเมลเป็นตัวระบุตัวตนของ
+  // ผู้สมัคร (เป็นกุญแจของผลสอบ เป็น seed ของการสับข้อ และเป็นสิ่งที่ HR ใช้จับคู่
+  // ผลสอบกับใบสมัคร) พิมพ์ผิดแล้วผลสอบใบนั้นจะหาไม่เจอโดยไม่มีอะไรเตือน
+  startRegisteredSession();
+  btn.innerHTML = t18n('reg_btn'); btn.disabled = false;
 }
 
-function cancelEmailConfirm(){
-  pendingReg = null;
-  document.getElementById('confirm-email-box').style.display = 'none';
-  document.getElementById('r-email').focus();
-}
-
-function confirmEmailAndStart(){
+// สร้าง applicant + รายการชุดสอบจากข้อมูลที่เพิ่งลงทะเบียน แล้วพาไปหน้าชุดสอบ
+function startRegisteredSession(){
   if (!pendingReg) return;
-  const btn = document.getElementById('confirm-email-yes');
-  btn.innerHTML = '<span class="spin"></span> กำลังลงทะเบียน...';
-  btn.disabled = true;
-
   const preset = pendingReg.preset;
   applicant = {
     name: pendingReg.name, pos: pendingReg.pos, postype: pendingReg.postype,
@@ -1862,9 +1844,6 @@ function confirmEmailAndStart(){
     return { test:t, status:'not_started', score:null, outcome:null, answers:new Array(n).fill(null) };
   });
   pendingReg = null;
-  document.getElementById('confirm-email-box').style.display = 'none';
-  btn.innerHTML = t18n('confirm_email_yes');
-  btn.disabled = false;
   nav('p-dash');
 }
 

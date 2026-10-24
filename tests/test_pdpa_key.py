@@ -218,34 +218,40 @@ def _fill_registration(page, email="Somchai@Example.com"):
     page.check("#pdpa-consent")
 
 
-def test_submitting_registration_asks_to_confirm_the_email(open_exam):
+def test_submitting_registration_starts_the_session_without_a_second_click(open_exam):
+    """ขั้นยืนยันอีเมลถูกเอาออกแล้ว (ข้อความเดิมบอกว่าจะส่งผลไปทางอีเมล ซึ่งระบบไม่เคยทำ)
+    ลงทะเบียนเสร็จต้องเข้าหน้าชุดสอบทันที ไม่มีให้กดซ้ำ
+    """
     page = open_exam()
     _fill_registration(page)
     page.click("#reg-btn")
-    page.wait_for_selector("#confirm-email-box", state="visible")
-    assert page.inner_text("#confirm-email-value").strip() == "Somchai@Example.com"
+    page.wait_for_selector("#p-dash.active")
+    assert page.evaluate("() => applicant.email") == "Somchai@Example.com"
+    assert page.evaluate("() => pendingReg") is None
+    assert page.evaluate("() => sessions.length") > 0
 
 
 def test_confirming_the_email_starts_the_exam(open_exam):
     page = open_exam()
     _fill_registration(page)
     page.click("#reg-btn")
-    page.click("#confirm-email-yes")
     page.wait_for_selector("#p-dash.active")
     assert page.evaluate("() => candKey({email: applicant.email})") == "somchai@example.com"
 
 
-def test_editing_from_the_confirm_box_returns_to_the_form(open_exam):
+def test_the_email_actually_typed_is_the_one_used(open_exam):
+    """อีเมลเป็นตัวระบุตัวตนของผู้สมัคร (กุญแจของผลสอบ, seed ของการสับข้อ,
+    และสิ่งที่ HR ใช้จับคู่ผลสอบ) — ต้องใช้ค่าที่พิมพ์ล่าสุดเสมอ
+    """
     page = open_exam()
     _fill_registration(page)
-    page.click("#reg-btn")
-    page.click("#confirm-email-edit")
-    page.wait_for_selector("#confirm-email-box", state="hidden")
     page.fill("#r-email", "other@example.com")
     page.click("#reg-btn")
-    page.click("#confirm-email-yes")
     page.wait_for_selector("#p-dash.active")
     assert page.evaluate("() => applicant.email") == "other@example.com"
+    # และเป็นตัวที่กำหนดลำดับการสับข้อด้วย
+    seed_key = page.evaluate("() => candKey(applicant)")
+    assert seed_key == "other@example.com"
 
 
 def test_reg_btn_keeps_its_english_label_while_the_confirm_box_is_open(open_exam):
@@ -261,26 +267,27 @@ def test_reg_btn_keeps_its_english_label_while_the_confirm_box_is_open(open_exam
     page.click("#lang-fab")   # drive the language switch the way the app itself does
     _fill_registration(page)
     page.click("#reg-btn")
-    page.wait_for_selector("#confirm-email-box", state="visible")
+    page.wait_for_selector("#p-dash.active")
+    # ขั้นยืนยันอีเมลถูกเอาออกแล้ว ป้ายปุ่มจึงไม่ถูกเห็นระหว่างรอ — แต่ค่าที่ตั้งกลับ
+    # ต้องยังเป็นภาษาปัจจุบัน ไม่ใช่ข้อความไทยที่ฝังไว้ตายตัว มิฉะนั้นผู้สมัคร
+    # ภาษาอังกฤษที่ย้อนกลับมาหน้านี้จะเห็นปุ่มเป็นภาษาไทย
     expected = page.evaluate("() => I18N.reg_btn.en")
     assert page.inner_text("#reg-btn") == expected
 
 
-def test_leaving_registration_hides_the_confirm_box_and_clears_pending_reg(open_exam):
-    """F2 regression: the '← กลับ' control (nav('p-landing')) neither hid
-    #confirm-email-box nor cleared pendingReg, so returning to registration later
-    showed a stale confirm box left over from a previous, abandoned attempt.
+def test_leaving_registration_clears_pending_form_data(open_exam):
+    """F2 regression: กด '← กลับ' แล้วข้อมูลฟอร์มที่ค้างอยู่ต้องถูกล้าง
+    ไม่งั้นการกลับมาลงทะเบียนครั้งถัดไปจะหยิบของเก่าที่ถูกทิ้งไปแล้วมาใช้
     """
     page = open_exam()
     _fill_registration(page)
-    page.click("#reg-btn")
-    page.wait_for_selector("#confirm-email-box", state="visible")
+    page.evaluate("() => { pendingReg = { name:'ทิ้งไว้', email:'stale@example.com' }; }")
 
     page.click("#p-register .topbar button")   # '← กลับ' → nav('p-landing')
     page.wait_for_selector("#p-landing.active")
-    page.evaluate("() => nav('p-register')")
+    assert page.evaluate("() => pendingReg") is None
 
-    page.wait_for_selector("#confirm-email-box", state="hidden")
+    page.evaluate("() => nav('p-register')")
     assert page.evaluate("() => pendingReg") is None
 
 
@@ -429,7 +436,6 @@ def test_same_candidate_gets_the_same_question_order_across_a_resume(open_exam):
     page = open_exam()
     _fill_registration(page, email="Somchai@Example.com")
     page.click("#reg-btn")
-    page.click("#confirm-email-yes")
     page.wait_for_selector("#p-dash.active")
 
     # Start the IQ test directly (skip the intro screen) so a randomized order
