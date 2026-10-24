@@ -23,6 +23,15 @@
     appId: "1:749923980046:web:d62cb893d1a653e690bd5f",
     measurementId: "G-GB4EWWGTPP"
   };
+  // Where the candidate's answers are sent to be scored.
+  //
+  // While this is empty the page grades locally, exactly as it always has, so
+  // deploying this file changes nothing until the endpoint is filled in. Set it
+  // only once the scoring Worker is deployed and verified: from that point the
+  // page has no answer key of its own to fall back on, which is the whole point
+  // — see server-scoring/README.md for the order these steps have to happen in.
+  window.SCORING_ENDPOINT = '';
+
   var db = null, fbAuth = null;
   try {
     if (window.firebase) {
@@ -1941,20 +1950,35 @@ function shuffleWithRng(arr, rng) {
   }
   return a;
 }
+// ทุกข้อที่สับแล้วจะพ่วง _bi / _oi ไว้ว่าเดิมมันคือข้อไหน ตัวเลือกไหน
+//
+// _bi      = ลำดับข้อนี้ในคลังข้อสอบก่อนสับ
+// _oi[pos] = ลำดับตัวเลือกก่อนสับ ของตัวเลือกที่ตอนนี้อยู่ตำแหน่ง pos
+//
+// Those two tags are what let answersInBankOrder() report the candidate's picks
+// in the bank's own order, so the scoring endpoint never has to reproduce this
+// shuffle. It deliberately is not given the seed: two independent
+// reconstructions of one ordering is exactly how this system once scored a
+// sitting against the wrong questions with no error at all (see the note in
+// getRandomizedQs below).
 function randomizeQuestions(qs, seed, shuffleOpts = true) {
   const rng = seededRng(seed);
   // สุ่มลำดับข้อ
-  const shuffled = shuffleWithRng(qs, rng);
-  // เมื่อชุดสอบปิดการสุ่มตัวเลือก (เช่น แบบทดสอบบุคลิกภาพที่ตัวเลือกเรียงตามระดับ)
-  // ให้คงลำดับตัวเลือกตามที่ผู้ดูแลกำหนดไว้ — สุ่มเฉพาะลำดับข้อ
-  if (!shuffleOpts) return shuffled;
-  // สุ่มลำดับตัวเลือกสำหรับแต่ละข้อ (ยกเว้นข้อ abstract/svg ซึ่งอ้างอิงตำแหน่งในรูป)
-  return shuffled.map(q => {
-    if (q.svgOpts || q.svgStem) return q;
-    const paired = q.opts.map((o, i) => ({ opt: o, optTH: q.optsTH ? q.optsTH[i] : undefined }));
+  const tagged   = qs.map((q, i) => ({ q, _bi: i }));
+  const shuffled = shuffleWithRng(tagged, rng);
+  return shuffled.map(({ q, _bi }) => {
+    const identity = (q.opts || []).map((_, j) => j);
+    // เมื่อชุดสอบปิดการสุ่มตัวเลือก (เช่น แบบทดสอบบุคลิกภาพที่ตัวเลือกเรียงตามระดับ)
+    // ให้คงลำดับตัวเลือกตามที่ผู้ดูแลกำหนดไว้ — สุ่มเฉพาะลำดับข้อ
+    // ข้อ abstract/svg ก็คงลำดับไว้ เพราะตัวเลือกอ้างอิงตำแหน่งในรูป
+    if (!shuffleOpts || q.svgOpts || q.svgStem) return { ...q, _bi, _oi: identity };
+    // สุ่มลำดับตัวเลือกสำหรับแต่ละข้อ
+    const paired = q.opts.map((o, i) => ({ opt: o, optTH: q.optsTH ? q.optsTH[i] : undefined, _oi: i }));
     const shuffledPairs = shuffleWithRng(paired, rng);
     return {
       ...q,
+      _bi,
+      _oi:    shuffledPairs.map(p => p._oi),
       opts:   shuffledPairs.map(p => p.opt),
       optsTH: q.optsTH ? shuffledPairs.map(p => p.optTH) : undefined,
     };
@@ -2145,14 +2169,37 @@ function openConfirm() {
   openModal('mod-confirm');
 }
 
-function doSubmit() {
-  clearInterval(timerInterval);
-  closeModal('mod-confirm');
-  const s  = sessions[curSess];
+// Whether the answer key lives on the scoring endpoint rather than in this
+// page. While no endpoint is configured everything below behaves exactly as it
+// always has, so this file can be deployed before the endpoint exists.
+function serverScoringEnabled() {
+  return typeof window.SCORING_ENDPOINT === 'string' && window.SCORING_ENDPOINT !== '';
+}
+
+// The candidate's picks in the bank's own order: out[i] is the index of the
+// option chosen for question i of ALL_QUESTIONS[code], or null where nothing
+// was chosen. This undoes the shuffle using the _bi/_oi tags each shuffled
+// question carries, so the endpoint is never asked to reproduce an order and is
+// never sent a seed.
+function answersInBankOrder(s) {
   const qs  = getRandomizedQs(s);
-  const ans = s._answersRandom;
-  // copy กลับไปที่ s.answers เพื่อให้ renderReview ใช้ได้ (same order as qs above)
-  s.answers = ans.slice();
+  const ans = s._answersRandom || [];
+  const out = new Array((ALL_QUESTIONS[s.test.code] || []).length).fill(null);
+  qs.forEach((q, i) => {
+    const pick = ans[i];
+    if (pick == null || q._bi == null || q._bi >= out.length) return;
+    const baseOpt = q._oi ? q._oi[pick] : pick;
+    // A stale pick left over from a shorter bank lands outside _oi. Treat it as
+    // unanswered, which is what the grading below did with it too.
+    if (baseOpt == null) return;
+    out[q._bi] = baseOpt;
+  });
+  return out;
+}
+
+// The grading this page has always done. Only reachable while scoring is local:
+// once it moves to the endpoint this page has no option scores left to read.
+function gradeLocally(s, qs, ans) {
   // grade — graded tests use opts[i].p; binary tests use opts[ansIdx].p===max
   let raw = 0, maxP = 0;
   const sectionData = {};
@@ -2173,10 +2220,27 @@ function doSubmit() {
   s.raw      = raw;
   s.maxP     = maxP;
   s.outcome  = s.score >= s.test.passing ? 'P' : 'NP';
-  s.status   = 'completed';
   s.sections = sectionData;
   // Percentile vs all stored records (same test)
   s.percentile = calcPercentile(s.test.code, s.score);
+}
+
+function doSubmit() {
+  clearInterval(timerInterval);
+  closeModal('mod-confirm');
+  const s  = sessions[curSess];
+  const qs  = getRandomizedQs(s);
+  const ans = s._answersRandom;
+  // copy กลับไปที่ s.answers เพื่อให้ renderReview ใช้ได้ (same order as qs above)
+  s.answers = ans.slice();
+  if (serverScoringEnabled()) {
+    // The score belongs to the endpoint now. Left unset rather than zeroed: a
+    // zero would read as a real result wherever it surfaced.
+    s.score = s.raw = s.maxP = s.outcome = s.sections = s.percentile = null;
+  } else {
+    gradeLocally(s, qs, ans);
+  }
+  s.status   = 'completed';
   // Candidates do NOT see their scores or the answer key — those are HR-only now.
   // Route back to the dashboard to take the next test, or to the thank-you when finished.
   if (sessions.every(x => x.status === 'completed')) nav('p-thankyou');
@@ -4597,16 +4661,37 @@ function restoreSession(data) {
 // UNIFIED openTest — auto-persist after opening test
 const _openTestOrig = openTest;
 window.openTest = function() {
+  // With the answer key on the endpoint, the questions have to be the published
+  // ones. If the shared bank did not load, this page is holding whatever it was
+  // built with — the case that used to be swallowed with a console.warn and
+  // handed to candidates anyway, with nobody told. Stop instead.
+  if (serverScoringEnabled() && !_cloudBankLoaded) {
+    if (typeof showToast === 'function')
+      showToast('❌ โหลดชุดข้อสอบจากระบบไม่สำเร็จ — กรุณารีเฟรชหน้า หรือแจ้งเจ้าหน้าที่', 10000);
+    return;
+  }
+  // Settle the sitting id before the autosave below, so a refresh mid-sitting
+  // resumes under the same id rather than starting a second record.
+  if (serverScoringEnabled()) sittingId();
   _openTestOrig();
   persistSession();
 };
 // UNIFIED doSubmit — single wrapper
 const _doSubmitOrig = doSubmit;
 window.doSubmit = function() {
+  const submitted = sessions[curSess];
   _doSubmitOrig();
-  setTimeout(saveExamData, 200);
-  setTimeout(saveResultSnapshot, 220);   // full result snapshot for the admin score dashboard
-  setTimeout(cloudPushOnComplete, 450);  // upload finished attempt to Firestore (cross-device)
+  if (serverScoringEnabled()) {
+    // The endpoint grades and records this. Nothing is written locally, because
+    // every one of those writes would be writing a score this page cannot
+    // compute — and letting the browser write a score is what the move exists
+    // to stop. HR reads the records back from Firestore as it already does.
+    submitAnswersForScoring(submitted);
+  } else {
+    setTimeout(saveExamData, 200);
+    setTimeout(saveResultSnapshot, 220);   // full result snapshot for the admin score dashboard
+    setTimeout(cloudPushOnComplete, 450);  // upload finished attempt to Firestore (cross-device)
+  }
   persistSession();
   if (sessions.every(s => s.status === 'completed')) clearPersistedSession();
 };
@@ -5792,6 +5877,214 @@ function _mergeIntoLocal(key, incoming, keyFn){
   } catch(e){ return 0; }
 }
 
+// ── Sending answers to be scored ───────────────────────────────────────
+// Used only when SCORING_ENDPOINT is set. Nothing here reads an option score:
+// that is the point, and it is why the page can stop shipping the answer key.
+const ANSWER_QUEUE_KEY = 'hma_answer_queue';
+
+// An id for this sitting, made once and kept for as long as the sitting lasts
+// (it rides along in the autosaved session, so a refresh keeps it). The
+// endpoint groups a candidate's tests by it, so every test in one sitting lands
+// in one record and a later re-sit gets its own.
+//
+// Deliberately not a counted attempt number: a count only works while it is
+// counted from the same place, and a candidate re-sitting on another device
+// would start counting at one again and collide with their first sitting.
+function sittingId() {
+  if (applicant && applicant._sitting) return applicant._sitting;
+  const rand = [...crypto.getRandomValues(new Uint8Array(10))]
+    .map(b => (b % 36).toString(36)).join('');
+  const id = 's' + Date.now().toString(36) + '-' + rand;
+  if (applicant) applicant._sitting = id;
+  rememberSitting(id);
+  return id;
+}
+
+// A list of this candidate's sitting ids on this device, in the order they
+// started. It exists only so the ATS's "ครั้งที่ N" still says something
+// sensible: with scoring on the server this page no longer writes any exam
+// record, so the old way of counting them has nothing left to count.
+//
+// It carries no score and no answer — just ids — and it is per-device, so a
+// candidate who re-sits elsewhere will be numbered from one again. Which record
+// belongs to which sitting never depends on this; that is the sitting id. For a
+// number that is right regardless, the ATS should count a candidate's records
+// in time order when it reads them.
+const SITTING_LOG_KEY = 'hma_sitting_log';
+
+function _sittingLog() {
+  try { return JSON.parse(localStorage.getItem(SITTING_LOG_KEY) || '{}') || {}; }
+  catch(e) { return {}; }
+}
+
+function rememberSitting(id) {
+  try {
+    const key = candKey(applicant);
+    if (!key) return;
+    const log = _sittingLog();
+    const list = Array.isArray(log[key]) ? log[key] : [];
+    if (!list.includes(id)) list.push(id);
+    // เก็บย้อนหลังพอประมาณ ไม่ต้องเก็บทั้งชีวิต
+    log[key] = list.slice(-20);
+    localStorage.setItem(SITTING_LOG_KEY, JSON.stringify(log));
+  } catch(e) {}
+}
+
+// Shown by the ATS as "ครั้งที่ N". Display only — see rememberSitting above.
+function attemptNumberForDisplay() {
+  try {
+    const key = candKey(applicant);
+    const log = _sittingLog();
+    const list = Array.isArray(log[key]) ? log[key] : [];
+    const here = list.indexOf(applicant && applicant._sitting);
+    if (here >= 0) return here + 1;
+    // ยังไม่ตรวจที่เซิร์ฟเวอร์: นับจาก record ในเครื่องเหมือนเดิม
+    const recs = JSON.parse(localStorage.getItem('hma_exam_records') || '[]');
+    return recs.filter(r => candKey(r) === key && r._complete).length + 1;
+  } catch(e) { return 1; }
+}
+
+// Stable JSON with object keys sorted — mirrors canonical() in
+// server-scoring/src/bank.mjs so both sides fingerprint the same bytes.
+function _canonicalJSON(value) {
+  if (Array.isArray(value)) return '[' + value.map(_canonicalJSON).join(',') + ']';
+  if (value && typeof value === 'object') {
+    return '{' + Object.keys(value).sort()
+      .filter(k => value[k] !== undefined)
+      .map(k => JSON.stringify(k) + ':' + _canonicalJSON(value[k]))
+      .join(',') + '}';
+  }
+  return JSON.stringify(value === undefined ? null : value);
+}
+
+// Which version of the questions these answers were given against. Mirrors
+// testFingerprint() in server-scoring/src/bank.mjs, so the endpoint can tell
+// that the candidate answered the set it is about to score them against, and
+// refuse rather than mis-score if the bank was republished mid-sitting.
+async function questionSetFingerprint(code) {
+  // crypto.subtle only exists in a secure context, so a page opened over plain
+  // http (a LAN IP rather than the real site) cannot produce this. Say which
+  // problem it is, rather than failing as "could not prepare the answers".
+  if (!(window.crypto && crypto.subtle))
+    throw new Error('ต้องเปิดหน้านี้ผ่าน https เท่านั้น (ระบบตรวจคะแนนต้องใช้)');
+  const text   = _canonicalJSON(ALL_QUESTIONS[code] || []);
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
+}
+
+async function buildAnswerSubmission(s) {
+  return {
+    testCode: s.test.code,
+    sitting:  sittingId(),
+    attempt:  attemptNumberForDisplay(),
+    candidate: {
+      key:   applicantKey(applicant),
+      name:  applicant.name  || '',
+      email: applicant.email || '',
+      phone: applicant.phone || '',
+      age:   applicant.age   || '',
+      exp:   applicant.exp   || '',
+      pos:   applicant.pos   || '',
+    },
+    answers:     answersInBankOrder(s),
+    fingerprint: await questionSetFingerprint(s.test.code),
+    // The pass mark is NOT sent: the endpoint reads it from the shared settings,
+    // so that this page cannot decide who passes.
+    meta: {
+      name:       s.test.name,
+      nameTH:     s.test.nameTH || '',
+      mins:       s.test.mins ?? null,
+      remainSecs: s.remainSecs ?? null,
+      leaves:     examLeaveCount(s.violations),
+      datetime:   new Date().toLocaleString('th-TH'),
+    },
+  };
+}
+
+async function postAnswers(submission) {
+  const base = String(window.SCORING_ENDPOINT).replace(/\/+$/, '');
+  const res = await fetch(base + '/score', {
+    method:  'POST',
+    headers: { 'content-type': 'application/json' },
+    body:    JSON.stringify(submission),
+  });
+  if (res.ok) return { ok: true };
+  let body = {};
+  try { body = await res.json(); } catch(e) {}
+  // The endpoint already holds this sitting's test — which is what a replayed
+  // queue entry looks like, not a failure.
+  if (res.status === 409 && body.code === 'already_graded') return { ok: true };
+  // Only a server-side or network problem gets better by being retried; a 4xx
+  // means these answers will be refused again just the same.
+  return {
+    ok:    false,
+    retry: res.status >= 500,
+    code:  body.code || String(res.status),
+    error: body.error || '',
+  };
+}
+
+function queueAnswers(submission) {
+  try {
+    const q = JSON.parse(localStorage.getItem(ANSWER_QUEUE_KEY) || '[]');
+    q.push({ submission, at: Date.now() });
+    localStorage.setItem(ANSWER_QUEUE_KEY, JSON.stringify(q));
+  } catch(e) { console.warn('could not queue the answers:', e); }
+}
+
+// Hand one finished test's answers to the endpoint. Nothing comes back about
+// the score, by design — a reply that varied with the answers could be used to
+// work the key out one option at a time.
+//
+// A submission that cannot be sent is queued and retried, so sitting the exam
+// without a connection still works. What waits in the queue is the raw answers,
+// not a score this page worked out. Candidates are not shown their score in any
+// case, so there is nothing for them to wait for.
+async function submitAnswersForScoring(s) {
+  if (!serverScoringEnabled() || !s || !applicant) return;
+  let submission;
+  try {
+    submission = await buildAnswerSubmission(s);
+  } catch(e) {
+    console.warn('could not build the answer submission:', e);
+    if (typeof showToast === 'function')
+      showToast('❌ เตรียมส่งคำตอบไม่สำเร็จ — กรุณาแจ้งเจ้าหน้าที่', 10000);
+    return;
+  }
+  let outcome;
+  try { outcome = await postAnswers(submission); }
+  catch(e) { outcome = { ok: false, retry: true, code: 'offline', error: String((e && e.message) || e) }; }
+  if (outcome.ok) return;
+  if (outcome.retry) {
+    queueAnswers(submission);
+    if (typeof showToast === 'function')
+      showToast('⚠️ ส่งคำตอบขึ้นระบบไม่สำเร็จ — ระบบจะส่งใหม่อัตโนมัติเมื่อเชื่อมต่อได้', 6000);
+    return;
+  }
+  // Not worth retrying: these answers cannot be scored as they stand. Saying so
+  // beats leaving the candidate believing they were recorded.
+  console.warn('scoring refused the submission:', outcome.code, outcome.error);
+  if (typeof showToast === 'function')
+    showToast('❌ ระบบตรวจคะแนนไม่รับคำตอบชุดนี้ (' + outcome.code + ') — กรุณาแจ้งเจ้าหน้าที่', 10000);
+}
+
+async function flushAnswerQueue() {
+  if (!serverScoringEnabled()) return;
+  let q;
+  try { q = JSON.parse(localStorage.getItem(ANSWER_QUEUE_KEY) || '[]'); } catch(e) { return; }
+  if (!Array.isArray(q) || !q.length) return;
+  const remain = [];
+  for (const item of q) {
+    let outcome;
+    try { outcome = await postAnswers(item.submission); }
+    catch(e) { outcome = { ok: false, retry: true }; }
+    if (!outcome.ok && outcome.retry) remain.push(item);
+  }
+  try { localStorage.setItem(ANSWER_QUEUE_KEY, JSON.stringify(remain)); } catch(e) {}
+  if (q.length && !remain.length && typeof showToast === 'function')
+    showToast('☁️ ส่งคำตอบที่ค้างขึ้นระบบสำเร็จแล้ว');
+}
+
 // Candidate side: push the finished attempt to Firestore (create-only).
 async function cloudPushOnComplete(){
   if (!cloudEnabled()) return;
@@ -6086,7 +6379,11 @@ async function cloudLoadQuestionBank(){
   return loaded;
 }
 // Pull the shared bank on startup (for admins AND candidates).
-cloudLoadQuestionBank().then(() => { seedPersonalityQuestionsIfEmpty(); cloudFlushPending(); });
+cloudLoadQuestionBank().then(() => {
+  seedPersonalityQuestionsIfEmpty();
+  cloudFlushPending();
+  flushAnswerQueue();   // retry any answers that could not be sent earlier
+});
 
 // Initial FAB state
 updateFABs('p-landing');
