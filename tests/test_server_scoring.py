@@ -533,3 +533,73 @@ def test_without_an_endpoint_the_bank_still_goes_to_firestore(open_exam):
     assert page.evaluate("() => window.__requests.length") == 0, "ยังยิงไปที่ endpoint ทั้งที่ยังไม่เปิดสวิตช์"
     writes = page.evaluate("() => window.__settingsWrites")
     assert any("customQuestions" in w for w in writes), "ไม่ได้เขียนคลังลง Firestore ตามพฤติกรรมเดิม"
+
+
+# ── เฉลยไม่อยู่ในหน้าเว็บแล้ว ────────────────────────────────────────────
+
+def test_the_page_ships_no_answer_key(open_exam):
+    """ข้อสอบที่ฝังมากับหน้าเว็บต้องไม่มีเฉลยและไม่มีคำอธิบายเลย"""
+    page = open_exam()
+    leaks = page.evaluate("""() => {
+      const out = { scored: [], explained: [], counts: {} };
+      const scan = (label, qs) => {
+        out.counts[label] = qs.length;
+        qs.forEach((q, i) => {
+          if ((q.opts || []).some(o => o && typeof o.p === 'number')) out.scored.push(label + '[' + i + ']');
+          if (q.why != null || q.exp != null) out.explained.push(label + '[' + i + ']');
+        });
+      };
+      Object.keys(ALL_QUESTIONS).forEach(c => scan(c, ALL_QUESTIONS[c]));
+      scan('PERS_DEFAULTS', DEFAULT_PERS_QUESTIONS);
+      return out;
+    }""")
+    assert leaks["scored"] == [], f"ยังมีเฉลยในหน้าเว็บ: {leaks['scored'][:5]}"
+    assert leaks["explained"] == [], f"ยังมีคำอธิบายในหน้าเว็บ: {leaks['explained'][:5]}"
+    # และโจทย์ยังอยู่ครบ ไม่ใช่ว่าตัดทิ้งไปทั้งก้อน
+    assert leaks["counts"]["PERS_DEFAULTS"] == 60
+    assert sum(v for k, v in leaks["counts"].items() if k != "PERS_DEFAULTS") == 116
+
+
+def test_a_test_cannot_start_when_nothing_can_score_it(open_exam):
+    """ไม่มีเฉลยในเครื่อง และไม่มีระบบตรวจคะแนน → ต้องไม่ให้เริ่มสอบ
+
+    ถ้าปล่อยให้เริ่ม ทุกคนจะได้คะแนนศูนย์ ซึ่งดูเหมือนผลสอบจริง
+    """
+    page = open_exam()
+    _setup(page, endpoint="")
+    blocked = page.evaluate("""() => {
+      // คลังแบบที่เผยแพร่จริง: มีโจทย์ ไม่มีเฉลย
+      ALL_QUESTIONS.TESTSET = ALL_QUESTIONS.TESTSET.map(q => ({ ...q, opts: q.opts.map(o => ({ t: o.t })) }));
+      sessions[0]._randomizedQs = undefined;
+      nav('p-dash');
+      document.getElementById('t-testname').textContent = '';
+      window.openTest();
+      return document.querySelector('.page.active').id;
+    }""")
+    assert blocked == "p-dash", "เริ่มสอบไปแล้วทั้งที่ไม่มีอะไรให้คะแนนได้"
+    assert page.evaluate("() => canGradeLocally('TESTSET')") is False
+
+
+def test_a_test_starts_once_there_is_an_endpoint(open_exam):
+    """มีระบบตรวจคะแนนแล้ว ก็เริ่มสอบได้ ทั้งที่หน้าเว็บไม่มีเฉลย"""
+    page = open_exam()
+    _setup(page)   # ตั้ง endpoint + _cloudBankLoaded ให้แล้ว
+    page.evaluate("""() => {
+      // คลังไม่มีเฉลย เหมือนครึ่งที่เผยแพร่จริง
+      ALL_QUESTIONS.TESTSET = ALL_QUESTIONS.TESTSET.map(q => ({ ...q, opts: q.opts.map(o => ({ t: o.t })) }));
+      sessions[0]._randomizedQs = undefined;
+    }""")
+    assert page.evaluate("() => canGradeLocally('TESTSET')") is False
+    active = page.evaluate("""() => {
+      nav('p-dash');
+      window.openTest();
+      return document.querySelector('.page.active').id;
+    }""")
+    assert active == "p-test"
+
+
+def test_an_admin_holding_the_key_can_still_grade_locally(open_exam):
+    """ผู้ดูแลที่ดึงเฉลยมาแล้ว canGradeLocally ต้องเป็นจริง (หน้าทบทวนของ HR ใช้)"""
+    page = open_exam()
+    _setup(page)
+    assert page.evaluate("() => canGradeLocally('TESTSET')") is True

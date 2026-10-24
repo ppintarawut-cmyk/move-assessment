@@ -434,8 +434,14 @@ def test_same_candidate_gets_the_same_question_order_across_a_resume(open_exam):
 
     # Start the IQ test directly (skip the intro screen) so a randomized order
     # is generated and persisted via the real window.openTest() wrapper.
+    #
+    # เฉลยไม่อยู่ในหน้าเว็บแล้ว หน้าเว็บจึงตรวจคะแนนเองไม่ได้ และ openTest() จะไม่ยอม
+    # เริ่มสอบถ้าไม่มีทางให้คะแนนเลย — ตั้งให้อยู่ในสภาพใช้งานจริง (มีระบบตรวจคะแนน
+    # และโหลดคลังมาแล้ว) เทสต์นี้ตรวจเรื่องลำดับการสับข้อ ไม่ใช่เรื่องการ์ดตัวนั้น
     page.evaluate("""
         () => {
+            window.SCORING_ENDPOINT = 'https://scoring.example.com';
+            _cloudBankLoaded = true;
             curSess = sessions.findIndex(s => s.test.code === 'IQ');
             sessions[curSess].status = 'in_progress';
             window.openTest();
@@ -449,6 +455,10 @@ def test_same_candidate_gets_the_same_question_order_across_a_resume(open_exam):
     # and resume through the real resumeSession() path.
     page.reload()
     page.wait_for_function("typeof submitReg !== 'undefined'")
+    page.evaluate("""() => {
+        window.SCORING_ENDPOINT = 'https://scoring.example.com';
+        _cloudBankLoaded = true;
+    }""")
     page.evaluate("() => resumeSession()")
     order_after = page.evaluate("() => sessions[curSess]._randomizedQs.map(q => q.q)")
 
@@ -501,6 +511,11 @@ def test_resuming_a_pre_task4_session_reconstructs_the_shuffle_it_was_sat_under(
         }
     """)
 
+    # เหตุผลเดียวกับเทสต์ด้านบน — resumeSession() ลงไปถึง openTest()
+    page.evaluate("""() => {
+        window.SCORING_ENDPOINT = 'https://scoring.example.com';
+        _cloudBankLoaded = true;
+    }""")
     page.evaluate("() => resumeSession()")
     actual_order = page.evaluate("() => sessions[curSess]._randomizedQs.map(q => q.q)")
 
