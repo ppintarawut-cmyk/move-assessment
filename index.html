@@ -6218,6 +6218,8 @@ if (window.fbAuth) {
     updateCloudStatus();
     if (user && document.getElementById('p-admin') && document.getElementById('p-admin').classList.contains('active')) cloudFetchAll();
     cloudFlushPending();   // retry any result uploads that failed earlier
+    if (user) adminLoadFullBank();   // the answer key, if this account may have it
+    else { _fullBankLoaded = false; }
   });
 }
 
@@ -6265,6 +6267,34 @@ async function cloudSaveQuestionBank(){
     if (e && e.code === 'permission-denied') showToast('⚠️ ซิงค์ไม่ได้ — ยังไม่ได้เพิ่ม Firestore rule ของ config', 5000);
     else showToast('⚠️ ซิงค์ตำแหน่ง/หมวดไม่สำเร็จ: ' + (e.code || e.message), 5000);
   }
+  // With scoring on the endpoint, the bank goes there to be split: the browser
+  // must not write config/bank itself, or it would be writing the public half
+  // and the answer key would have nowhere to come from.
+  if (serverScoringEnabled()) {
+    const missing = banksMissingAnswers(customQuestions);
+    if (missing.length) {
+      // This page is holding questions without their scores — the published
+      // half, not the whole bank. Publishing it would wipe the real answer key
+      // for everybody. Refuse, and say what to do about it.
+      console.warn('refusing to publish a bank with no answer key for:', missing.join(', '));
+      if (typeof showToast === 'function')
+        showToast('❌ ยังไม่ได้โหลดเฉลยของ ' + missing.join(', ') +
+                  ' — ไม่บันทึก เพราะจะทับเฉลยเดิมหาย กรุณารีเฟรชแล้วลองใหม่', 12000);
+      return { settingsOk, bankOk: false };
+    }
+    if (!_fullBankLoaded) {
+      if (typeof showToast === 'function')
+        showToast('⌛ ยังโหลดเฉลยจากระบบไม่เสร็จ — รอสักครู่แล้วลองใหม่', 6000);
+      return { settingsOk, bankOk: false };
+    }
+    const outcome = await publishBankToEndpoint(customQuestions);
+    if (!outcome.ok) {
+      console.warn('publishing the bank failed:', outcome.code, outcome.error);
+      if (typeof showToast === 'function')
+        showToast('⚠️ บันทึกข้อสอบขึ้นระบบไม่สำเร็จ (' + outcome.code + ')', 7000);
+    }
+    return { settingsOk, bankOk: outcome.ok };
+  }
   // Large bank (questions + instructions) — best effort; may exceed 1 MB with images
   try {
     await db.collection('config').doc('bank').set({
@@ -6284,6 +6314,85 @@ async function cloudSaveQuestionBank(){
   }
   return { settingsOk, bankOk };
 }
+// ── The answer key, for the people who are allowed to see it ───────────
+// With scoring on the endpoint, config/bank carries the questions without
+// their scores, which is all a candidate needs. The question editor and the
+// HR review screen do need the scores, so they ask the endpoint for the whole
+// bank, as a signed-in administrator.
+//
+// true once this page is holding a bank that includes the answer key. Publishing
+// is refused until it is — see the guard in cloudSaveQuestionBank().
+var _fullBankLoaded = false;
+
+async function _adminIdToken() {
+  if (!cloudSignedIn()) throw new Error('ยังไม่ได้ล็อกอิน');
+  return fbAuth.currentUser.getIdToken();
+}
+
+async function adminLoadFullBank() {
+  if (!serverScoringEnabled() || !cloudSignedIn()) return false;
+  const base = String(window.SCORING_ENDPOINT).replace(/\/+$/, '');
+  try {
+    const res = await fetch(base + '/admin/bank', {
+      headers: { authorization: 'Bearer ' + (await _adminIdToken()) },
+    });
+    if (!res.ok) {
+      let body = {};
+      try { body = await res.json(); } catch(e) {}
+      // 401/403 is the ordinary case for an HR or viewer account: they are not
+      // allowed the answer key, and that is not an error worth shouting about.
+      if (res.status !== 401 && res.status !== 403 && typeof showToast === 'function')
+        showToast('⚠️ โหลดเฉลยไม่สำเร็จ (' + (body.code || res.status) + ')', 6000);
+      return false;
+    }
+    const { bank } = await res.json();
+    if (!bank || typeof bank !== 'object') return false;
+    Object.keys(bank).forEach(k => { ALL_QUESTIONS[k] = bank[k]; });
+    try { localStorage.setItem('hma_custom_questions', JSON.stringify(bank)); } catch(e){}
+    _fullBankLoaded = true;
+    EDIT_QUESTIONS = null;   // rebuild the editor from the bank that has answers
+    if (document.getElementById('p-question-editor')
+        && document.getElementById('p-question-editor').classList.contains('active'))
+      renderQuestionEditor();
+    return true;
+  } catch(e) {
+    console.warn('adminLoadFullBank failed:', e);
+    return false;
+  }
+}
+
+// Does this bank still carry an answer key? Publishing one that does not would
+// erase the real key for everybody, so this is checked rather than trusted.
+// Returns the names of the test sets that have lost their scores.
+function banksMissingAnswers(bank) {
+  return Object.keys(bank || {}).filter(code => {
+    const questions = bank[code] || [];
+    if (!questions.length) return false;
+    return !questions.every(q =>
+      Array.isArray(q.opts) && q.opts.length &&
+      q.opts.some(o => o && typeof o.p === 'number'));
+  });
+}
+
+// Hand the whole bank to the endpoint, which splits it and stores the key. Doing
+// the split there rather than here means the two halves cannot be written
+// inconsistently, and means this page never has to write the key anywhere.
+async function publishBankToEndpoint(customQuestions) {
+  const base = String(window.SCORING_ENDPOINT).replace(/\/+$/, '');
+  const res = await fetch(base + '/admin/bank', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: 'Bearer ' + (await _adminIdToken()),
+    },
+    body: JSON.stringify({ bank: customQuestions }),
+  });
+  if (res.ok) return { ok: true };
+  let body = {};
+  try { body = await res.json(); } catch(e) {}
+  return { ok: false, code: body.code || String(res.status), error: body.error || '' };
+}
+
 function _parseMaybe(v, fallback){ try { return typeof v === 'string' ? JSON.parse(v) : (v ?? fallback); } catch(e){ return fallback; } }
 async function cloudLoadQuestionBank(){
   if (!cloudEnabled()) return false;

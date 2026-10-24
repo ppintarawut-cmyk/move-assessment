@@ -373,3 +373,163 @@ def test_records_without_a_sitting_still_group_by_attempt(open_exam):
       return getStoredRows().filter(r => r.test === 'IQ').map(r => r.id);
     }""")
     assert len(set(rows)) == 2
+
+
+# ── เฉลยฝั่งผู้ดูแล: โหลดจากระบบ และกันการเผลอทับเฉลยหาย ──────────────
+
+ADMIN_SETUP = """
+() => {
+  window.SCORING_ENDPOINT = 'https://scoring.example.com';
+  _cloudSettingsLoaded = true;
+  _fullBankLoaded = false;
+  // ยืนหมัน Firebase ให้พอใช้: ล็อกอินแล้ว และเขียน config/settings ได้
+  window.__settingsWrites = [];
+  window.db = { collection: () => ({ doc: () => ({
+    set: async (data) => { window.__settingsWrites.push(data); },
+  }) }) };
+  window.fbAuth = { currentUser: { getIdToken: async () => 'admin-id-token' } };
+  // Firebase ตัวจริงโหลดจาก CDN ซึ่งถูกบล็อกในเครื่องที่รันเทสต์ — ใส่เท่าที่ใช้
+  window.firebase = { firestore: { FieldValue: { serverTimestamp: () => 'ts' } } };
+  window.__requests = [];
+  window.__bankResponse = { ok:true, status:200, body:{ ok:true, bank:{
+    IQ: [
+      { sec:'A', q:'Q0', opts:[{t:'0a',p:0},{t:'0b',p:1}], why:'because' },
+      { sec:'A', q:'Q1', opts:[{t:'1a',p:1},{t:'1b',p:0}] },
+    ],
+  } } };
+  window.__publishResponse = { ok:true, status:200, body:{ ok:true } };
+  window.fetch = async (url, init = {}) => {
+    const method = init.method || 'GET';
+    window.__requests.push({
+      url: String(url), method,
+      auth: (init.headers || {}).authorization || null,
+      body: init.body ? JSON.parse(init.body) : null,
+    });
+    const r = method === 'GET' ? window.__bankResponse : window.__publishResponse;
+    return { ok: r.ok, status: r.status, json: async () => r.body };
+  };
+  return true;
+}
+"""
+
+
+def test_an_admin_loads_the_answer_key_from_the_endpoint(open_exam):
+    page = open_exam()
+    page.evaluate(ADMIN_SETUP)
+    ok = page.evaluate("() => adminLoadFullBank()")
+    assert ok is True
+
+    req = page.evaluate("() => window.__requests[0]")
+    assert req["url"] == "https://scoring.example.com/admin/bank"
+    assert req["method"] == "GET"
+    assert req["auth"] == "Bearer admin-id-token"
+
+    # ข้อสอบในหน้าเว็บต้องมีเฉลยแล้ว เพื่อให้หน้าแก้ข้อสอบกับหน้าทบทวนของ HR ใช้ได้
+    assert page.evaluate("() => ALL_QUESTIONS.IQ[0].opts[1].p") == 1
+    assert page.evaluate("() => ALL_QUESTIONS.IQ[0].why") == "because"
+    assert page.evaluate("() => _fullBankLoaded") is True
+
+
+def test_an_account_without_the_right_role_is_refused_quietly(open_exam):
+    """บัญชี HR/viewer ไม่มีสิทธิ์เห็นเฉลย — ไม่ใช่ error ที่ต้องตะโกน"""
+    page = open_exam()
+    page.evaluate(ADMIN_SETUP)
+    page.evaluate("() => { window.__bankResponse = { ok:false, status:403, body:{ code:'forbidden' } }; }")
+    ok = page.evaluate("() => adminLoadFullBank()")
+    assert ok is False
+    assert page.evaluate("() => _fullBankLoaded") is False
+
+
+def test_saving_publishes_the_whole_bank_to_the_endpoint(open_exam):
+    """ต้องไม่เขียน config/bank จากเบราว์เซอร์ — ส่งทั้งคลังให้ระบบไปแยกเอง"""
+    page = open_exam()
+    page.evaluate(ADMIN_SETUP)
+    page.evaluate("() => adminLoadFullBank()")
+    page.wait_for_function("() => _fullBankLoaded")
+
+    res = page.evaluate("() => cloudSaveQuestionBank()")
+    assert res["bankOk"] is True
+
+    posts = page.evaluate("() => window.__requests.filter(r => r.method === 'POST')")
+    assert len(posts) == 1
+    assert posts[0]["url"] == "https://scoring.example.com/admin/bank"
+    assert posts[0]["auth"] == "Bearer admin-id-token"
+    # คลังที่ส่งไปต้องมีเฉลยครบ
+    assert posts[0]["body"]["bank"]["IQ"][0]["opts"][1]["p"] == 1
+    # config/settings ยังเขียนเหมือนเดิม (ไม่ใช่ความลับ) แต่ต้องไม่มี customQuestions
+    writes = page.evaluate("() => window.__settingsWrites")
+    assert writes, "config/settings ไม่ได้ถูกเขียน"
+    assert not any("customQuestions" in w for w in writes), "ยังเขียนคลังข้อสอบลง Firestore จากเบราว์เซอร์"
+
+
+def test_saving_a_bank_that_lost_its_answer_key_is_refused(open_exam):
+    """กับดักที่อันตรายที่สุด: ผู้ดูแลที่หน้าเว็บมีแต่โจทย์ (ไม่มีเฉลย) กดบันทึก
+    = ทับเฉลยจริงหายทั้งระบบ ต้องไม่ยอมบันทึก
+    """
+    page = open_exam()
+    page.evaluate(ADMIN_SETUP)
+    page.evaluate("""() => {
+      // หน้าเว็บโหลดมาได้แต่ครึ่งที่เปิดสาธารณะ — ตัวเลือกไม่มี p
+      _fullBankLoaded = true;   // แม้ธงจะบอกว่าโหลดแล้ว ก็ยังต้องตรวจรูปร่างจริง
+      localStorage.setItem('hma_custom_questions', JSON.stringify({
+        IQ: [{ sec:'A', q:'Q0', opts:[{t:'0a'},{t:'0b'}] }],
+      }));
+    }""")
+    res = page.evaluate("() => cloudSaveQuestionBank()")
+    assert res["bankOk"] is False
+    assert page.evaluate("() => window.__requests.filter(r => r.method === 'POST').length") == 0, \
+        "ส่งคลังที่ไม่มีเฉลยขึ้นระบบไปแล้ว"
+
+
+def test_saving_before_the_answer_key_arrives_is_refused(open_exam):
+    page = open_exam()
+    page.evaluate(ADMIN_SETUP)
+    page.evaluate("""() => {
+      _fullBankLoaded = false;
+      localStorage.setItem('hma_custom_questions', JSON.stringify({
+        IQ: [{ sec:'A', q:'Q0', opts:[{t:'0a',p:0},{t:'0b',p:1}] }],
+      }));
+    }""")
+    res = page.evaluate("() => cloudSaveQuestionBank()")
+    assert res["bankOk"] is False
+    assert page.evaluate("() => window.__requests.filter(r => r.method === 'POST').length") == 0
+
+
+def test_an_empty_test_set_does_not_count_as_a_lost_answer_key(open_exam):
+    """ชุดสอบที่ยังไม่มีข้อ ไม่ใช่ชุดที่เฉลยหาย — ต้องไม่บล็อกการบันทึก"""
+    page = open_exam()
+    page.evaluate(ADMIN_SETUP)
+    missing = page.evaluate("""() => banksMissingAnswers({
+      EMPTY: [],
+      GOOD:  [{ opts:[{t:'a',p:0},{t:'b',p:1}] }],
+      BAD:   [{ opts:[{t:'a'},{t:'b'}] }],
+      NOOPTS:[{ q:'no options at all' }],
+    })""")
+    assert missing == ["BAD", "NOOPTS"]
+
+
+def test_a_failed_publish_is_reported_rather_than_claimed_as_saved(open_exam):
+    page = open_exam()
+    page.evaluate(ADMIN_SETUP)
+    page.evaluate("() => adminLoadFullBank()")
+    page.wait_for_function("() => _fullBankLoaded")
+    page.evaluate("() => { window.__publishResponse = { ok:false, status:503, body:{ code:'down' } }; }")
+    res = page.evaluate("() => cloudSaveQuestionBank()")
+    assert res["bankOk"] is False
+
+
+def test_without_an_endpoint_the_bank_still_goes_to_firestore(open_exam):
+    """ยังไม่เปิดสวิตช์ → ทุกอย่างเหมือนเดิม"""
+    page = open_exam()
+    page.evaluate(ADMIN_SETUP)
+    page.evaluate("""() => {
+      window.SCORING_ENDPOINT = '';
+      localStorage.setItem('hma_custom_questions', JSON.stringify({
+        IQ: [{ sec:'A', q:'Q0', opts:[{t:'0a',p:0},{t:'0b',p:1}] }],
+      }));
+    }""")
+    res = page.evaluate("() => cloudSaveQuestionBank()")
+    assert res["bankOk"] is True
+    assert page.evaluate("() => window.__requests.length") == 0, "ยังยิงไปที่ endpoint ทั้งที่ยังไม่เปิดสวิตช์"
+    writes = page.evaluate("() => window.__settingsWrites")
+    assert any("customQuestions" in w for w in writes), "ไม่ได้เขียนคลังลง Firestore ตามพฤติกรรมเดิม"
