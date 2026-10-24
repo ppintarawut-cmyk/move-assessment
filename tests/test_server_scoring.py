@@ -335,3 +335,41 @@ def test_the_attempt_number_counts_sittings_when_the_server_scores(open_exam):
     log = page.evaluate("() => localStorage.getItem('hma_sitting_log')")
     for leaked in ('"score"', '"answers"', '"p"', '"outcome"'):
         assert leaked not in log, f"sitting log เก็บ {leaked} ไปด้วย"
+
+
+def test_two_sittings_stay_separate_rows_in_the_hr_table(open_exam):
+    """สองการสอบที่เลข "ครั้งที่" ชนกัน (คนละเครื่อง) ต้องไม่ถูกรวมเป็นแถวเดียว"""
+    page = open_exam()
+    rows = page.evaluate("""() => {
+      const base = {
+        candidate_key:'somchai@example.com', email:'somchai@example.com',
+        name:'สมชาย ทดสอบ', position:'ช่างเทคนิค', datetime:'3/8/2569 10:00:00',
+        IQ_score:70, IQ_outcome:'P', IQ_total:25, IQ_passing:60, _complete:true,
+      };
+      localStorage.setItem('hma_exam_records', JSON.stringify([
+        { ...base, sitting:'s-first',  attempt:1 },
+        { ...base, sitting:'s-second', attempt:1, IQ_score:85 },
+      ]));
+      return getStoredRows().filter(r => r.test === 'IQ').map(r => ({ id:r.id, score:r.score }));
+    }""")
+    assert len(rows) == 2, "สองการสอบรวมเป็นแถวเดียว"
+    assert len({r["id"] for r in rows}) == 2
+    assert sorted(r["score"] for r in rows) == [70, 85]
+
+
+def test_records_without_a_sitting_still_group_by_attempt(open_exam):
+    """record รุ่นก่อนที่ยังไม่มี sitting ต้องแสดงได้เหมือนเดิม"""
+    page = open_exam()
+    rows = page.evaluate("""() => {
+      const base = {
+        candidate_key:'somchai@example.com', email:'somchai@example.com',
+        name:'สมชาย ทดสอบ', position:'ช่างเทคนิค', datetime:'3/8/2569 10:00:00',
+        IQ_score:70, IQ_outcome:'P', IQ_total:25, IQ_passing:60, _complete:true,
+      };
+      localStorage.setItem('hma_exam_records', JSON.stringify([
+        { ...base, attempt:1 },
+        { ...base, attempt:2, IQ_score:85 },
+      ]));
+      return getStoredRows().filter(r => r.test === 'IQ').map(r => r.id);
+    }""")
+    assert len(set(rows)) == 2

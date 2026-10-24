@@ -2548,7 +2548,9 @@ function getStoredRows() {
   try {
     const stored = JSON.parse(localStorage.getItem('hma_exam_records') || '[]');
     const rows = [];
-    // group by candidate_key + attempt เพื่อแสดงแต่ละการสอบแยกชุด
+    // group by candidate_key + sitting เพื่อแสดงแต่ละการสอบแยกชุด
+    // (record รุ่นก่อนไม่มี sitting จึงถอยไปใช้ attempt เหมือนเดิม — แต่เลข attempt
+    //  ซ้ำกันได้ถ้าผู้สมัครกลับมาสอบจากอีกเครื่อง ซึ่งจะทำให้สองการสอบรวมเป็นแถวเดียว)
     stored.forEach(rec => {
       const nameParts = (rec.name || '').split(' ');
       const fn = nameParts[0] || rec.name || '';
@@ -2559,7 +2561,7 @@ function getStoredRows() {
         const outcome = rec[`${code}_outcome`];
         if (score == null) return;          // ชุดนี้ยังไม่ได้สอบ
         rows.push({
-          id:       `stored_${candKey(rec)}_${code}_${rec.attempt||1}`,
+          id:       `stored_${candKey(rec)}_${code}_${rec.sitting || rec.attempt || 1}`,
           fn, ln,
           candidate_key: candKey(rec),
           test:     code,
