@@ -603,3 +603,41 @@ def test_an_admin_holding_the_key_can_still_grade_locally(open_exam):
     page = open_exam()
     _setup(page)
     assert page.evaluate("() => canGradeLocally('TESTSET')") is True
+
+
+def test_the_fingerprint_ignores_whether_this_browser_holds_the_answers(open_exam):
+    """ผู้ดูแลที่ล็อกอินอยู่จะมีคลังฉบับมีเฉลย ผู้สมัครมีฉบับไม่มีเฉลย
+    ทั้งสองต้องได้ลายนิ้วมือเดียวกัน ไม่งั้นผู้ดูแลจะส่งข้อสอบไม่ได้เลย (stale_bank)
+    """
+    page = open_exam()
+    _setup(page)   # BANK มีเฉลย (p) อยู่
+    with_answers = page.evaluate("() => questionSetFingerprint('TESTSET')")
+
+    without_answers = page.evaluate("""async () => {
+      // คลังแบบที่เผยแพร่จริง: ตัด p และคำอธิบายออก
+      ALL_QUESTIONS.TESTSET = ALL_QUESTIONS.TESTSET.map(q => {
+        const { why, exp, ...rest } = q;
+        return { ...rest, opts: q.opts.map(o => ({ t: o.t })) };
+      });
+      return await questionSetFingerprint('TESTSET');
+    }""")
+    assert with_answers == without_answers, "ลายนิ้วมือเปลี่ยนตามว่ามีเฉลยอยู่ในเครื่องหรือไม่"
+
+
+def test_the_fingerprint_still_changes_when_the_questions_change(open_exam):
+    """แต่ต้องยังจับได้เมื่อตัวข้อสอบเปลี่ยนจริง ไม่งั้นด่านนี้ไร้ความหมาย"""
+    page = open_exam()
+    _setup(page)
+    before = page.evaluate("() => questionSetFingerprint('TESTSET')")
+
+    edited = page.evaluate("""async () => {
+      ALL_QUESTIONS.TESTSET[0].q = 'คำถามที่ถูกแก้';
+      return await questionSetFingerprint('TESTSET');
+    }""")
+    assert edited != before
+
+    reordered = page.evaluate("""async () => {
+      ALL_QUESTIONS.TESTSET[0].opts = [ALL_QUESTIONS.TESTSET[0].opts[1], ALL_QUESTIONS.TESTSET[0].opts[0]];
+      return await questionSetFingerprint('TESTSET');
+    }""")
+    assert reordered != edited, "สลับลำดับตัวเลือกแล้วลายนิ้วมือไม่เปลี่ยน"

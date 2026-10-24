@@ -5998,6 +5998,26 @@ function _canonicalJSON(value) {
   return JSON.stringify(value === undefined ? null : value);
 }
 
+// The questions as published, with everything that reveals an answer taken out
+// — the same fields splitBank() treats as secret.
+//
+// The fingerprint below has to identify the question set itself, not whether
+// this particular browser also happens to hold the key. An administrator who
+// is signed in has the full bank loaded, scores and all, so hashing whatever
+// ALL_QUESTIONS holds made their submissions hash to something the endpoint
+// had never published, and every one of them was refused as stale.
+function publicShapeOfQuestions(qs) {
+  return (qs || []).map(q => {
+    const out = {};
+    for (const [field, value] of Object.entries(q)) {
+      if (field === 'exp' || field === 'why') continue;
+      if (field === 'opts') { out.opts = (value || []).map(o => ({ t: o.t })); continue; }
+      out[field] = value;
+    }
+    return out;
+  });
+}
+
 // Which version of the questions these answers were given against. Mirrors
 // testFingerprint() in server-scoring/src/bank.mjs, so the endpoint can tell
 // that the candidate answered the set it is about to score them against, and
@@ -6008,7 +6028,7 @@ async function questionSetFingerprint(code) {
   // problem it is, rather than failing as "could not prepare the answers".
   if (!(window.crypto && crypto.subtle))
     throw new Error('ต้องเปิดหน้านี้ผ่าน https เท่านั้น (ระบบตรวจคะแนนต้องใช้)');
-  const text   = _canonicalJSON(ALL_QUESTIONS[code] || []);
+  const text   = _canonicalJSON(publicShapeOfQuestions(ALL_QUESTIONS[code]));
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
   return [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
 }
