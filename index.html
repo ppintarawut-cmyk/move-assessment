@@ -6161,6 +6161,24 @@ async function cloudPushOnComplete(){
 // once; deduped server-side is not needed because we clear on success).
 async function cloudFlushPending(){
   if (!cloudEnabled()) return;
+  // With scoring on the endpoint this queue is both unusable and untrustworthy.
+  // It holds scores this page worked out for itself before the move, and the
+  // Firestore rules now refuse browser writes to exam_records outright — which
+  // is the whole point of the move. Replaying it would fail on every page load
+  // and every admin sign-in, forever, and would be writing exactly the thing
+  // that is no longer allowed to be believed.
+  //
+  // Left in place rather than cleared: it is the candidate's data, and deleting
+  // it is not this function's call to make.
+  if (serverScoringEnabled()) {
+    try {
+      const stale = JSON.parse(localStorage.getItem('hma_cloud_pending') || '[]');
+      if (Array.isArray(stale) && stale.length)
+        console.info('hma_cloud_pending holds', stale.length,
+          'result(s) from before scoring moved to the endpoint — left in place, not replayed');
+    } catch(e){}
+    return;
+  }
   let q; try { q = JSON.parse(localStorage.getItem('hma_cloud_pending') || '[]'); } catch(e){ return; }
   if (!Array.isArray(q) || !q.length) return;
   const stamp = firebase.firestore.FieldValue.serverTimestamp();

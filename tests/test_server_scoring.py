@@ -641,3 +641,47 @@ def test_the_fingerprint_still_changes_when_the_questions_change(open_exam):
       return await questionSetFingerprint('TESTSET');
     }""")
     assert reordered != edited, "สลับลำดับตัวเลือกแล้วลายนิ้วมือไม่เปลี่ยน"
+
+
+def test_the_old_result_queue_is_not_replayed_once_the_server_scores(open_exam):
+    """คิวเก่าเก็บคะแนนที่เบราว์เซอร์คิดเอง และกฎใหม่ห้ามเบราว์เซอร์เขียนผลสอบแล้ว
+    ถ้ายัง replay จะล้มเหลวทุกครั้งที่เปิดหน้าเว็บไปตลอด และเป็นการพยายามเขียน
+    สิ่งที่ระบบตั้งใจไม่ให้เชื่อ
+    """
+    page = open_exam()
+    page.evaluate(ADMIN_SETUP)
+    page.evaluate("""() => {
+      window.__writes = [];
+      window.db = { collection: (c) => ({
+        add: async (d) => { window.__writes.push([c, d]); },
+        doc: () => ({ set: async () => {} }),
+      }) };
+      localStorage.setItem('hma_cloud_pending', JSON.stringify([
+        { rec: { candidate_key:'old@example.com', IQ_score: 99 }, at: 1 },
+      ]));
+    }""")
+    page.evaluate("() => cloudFlushPending()")
+    assert page.evaluate("() => window.__writes.length") == 0, "ยัง replay คิวเก่าอยู่"
+    # ไม่ลบข้อมูลของผู้สมัครทิ้งเอง แค่ไม่ส่ง
+    assert page.evaluate(
+        "() => JSON.parse(localStorage.getItem('hma_cloud_pending')).length") == 1
+
+
+def test_the_old_result_queue_still_works_while_scoring_is_local(open_exam):
+    """ยังไม่เปิดสวิตช์ → พฤติกรรมเดิมต้องไม่เปลี่ยน"""
+    page = open_exam()
+    page.evaluate(ADMIN_SETUP)
+    page.evaluate("""() => {
+      window.SCORING_ENDPOINT = '';
+      window.__writes = [];
+      window.db = { collection: (c) => ({
+        add: async (d) => { window.__writes.push([c, d]); },
+        doc: () => ({ set: async () => {} }),
+      }) };
+      localStorage.setItem('hma_cloud_pending', JSON.stringify([
+        { rec: { candidate_key:'old@example.com', IQ_score: 99 }, at: 1 },
+      ]));
+    }""")
+    page.evaluate("() => cloudFlushPending()")
+    page.wait_for_function("() => window.__writes.length > 0")
+    assert page.evaluate("() => window.__writes[0][0]") == "exam_records"
