@@ -765,6 +765,33 @@ def test_landing_registration_label_follows_the_language_toggle(open_exam):
     assert page.locator(label).inner_text() == "ลงทะเบียน"
 
 
+def test_registration_button_uses_the_brand_red_with_white_text(open_exam):
+    page = open_exam()
+    style = page.evaluate("""() => {
+        const b = document.getElementById('landing-register-btn');
+        const cs = getComputedStyle(b);
+        return { bg: cs.backgroundImage + cs.backgroundColor, color: cs.color };
+    }""")
+    assert "rgb(255, 255, 255)" == style["color"], "ตัวอักษรต้องเป็นสีขาว"
+    # แดง Hino — #c8102e คือสีกลางของไล่เฉดที่ใช้กับปุ่มหลักทุกปุ่มในระบบ
+    assert "200, 16, 46" in style["bg"], "พื้นปุ่มต้องเป็นแดงแบรนด์"
+
+
+def test_registration_button_stays_tappable_on_every_screen_size(open_exam):
+    # 48px คือขนาดเป้ากดขั้นต่ำที่ใช้กันทั่วไปสำหรับนิ้ว ปุ่มนี้ต้องผ่านทุกจอ
+    # ตั้งแต่มือถือแคบสุดจนถึงจอคอม และต้องไม่ดันหน้าให้เลื่อนแนวนอน
+    page = open_exam()
+    for width, height in [(320, 568), (360, 800), (390, 844),
+                          (768, 1024), (834, 1194), (1024, 768), (1920, 1080)]:
+        page.set_viewport_size({"width": width, "height": height})
+        box = page.locator("#landing-register-btn").bounding_box()
+        assert box["height"] >= 48, f"ปุ่มเตี้ยเกินไปที่ {width}x{height}"
+        assert box["width"] >= 240, f"ปุ่มแคบเกินไปที่ {width}x{height}"
+        assert page.evaluate(
+            "() => document.documentElement.scrollWidth <= window.innerWidth"), \
+            f"หน้าเลื่อนแนวนอนที่ {width}x{height}"
+
+
 def test_admin_entrance_sits_small_in_the_top_right_corner(open_exam):
     page = open_exam()
     btn = page.locator("#landing-admin-btn")
