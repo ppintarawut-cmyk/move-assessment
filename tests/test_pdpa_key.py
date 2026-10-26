@@ -868,3 +868,127 @@ def test_result_modal_does_not_push_the_page_sideways(open_exam):
     _open_indiv_result(page)
     assert page.evaluate(
         "() => document.documentElement.scrollWidth <= window.innerWidth")
+
+
+# ── แดชบอร์ดคะแนน: สรุปจบในหน้าเดียว ──
+#
+# ซ้ายคือภาพรวมที่ต้องเห็นตลอดเวลาขณะอ่านรายละเอียด จึงต้องปักอยู่กับที่
+# ขวาคือรายละเอียดที่ยาวตามจำนวนชุดสอบ จึงต้องเลื่อนได้
+
+
+def _dash_snapshot(english_passing=50):
+    """ผู้สมัครที่ทำครบ 8 ชุด โดยชุด ENGLISH ตั้งเกณฑ์ผ่านไว้ต่างจากชุดอื่นได้"""
+    codes = [("IQ", 40), ("EQ", 33), ("ENGLISH", 27), ("AQ", 20),
+             ("LEADER", 20), ("EXCEL", 22), ("PM", 13), ("PERS", 47)]
+    mark = lambda c: english_passing if c == "ENGLISH" else 70
+    return {
+        "candidate_key": "hma@fmail.com", "name": "HMA Test", "pos": "HR", "exp": 2,
+        "datetime": "11/7/2569 18:57:21",
+        "sessions": [{
+            "code": c, "name": c, "nameTH": c, "passing": mark(c), "mins": 20,
+            "score": s, "outcome": "P" if s >= mark(c) else "NP",
+            "raw": s, "maxP": 100, "sections": {"ส่วนที่ 1": {"got": s, "max": 100}},
+            "percentile": None, "remainSecs": None, "leaves": 0,
+        } for c, s in codes],
+    }
+
+
+def _open_dash(open_exam, width=1440, height=900, english_passing=50):
+    page = open_exam(result_snapshots=[_dash_snapshot(english_passing)])
+    page.set_viewport_size({"width": width, "height": height})
+    page.evaluate("""() => {
+        if (!TESTS.some(t => t.code === 'PERS'))
+            TESTS.push({ code:'PERS', name:'PERS', nameTH:'บุคลิกภาพ', passing:70, mins:20 });
+        adminOpenScoreDash('hma@fmail.com');
+    }""")
+    return page
+
+
+def test_result_dashboard_splits_into_two_columns_on_a_wide_screen(open_exam):
+    page = _open_dash(open_exam, 1440, 900)
+    side_by_side = page.evaluate("""() => {
+        const l = document.querySelector('.onepage-left').getBoundingClientRect();
+        const r = document.querySelector('.onepage-right').getBoundingClientRect();
+        return l.right <= r.left + 1 && Math.abs(l.top - r.top) < 2;
+    }""")
+    assert side_by_side, "ฝั่งซ้ายกับฝั่งขวาต้องอยู่เคียงกัน"
+
+
+def test_result_dashboard_keeps_the_overview_on_the_left(open_exam):
+    page = _open_dash(open_exam)
+    left  = page.evaluate("() => [...document.querySelector('.onepage-left').children].map(e => e.id)")
+    right = page.evaluate("() => [...document.querySelector('.onepage-right').children].map(e => e.id)")
+    assert left == ["r-header-card", "r-radar-card"]
+    assert right == ["r-bars-card", "r-breakdown-card", "r-verdict", "r-skill-card"]
+
+
+def test_result_dashboard_left_column_stays_put_while_the_right_scrolls(open_exam):
+    page = _open_dash(open_exam, 1440, 900)
+    pos = lambda: page.evaluate("""() => ({
+        l: Math.round(document.querySelector('.onepage-left').getBoundingClientRect().top),
+        r: Math.round(document.querySelector('.onepage-right').getBoundingClientRect().top),
+    })""")
+    page.evaluate("() => window.scrollTo(0, 500)")
+    a = pos()
+    page.evaluate("() => window.scrollTo(0, 1500)")
+    b = pos()
+    assert a["l"] == b["l"], "ฝั่งซ้ายต้องปักนิ่ง ไม่เลื่อนตามหน้า"
+    assert b["r"] < a["r"] - 500, "ฝั่งขวาต้องเลื่อนตามหน้า"
+
+
+def test_result_dashboard_stacks_into_one_column_on_a_phone(open_exam):
+    # จอแคบวางสองคอลัมน์ไม่ไหว และการปักซ้ายจะกินจอจนรายละเอียดแทบไม่เหลือที่
+    page = _open_dash(open_exam, 390, 844)
+    stacked = page.evaluate("""() => {
+        const l = document.querySelector('.onepage-left').getBoundingClientRect();
+        const r = document.querySelector('.onepage-right').getBoundingClientRect();
+        return r.top >= l.bottom - 1;
+    }""")
+    assert stacked, "จอแคบต้องเรียงต่อกันลงมา"
+    assert page.evaluate(
+        "() => getComputedStyle(document.querySelector('.onepage-left')).position") == "static"
+
+
+def test_score_bars_mark_each_tests_own_pass_threshold(open_exam):
+    # ตอนนี้ทุกชุดใช้ 70 เท่ากัน เทสต์จึงตั้ง ENGLISH ไว้ที่ 50 เพื่อพิสูจน์ว่า
+    # เส้นอ่านจากค่าของชุดนั้นจริง ไม่ได้ตรึงไว้ที่ 70
+    page = _open_dash(open_exam, english_passing=50)
+    marks = page.evaluate("""() => [...document.querySelectorAll('#r-bars .bar-score-row')].map(row => ({
+        code: row.querySelector('.bar-score-label').textContent.trim(),
+        left: row.querySelector('.bar-score-mark').style.left,
+    }))""")
+    assert len(marks) == 8, "ต้องมีเส้นเกณฑ์ครบทุกชุดสอบ"
+    by_code = {m["code"]: m["left"] for m in marks}
+    assert by_code["ENGLISH"] == "50%"
+    assert by_code["IQ"] == "70%" and by_code["PM"] == "70%"
+
+
+def test_score_bar_note_names_the_figure_only_while_every_test_shares_one(open_exam):
+    page = _open_dash(open_exam, english_passing=70)
+    assert "70 คะแนน" in page.inner_text("#r-bars-note")
+    page = _open_dash(open_exam, english_passing=50)
+    note = page.inner_text("#r-bars-note")
+    assert "50" in note and "70" in note, "เกณฑ์ต่างกันต้องบอกเป็นช่วง ไม่ใช่เลขเดียว"
+
+
+def test_score_bar_colour_follows_the_tests_own_threshold(open_exam):
+    # ENGLISH ได้ 27 คะแนน — ไม่ผ่านทั้งเกณฑ์ 50 และ 70 แต่ถ้าเกณฑ์เป็น 20
+    # ต้องขึ้นเขียว ไม่ใช่แดงเพราะเทียบกับ 70 ที่ตรึงไว้
+    page = _open_dash(open_exam, english_passing=20)
+    fill = page.evaluate("""() => {
+        const row = [...document.querySelectorAll('#r-bars .bar-score-row')]
+            .find(r => r.querySelector('.bar-score-label').textContent.trim() === 'ENGLISH');
+        return row.querySelector('.bar-score-fill').style.background;
+    }""")
+    assert "teal" in fill, "คะแนนเกินเกณฑ์ของชุดนั้นต้องไม่ขึ้นสีไม่ผ่าน"
+
+
+def test_result_dashboard_never_scrolls_sideways(open_exam):
+    page = _open_dash(open_exam, 1440, 900)
+    for width, height in [(1920, 1080), (1366, 768), (1024, 768),
+                          (768, 1024), (390, 844), (320, 568)]:
+        page.set_viewport_size({"width": width, "height": height})
+        page.wait_for_timeout(150)   # รอให้จัดเรียงเสร็จก่อนวัด
+        assert page.evaluate(
+            "() => document.documentElement.scrollWidth <= window.innerWidth"), \
+            f"หน้าเลื่อนแนวนอนที่ {width}x{height}"
