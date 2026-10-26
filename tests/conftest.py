@@ -49,6 +49,32 @@ def browser():
         b.close()
 
 
+# หน้าแดชบอร์ดคะแนนเรียก Chart.js จาก CDN ถ้าเครื่องที่รันเทสต์ออกเน็ตไม่ได้
+# renderResults() จะพังที่ "Chart is not defined" แล้วเทสต์ที่ไม่เกี่ยวกับกราฟเลย
+# ก็พังตามไปด้วย จึงจ่ายตัวแทนขนาดเล็กให้แทน เทสต์ในไฟล์นี้ตรวจ "โครงหน้า"
+# ไม่ได้ตรวจว่ากราฟวาดออกมาหน้าตาถูกไหม — ส่วนนั้นต้องดูด้วยตาบนของจริง
+_CHART_STUB = """window.Chart = function (ctx) {
+  const c = ctx.canvas;
+  const fit = function () {
+    const e = c.parentElement;
+    if (!e) return;
+    const cs = getComputedStyle(e);
+    const w = e.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    c.style.width = w + 'px'; c.style.height = w + 'px'; c.width = w; c.height = w;
+  };
+  fit();
+  window.addEventListener('resize', fit);
+  this.destroy = function () { window.removeEventListener('resize', fit); };
+};"""
+
+
+def _stub_cdn(route):
+    """Chart.js ได้ตัวแทน ส่วนไลบรารีอื่นได้ไฟล์ว่าง — หน้าเว็บรับมือกับการที่
+    ไลบรารี PDF/Excel ไม่มาอยู่แล้ว (ขึ้น toast บอก) จึงไม่ต้องปลอมให้"""
+    body = _CHART_STUB if "chart.umd.js" in route.request.url else ""
+    route.fulfill(content_type="application/javascript", body=body)
+
+
 @pytest.fixture
 def open_exam(browser, server):
     """เปิด index.html (ระบบสอบ) โดย seed localStorage ก่อนสคริปต์ของหน้าจะรัน"""
@@ -56,6 +82,7 @@ def open_exam(browser, server):
 
     def _open(exam_records=None, result_snapshots=None):
         ctx = browser.new_context()
+        ctx.route("**/cdnjs.cloudflare.com/**", _stub_cdn)
         contexts.append(ctx)
         for key, value in (("hma_exam_records", exam_records),
                            ("hma_result_snapshots", result_snapshots)):
