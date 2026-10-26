@@ -619,87 +619,11 @@ def test_export_data_identity_column_holds_the_candidate_key(open_exam):
     assert "1234567890123" not in values
 
 
-# ── Task 5: แผงยืนยันตัวตนบนหน้าแรก ──
+# ── ผู้รับผิดชอบระบบบนหน้านโยบาย ──
 #
-# ผู้สมัครไม่กล้ากดลิงก์เพราะระบบพิสูจน์ตัวเองไม่ได้ แผงนี้ต้องอยู่บนหน้าแรก
-# ก่อนกรอกข้อมูลใด ๆ และต้องพาไปหา "คนจริง" ที่โทรถามได้
-
-
-def test_trust_panel_is_visible_before_any_form(open_exam):
-    page = open_exam()
-    assert page.locator("#trust-panel").is_visible()
-    panel = page.inner_text("#trust-panel")
-    assert "Hino Motors Asia" in panel
-    assert "privacy.html" in page.inner_html("#trust-panel")
-
-
-def test_trust_panel_warns_while_the_hr_contact_is_a_placeholder(open_exam):
-    page = open_exam()
-    # ตั้งค่า placeholder เองแทนที่จะพึ่งค่าที่ ship มา — ไม่งั้นเทสต์ตัวนี้จะแดง
-    # ทันทีที่ Task 8 Step 1 ใส่ข้อมูล HR จริง
-    page.evaluate("() => { HR_CONTACT.name = 'ยังไม่ระบุ'; renderTrustPanel(); }")
-    assert page.locator("#hr-contact-warning").is_visible()
-
-
-def test_warning_disappears_once_real_contact_details_are_set(open_exam):
-    page = open_exam()
-    page.evaluate("""() => {
-        HR_CONTACT.name  = 'ภัทราวุธ ย.';
-        HR_CONTACT.email = 'pattarawut_y@hinomotorsasia.com';
-        renderTrustPanel();
-    }""")
-    assert page.locator("#hr-contact-warning").count() == 0
-    assert "pattarawut_y@hinomotorsasia.com" in page.inner_text("#trust-panel")
-
-
-def test_trust_panel_escapes_contact_values(open_exam):
-    # HR_CONTACT ถูกกรอกโดยคน ไม่ใช่ผู้สมัคร แต่ renderTrustPanel สร้าง HTML ด้วย
-    # string template — ถ้าไม่ escape ชื่อที่มี < > จะพัง markup
-    page = open_exam()
-    page.evaluate("""() => {
-        HR_CONTACT.name  = '<img src=x onerror="window.__trust_xss=1">';
-        HR_CONTACT.email = 'hr@hinomotorsasia.com';
-        renderTrustPanel();
-    }""")
-    assert page.evaluate("() => window.__trust_xss") is None
-    assert "<img" in page.inner_text("#trust-panel")
-
-
-def test_privacy_page_shares_the_same_contact_details(open_exam, server):
-    # แผงบนหน้าแรกกับหน้านโยบายต้องบอกผู้รับผิดชอบคนเดียวกัน ไม่งั้นผู้สมัคร
-    # ที่โทรตามเบอร์ในนโยบายจะไปไม่ถึงคนเดียวกับที่หน้าแรกอ้าง
-    index_contact = open_exam().evaluate(
-        "() => [HR_CONTACT.name, HR_CONTACT.email]")
-    page = open_exam()
-    page.goto(f"{server}/privacy.html")
-    privacy_contact = page.evaluate(
-        "() => [HR_CONTACT.name, HR_CONTACT.email]")
-    assert index_contact == privacy_contact
-
-
-def test_trust_panel_follows_the_language_toggle(open_exam):
-    # แผงนี้สร้างด้วย JS ไม่ใช่ data-i18n — applyLang() จึงไม่แตะให้เอง
-    # ถ้าไม่ hook ไว้ ผู้สมัครที่กด EN จะเห็นแผงยืนยันตัวตนค้างเป็นภาษาไทย
-    page = open_exam()
-    assert "แบบทดสอบนี้เป็นของ" in page.inner_text("#trust-panel")
-    page.click("#lang-fab")
-    assert "This assessment belongs to" in page.inner_text("#trust-panel")
-    page.click("#lang-fab")
-    assert "แบบทดสอบนี้เป็นของ" in page.inner_text("#trust-panel")
-
-
-# ── code-review fixes 1-3: the "don't ship with placeholder contacts" gate ──
-
-
-def test_blank_contact_values_count_as_placeholders(open_exam):
-    # เดิมเช็คแค่คำขึ้นต้น 'ยังไม่ระบุ' — ลบค่าทิ้งเป็นค่าว่างแล้ว guard เงียบ
-    # แล้วหน้าแรกขึ้นให้ผู้สมัครโดยไม่มีชื่อผู้รับผิดชอบเลย
-    page = open_exam()
-    page.evaluate("""() => {
-        HR_CONTACT.name = ''; HR_CONTACT.email = '   ';
-        renderTrustPanel();
-    }""")
-    assert page.locator("#hr-contact-warning").is_visible()
+# หน้าแรกไม่แสดงผู้รับผิดชอบแล้ว (ดูหัวข้อ "หน้าแรก" ท้ายไฟล์) แต่หน้านโยบาย
+# ยังต้องพาผู้สมัครไปหา "คนจริง" ที่ติดต่อได้ และยังต้องกันการ deploy
+# ทั้งที่ยังไม่ได้ใส่ข้อมูลจริง
 
 
 def test_privacy_page_warns_while_the_hr_contact_is_a_placeholder(open_exam, server):
@@ -720,11 +644,9 @@ def test_privacy_page_warns_when_a_contact_value_is_blank(open_exam, server):
 
 
 def test_shipped_contact_details_are_real(open_exam, server):
-    # ค่าที่ ship จริงต้องผ่าน guard ทั้งสองหน้า — เทสต์นี้คือสิ่งที่กันไม่ให้
-    # deploy ทั้งที่ยังไม่ได้ใส่ข้อมูล
+    # ค่าที่ ship จริงต้องผ่าน guard — เทสต์นี้คือสิ่งที่กันไม่ให้ deploy
+    # ทั้งที่ยังไม่ได้ใส่ข้อมูล
     page = open_exam()
-    assert page.evaluate("() => hrContactIsPlaceholder()") is False
-    assert page.locator("#hr-contact-warning").count() == 0
     page.goto(f"{server}/privacy.html")
     assert page.evaluate("() => hrContactIsPlaceholder()") is False
     assert page.locator("#hr-contact-warning").count() == 0
@@ -813,3 +735,57 @@ def test_pending_reg_is_declared_before_its_users(open_exam):
     decl = src.index("let pendingReg")
     assert decl < src.index("function nav(id)"), \
         "let pendingReg ต้องประกาศก่อน nav() ไม่งั้น init ที่เพิ่มเข้ามาทีหลังจะเจอ TDZ"
+
+
+# ── หน้าแรก: เหลือทางเลือกเดียวสำหรับผู้สมัคร ──
+#
+# ลิงก์นี้ส่งให้ผู้สมัครเท่านั้น หน้าแรกจึงควรอ่านได้เป็นการกระทำเดียว
+# ทางเข้าผู้ดูแลยังต้องกดได้ แต่ไม่ควรแย่งความสนใจจนผู้สมัครกดผิด
+
+
+def test_landing_offers_registration_as_its_only_card(open_exam):
+    page = open_exam()
+    assert page.locator("#p-landing [onclick*='p-register']").count() == 1
+    assert page.locator("#p-landing [data-i18n='l_candidate']").inner_text() == "ลงทะเบียน"
+
+
+def test_landing_registration_card_opens_the_registration_page(open_exam):
+    page = open_exam()
+    page.click("#p-landing [data-i18n='l_candidate']")
+    assert page.locator(".page.active").get_attribute("id") == "p-register"
+
+
+def test_landing_registration_label_follows_the_language_toggle(open_exam):
+    page = open_exam()
+    label = "#p-landing [data-i18n='l_candidate']"
+    assert page.locator(label).inner_text() == "ลงทะเบียน"
+    page.click("#lang-fab")
+    assert page.locator(label).inner_text() == "Register"
+    page.click("#lang-fab")
+    assert page.locator(label).inner_text() == "ลงทะเบียน"
+
+
+def test_admin_entrance_sits_small_in_the_top_right_corner(open_exam):
+    page = open_exam()
+    btn = page.locator("#landing-admin-btn")
+    assert btn.is_visible()
+    box, view = btn.bounding_box(), page.viewport_size
+    assert box["y"] < view["height"] / 4,  "ต้องอยู่แถบบนของหน้า"
+    assert box["x"] > view["width"] / 2,   "ต้องอยู่ครึ่งขวาของหน้า"
+    # เล็กกว่าการ์ดลงทะเบียนชัดเจน ไม่ใช่การ์ดคู่กันเหมือนเดิม
+    card = page.locator("#p-landing [onclick*='p-register']").bounding_box()
+    assert box["width"] * box["height"] < card["width"] * card["height"] / 4
+
+
+def test_admin_entrance_still_opens_the_login_page(open_exam):
+    page = open_exam()
+    page.click("#landing-admin-btn")
+    assert page.locator(".page.active").get_attribute("id") == "p-login"
+
+
+def test_landing_no_longer_carries_the_ownership_panel(open_exam):
+    # ย้ายข้อความเจ้าของ/PDPA ออกจากหน้าแรกตามที่ขอ — ตัวข้อความยินยอมยังอยู่
+    # ที่หน้าลงทะเบียน และรายละเอียดเต็มยังอยู่ที่ privacy.html
+    page = open_exam()
+    assert page.locator("#trust-panel").count() == 0
+    assert "Hino Motors Asia Ltd." not in page.inner_text("#p-landing")
