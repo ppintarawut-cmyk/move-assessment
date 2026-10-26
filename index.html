@@ -410,6 +410,11 @@ th.sortable{cursor:pointer;user-select:none}
 th.sortable:hover{color:var(--teal)}
 /* comparison dashboard */
 .modal-xl{max-width:920px !important}
+/* หน้าต่างผลรายคนสูงขึ้นตามจำนวนชุดสอบที่ผู้สมัครทำ — 8 ชุดไม่เคยพอใน 420px
+   จึงให้สูงตามจอจริง และเรียงการ์ดสองคอลัมน์ให้ครบจอโดยไม่ต้องเลื่อน */
+.modal-results{max-width:1280px !important}
+.modal-results .modal-body{max-height:calc(100vh - 170px)}
+.ipdf-tests{display:grid;grid-template-columns:repeat(auto-fit,minmax(286px,1fr));gap:10px}
 .cmp-table{width:100%;border-collapse:collapse;font-size:12.5px}
 .cmp-table th,.cmp-table td{padding:9px 10px;border-bottom:1px solid var(--gray-100);text-align:center}
 .cmp-table th:first-child,.cmp-table td:first-child{text-align:left;font-weight:500;color:var(--gray-500);white-space:nowrap}
@@ -3528,7 +3533,7 @@ document.querySelector('#p-register .alert-info').style.display='flex';
 
 <!-- Individual PDF modal -->
 <div class="overlay" id="mod-indiv-pdf">
-  <div class="modal">
+  <div class="modal modal-results">
     <div class="modal-head"><span style="font-weight:600" id="ipdf-title">ผลการทดสอบ</span><button onclick="closeModal('mod-indiv-pdf')" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--gray-400)">✕</button></div>
     <div class="modal-body" id="ipdf-content"></div>
     <div class="modal-foot">
@@ -5366,16 +5371,16 @@ function showIndivPdf(encodedKey) {
         <p style="font-size:12px;color:var(--gray-400)">${esc(candKey(rows[0]))} · ${esc(rows[0].pos)}</p>
       </div>
     </div>
-    <div class="grid3" style="margin-bottom:16px">
+    <div class="grid3" style="margin-bottom:16px;max-width:560px">
       <div class="metric"><div class="metric-val">${total}</div><div class="metric-lbl">ชุดสอบ</div></div>
       <div class="metric"><div class="metric-val" style="color:var(--teal)">${passed}</div><div class="metric-lbl">ผ่าน</div></div>
       <div class="metric"><div class="metric-val" style="color:#185fa5">${avgScore}</div><div class="metric-lbl">เฉลี่ย</div></div>
     </div>
-    ${rows.map(r => {
+    <div class="ipdf-tests">${rows.map(r => {
       const c = r.out==='P' ? 'var(--teal)' : 'var(--red)';
       const pill = r.out==='P' ? '<span class="badge b-pass">✓ ผ่าน</span>' : '<span class="badge b-fail">✗ ไม่ผ่าน</span>';
       const passVal = (r.passing != null) ? r.passing : (((typeof TESTS!=='undefined' && TESTS.find(t=>t.code===r.test)) || {}).passing);
-      return `<div style="border:1px solid var(--gray-200);border-radius:var(--radius);padding:12px;margin-bottom:8px">
+      return `<div style="border:1px solid var(--gray-200);border-radius:var(--radius);padding:12px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
           <span style="font-weight:600;font-size:13px">${esc(r.test)}</span>${pill}
         </div>
@@ -5393,7 +5398,7 @@ function showIndivPdf(encodedKey) {
           <span style="color:var(--gray-400)">ออกจากหน้าสอบระหว่างทำ:</span> ${leaveBadgeHtml(r.leaves)}
         </div>
       </div>`;
-    }).join('')}
+    }).join('')}</div>
     <p style="font-size:11px;color:var(--gray-400);margin-top:8px;text-align:right">สร้างเมื่อ: ${new Date().toLocaleString('th-TH')}</p>
   `;
   openModal('mod-indiv-pdf');

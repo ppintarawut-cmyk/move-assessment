@@ -789,3 +789,55 @@ def test_landing_no_longer_carries_the_ownership_panel(open_exam):
     page = open_exam()
     assert page.locator("#trust-panel").count() == 0
     assert "Hino Motors Asia Ltd." not in page.inner_text("#p-landing")
+
+
+# ── หน้าต่างผลรายคน: เห็นครบโดยไม่ต้องเลื่อน ──
+
+
+def _eight_set_record():
+    rec = exam_record(name="HMA Test", candidate_key="hma@fmail.com", email="hma@fmail.com")
+    for code in ["IQ", "EQ", "ENGLISH", "AQ", "LEADER", "EXCEL", "PM", "PERS"]:
+        rec[f"{code}_score"]   = 40
+        rec[f"{code}_outcome"] = "NP"
+        rec[f"{code}_time"]    = "0:18"
+    return rec
+
+
+def _open_indiv_result(page):
+    # PERS ไม่ได้อยู่ในรายการมาตรฐานของหน้า — ของจริงมันมาจากค่าที่ตั้งเพิ่ม
+    # ภายหลัง เทสต์จึงต้องใส่เองเพื่อจำลองผู้สมัครที่ทำครบทั้ง 8 ชุด
+    page.evaluate("""() => {
+        if (!TESTS.some(t => t.code === 'PERS'))
+            TESTS.push({ code:'PERS', name:'บุคลิกภาพ', passing:70 });
+        const r = getAllRows()[0];
+        showIndivPdf(encodeURIComponent(
+            JSON.stringify({ fn:r.fn, ln:r.ln, candKey:candKey(r) })));
+    }""")
+
+
+def test_result_modal_lists_every_test_set_the_candidate_sat(open_exam):
+    page = open_exam(exam_records=[_eight_set_record()])
+    _open_indiv_result(page)
+    assert page.locator("#ipdf-content .ipdf-tests > div").count() == 8
+
+
+def test_result_modal_fits_all_eight_sets_without_scrolling(open_exam):
+    # เดิมตัวหน้าต่างสูงตายตัว 420px และเรียงการ์ดเป็นคอลัมน์เดียว ผู้สมัคร
+    # ที่ทำครบ 8 ชุดจึงต้องเลื่อนดูเกือบทั้งหมด
+    page = open_exam(exam_records=[_eight_set_record()])
+    page.set_viewport_size({"width": 1366, "height": 768})
+    _open_indiv_result(page)
+    fits = page.evaluate("""() => {
+        const e = document.getElementById('ipdf-content');
+        return e.scrollHeight <= e.clientHeight + 1;
+    }""")
+    assert fits, "ยังต้องเลื่อนเพื่อดูชุดสอบให้ครบ"
+
+
+def test_result_modal_does_not_push_the_page_sideways(open_exam):
+    # หน้าต่างกว้างขึ้นมาก ต้องไม่ทำให้จอแคบเลื่อนแนวนอน
+    page = open_exam(exam_records=[_eight_set_record()])
+    page.set_viewport_size({"width": 390, "height": 844})
+    _open_indiv_result(page)
+    assert page.evaluate(
+        "() => document.documentElement.scrollWidth <= window.innerWidth")
