@@ -44,6 +44,7 @@
 </script>
 <style>
 :root {
+  --topbar-h: 53px;   /* แถบหัวเรื่องเป็น sticky — ฝั่งซ้ายต้องปักต่ำกว่านี้ */
   /* ── Hino Red/White/Gray theme ── */
   --teal:     #c8102e;   /* Hino Red — primary accent */
   --teal-d:   #a00c24;   /* darker red */
@@ -230,6 +231,19 @@ a{color:var(--teal);text-decoration:none}
 .brand{font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--teal);text-transform:uppercase;margin-bottom:2px}
 .topbar-title{font-size:15px;font-weight:600;color:var(--gray-900)}
 .main{max-width:680px;margin:0 auto;padding:24px 16px}
+/* ── สรุปผลแบบหน้าเดียว ──────────────────────────────────────────
+   ซ้ายคือภาพรวมที่ต้องเห็นตลอดเวลา จึงปักไว้กับที่ด้วย sticky แทนที่จะทำเป็น
+   กล่องเลื่อนของตัวเอง เพราะกล่องเลื่อนซ้อนกันจะทำให้ตอนจับภาพทำ PDF
+   (html2canvas อ่านการ์ดทีละใบ) เสี่ยงโดนตัดขอบ ส่วนขวาเลื่อนไปกับหน้า */
+.onepage{max-width:1240px;display:grid;grid-template-columns:minmax(330px,380px) minmax(0,1fr);gap:14px;align-items:start}
+.onepage-left{position:sticky;top:calc(var(--topbar-h) + 16px)}
+.onepage-right{min-width:0}
+/* จอแคบกว่านี้วางสองคอลัมน์ไม่ไหว — เรียงต่อกันลงมาและเลิกปักซ้าย
+   ไม่งั้นภาพรวมจะกินพื้นที่จอจนรายละเอียดแทบไม่เหลือที่ */
+@media (max-width:900px){
+  .onepage{grid-template-columns:minmax(0,1fr)}
+  .onepage-left{position:static}
+}
 .main-wide{max-width:900px;margin:0 auto;padding:24px 16px}
 
 /* ── Cards ── */
@@ -450,7 +464,11 @@ th.sortable:hover{color:var(--teal)}
 /* ── Bar chart row ── */
 .bar-score-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .bar-score-label{font-size:11px;color:var(--gray-500);width:52px;text-align:right;flex-shrink:0}
-.bar-score-track{flex:1;height:9px;background:var(--gray-100);border-radius:4px;overflow:hidden}
+.bar-score-track{position:relative;flex:1;height:9px;background:var(--gray-100);border-radius:4px}
+/* เกณฑ์ผ่านอ่านจากค่าของชุดสอบนั้น ๆ ไม่ได้ตรึงไว้ที่ 70 — ถ้าวันหน้าปรับเกณฑ์
+   ชุดใดชุดหนึ่ง เส้นนี้จะขยับตามเอง */
+.bar-score-mark{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:var(--gray-700);border-radius:1px;pointer-events:none}
+.bar-score-mark::after{content:'';position:absolute;inset:-4px -5px;pointer-events:auto}
 .bar-score-fill{height:100%;border-radius:4px;transition:width .8s ease}
 .bar-score-num{font-size:12px;font-weight:600;width:26px}
 
@@ -891,59 +909,67 @@ textarea.q-inp:focus{border-color:var(--teal)}
       <button class="btn btn-secondary btn-sm" onclick="backFromResults()">← กลับ</button>
     </div>
   </div>
-  <div class="main">
-    <div class="card" id="r-header-card" style="margin-bottom:12px">
-      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
-        <div class="ring-wrap">
-          <svg viewBox="0 0 110 110" style="width:110px;height:110px;transform:rotate(-90deg)">
-            <circle cx="55" cy="55" r="44" fill="none" stroke="var(--gray-100)" stroke-width="9"/>
-            <circle cx="55" cy="55" r="44" fill="none" stroke="var(--teal)" stroke-width="9" stroke-linecap="round" id="r-ring" stroke-dasharray="0 277"/>
-          </svg>
-          <div class="ring-inner">
-            <span style="font-size:22px;font-weight:700" id="r-pct">0%</span>
-            <span style="font-size:10px;color:var(--gray-400)">เฉลี่ย</span>
-          </div>
-        </div>
-        <div style="flex:1;min-width:160px">
-          <p style="font-size:17px;font-weight:600;margin-bottom:2px" id="r-name"></p>
-          <p style="font-size:12px;color:var(--gray-400);margin-bottom:8px" id="r-pos"></p>
-          <!-- Percentile bar (hidden until data available) -->
-          <div id="r-percentile-bar" style="margin-bottom:12px;display:none">
-            <p style="font-size:11px;color:var(--gray-400);margin-bottom:4px">Percentile เทียบกับผู้สมัครทั้งหมด</p>
-            <div style="background:var(--gray-200);border-radius:4px;height:6px;overflow:hidden">
-              <div id="r-pct-fill" style="height:6px;border-radius:4px;background:var(--teal);width:0%;transition:width .6s ease"></div>
+  <div class="main onepage">
+    <!-- ซ้าย: ภาพรวมที่ต้องเห็นตลอดเวลาขณะอ่านรายละเอียดฝั่งขวา -->
+    <div class="onepage-left">
+      <div class="card" id="r-header-card" style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+          <div class="ring-wrap">
+            <svg viewBox="0 0 110 110" style="width:110px;height:110px;transform:rotate(-90deg)">
+              <circle cx="55" cy="55" r="44" fill="none" stroke="var(--gray-100)" stroke-width="9"/>
+              <circle cx="55" cy="55" r="44" fill="none" stroke="var(--teal)" stroke-width="9" stroke-linecap="round" id="r-ring" stroke-dasharray="0 277"/>
+            </svg>
+            <div class="ring-inner">
+              <span style="font-size:22px;font-weight:700" id="r-pct">0%</span>
+              <span style="font-size:10px;color:var(--gray-400)">เฉลี่ย</span>
             </div>
-            <p id="r-pct-label" style="font-size:11px;color:var(--teal);margin-top:3px;font-weight:600"></p>
           </div>
-          <div class="grid3" id="r-metrics"></div>
+          <div style="flex:1;min-width:160px">
+            <p style="font-size:17px;font-weight:600;margin-bottom:2px" id="r-name"></p>
+            <p style="font-size:12px;color:var(--gray-400);margin-bottom:8px" id="r-pos"></p>
+            <!-- Percentile bar (hidden until data available) -->
+            <div id="r-percentile-bar" style="margin-bottom:12px;display:none">
+              <p style="font-size:11px;color:var(--gray-400);margin-bottom:4px">Percentile เทียบกับผู้สมัครทั้งหมด</p>
+              <div style="background:var(--gray-200);border-radius:4px;height:6px;overflow:hidden">
+                <div id="r-pct-fill" style="height:6px;border-radius:4px;background:var(--teal);width:0%;transition:width .6s ease"></div>
+              </div>
+              <p id="r-pct-label" style="font-size:11px;color:var(--teal);margin-top:3px;font-weight:600"></p>
+            </div>
+          </div>
         </div>
+        <div class="grid3" id="r-metrics" style="margin-top:14px"></div>
+      </div>
+      <div class="card" id="r-radar-card" style="margin-bottom:12px">
+        <p style="font-size:13px;font-weight:600;margin-bottom:4px">แผนภาพทักษะโดยรวม</p>
+        <p style="font-size:11px;color:var(--gray-400);margin-bottom:10px">คะแนนเต็ม 100 แต่ละด้าน</p>
+        <canvas id="r-radar" height="200"></canvas>
       </div>
     </div>
-    <div class="card" id="r-bars-card" style="margin-bottom:12px">
-      <p style="font-size:13px;font-weight:600;margin-bottom:4px">คะแนนรายชุดสอบ</p>
-      <p style="font-size:11px;color:var(--gray-400);margin-bottom:14px">เกณฑ์ผ่าน 70 คะแนน</p>
-      <div id="r-bars"></div>
-    </div>
-    <div class="card" id="r-radar-card" style="margin-bottom:12px">
-      <p style="font-size:13px;font-weight:600;margin-bottom:4px">แผนภาพทักษะโดยรวม</p>
-      <p style="font-size:11px;color:var(--gray-400);margin-bottom:10px">คะแนนเต็ม 100 แต่ละด้าน</p>
-      <canvas id="r-radar" height="200"></canvas>
-    </div>
-    <div class="card" id="r-breakdown-card" style="padding:0;overflow:hidden;margin-bottom:12px">
-      <div style="padding:14px 20px;border-bottom:1px solid var(--gray-100)">
-        <p style="font-size:13px;font-weight:600">รายละเอียดผลแต่ละชุดสอบ</p>
-      </div>
-      <div id="r-breakdown"></div>
-    </div>
-    <div id="r-verdict"></div>
 
-    <!-- Skill Breakdown Card -->
-    <div class="card" style="margin-bottom:12px;padding:0;overflow:hidden" id="r-skill-card">
-      <div style="padding:12px 18px;border-bottom:1px solid var(--gray-200);background:var(--gray-50)">
-        <p style="font-size:13px;font-weight:600">📊 วิเคราะห์จุดแข็ง-จุดอ่อน</p>
-        <p style="font-size:11px;color:var(--gray-400)">ใช้สำหรับ Hiring Manager ในการตั้งคำถามสัมภาษณ์เชิงลึก</p>
+    <!-- ขวา: รายละเอียดที่ยาวได้เรื่อย ๆ ตามจำนวนชุดสอบ -->
+    <div class="onepage-right">
+      <div class="card" id="r-bars-card" style="margin-bottom:12px">
+        <p style="font-size:13px;font-weight:600;margin-bottom:4px">คะแนนรายชุดสอบ</p>
+        <p id="r-bars-note" style="font-size:11px;color:var(--gray-400);margin-bottom:14px">เส้นบนแถบคือเกณฑ์ผ่านของแต่ละชุด</p>
+        <div id="r-bars"></div>
       </div>
-      <div id="r-skill-breakdown" style="padding:14px 18px"></div>
+      <div class="card" id="r-breakdown-card" style="padding:0;overflow:hidden;margin-bottom:12px">
+        <div style="padding:14px 20px;border-bottom:1px solid var(--gray-100)">
+          <p style="font-size:13px;font-weight:600">รายละเอียดผลแต่ละชุดสอบ</p>
+        </div>
+        <div id="r-breakdown"></div>
+      </div>
+      <div id="r-verdict"></div>
+
+      <!-- Skill Breakdown Card -->
+      <!-- Skill Breakdown Card -->
+      <div class="card" style="margin-bottom:12px;padding:0;overflow:hidden" id="r-skill-card">
+        <div style="padding:12px 18px;border-bottom:1px solid var(--gray-200);background:var(--gray-50)">
+          <p style="font-size:13px;font-weight:600">📊 วิเคราะห์จุดแข็ง-จุดอ่อน</p>
+          <p style="font-size:11px;color:var(--gray-400)">ใช้สำหรับ Hiring Manager ในการตั้งคำถามสัมภาษณ์เชิงลึก</p>
+        </div>
+        <div id="r-skill-breakdown" style="padding:14px 18px"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -2348,15 +2374,30 @@ function renderResults() {
     {l:'ผลรวม',v:pass===done.length?'ผ่านทั้งหมด ✓':'ไม่ผ่านบางชุด',c:pass===done.length?'var(--teal)':'var(--red)'},
   ].map(({l,v,c})=>`<div class="metric"><div class="metric-val" style="color:${c};font-size:${typeof v==='string'?'13px':'22px'}">${v}</div><div class="metric-lbl">${l}</div></div>`).join('');
 
-  // Bar chart rows
+  // Bar chart rows. The pass mark is read per test instead of assumed to be 70
+  // for all of them: the sitting's own threshold first, the test's current one
+  // for live sessions that carry none, and only then the historical default.
+  const passMarkOf = x => x.passing ?? (x.test && x.test.passing) ?? 70;
   document.getElementById('r-bars').innerHTML = done.map(s=>{
-    const c=s.score>=70?'var(--teal)':'var(--red)';
+    const mark = Math.min(100, Math.max(0, passMarkOf(s)));
+    const c = s.score >= passMarkOf(s) ? 'var(--teal)' : 'var(--red)';
     return `<div class="bar-score-row">
       <div class="bar-score-label">${s.test.code}</div>
-      <div class="bar-score-track"><div class="bar-score-fill" style="width:${s.score}%;background:${c}"></div></div>
+      <div class="bar-score-track">
+        <div class="bar-score-fill" style="width:${s.score}%;background:${c}"></div>
+        <div class="bar-score-mark" style="left:${mark}%" title="เกณฑ์ผ่าน ${passMarkOf(s)} คะแนน"></div>
+      </div>
       <div class="bar-score-num" style="color:${c}">${s.score}</div>
     </div>`;
   }).join('');
+
+  // Name the figure while every test shares one, and stop naming it the moment
+  // they differ, rather than printing a number true for only some of the bars.
+  const marks = [...new Set(done.map(passMarkOf))];
+  const barsNote = document.getElementById('r-bars-note');
+  if (barsNote) barsNote.textContent = marks.length === 1
+    ? `เส้นบนแถบคือเกณฑ์ผ่าน ${marks[0]} คะแนน`
+    : `เส้นบนแถบคือเกณฑ์ผ่านของแต่ละชุด (${Math.min(...marks)}–${Math.max(...marks)} คะแนน)`;
 
   // Radar
   if (radarChart) radarChart.destroy();
@@ -2380,7 +2421,7 @@ function renderResults() {
 
   // Breakdown
   document.getElementById('r-breakdown').innerHTML = done.map(s=>{
-    const c=s.score>=70?'var(--teal)':'var(--red)';
+    const c = s.score >= passMarkOf(s) ? 'var(--teal)' : 'var(--red)';
     const pill=s.outcome==='P'?'<span class="badge b-pass">✓ ผ่าน</span>':'<span class="badge b-fail">✗ ไม่ผ่าน</span>';
     // From a live session use its violations; from an admin-opened snapshot use the stored count.
     const leaves = (s.leaves != null) ? s.leaves : examLeaveCount(s.violations);
@@ -2395,7 +2436,7 @@ function renderResults() {
           <div class="bar-score-track"><div class="bar-score-fill" style="width:${s.score}%;background:${c}"></div></div>
           <span style="font-size:12px;font-weight:600;color:${c}">${s.score}</span>
         </div>
-        <div style="font-size:11px;color:var(--gray-400);margin-top:3px">เกณฑ์ผ่าน ${s.test.passing} คะแนน · ใช้เวลา ~${s.test.mins} นาที${leaveNote}</div>
+        <div style="font-size:11px;color:var(--gray-400);margin-top:3px">เกณฑ์ผ่าน ${passMarkOf(s)} คะแนน · ใช้เวลา ~${s.test.mins} นาที${leaveNote}</div>
       </div>
       ${pill}
     </div>`;
@@ -5807,6 +5848,9 @@ function adminOpenScoreDash(nid){
   sessions = snap.sessions.map(s => ({
     test: (typeof TESTS !== 'undefined' && TESTS.find(t => t.code === s.code)) ||
           { code:s.code, name:s.name, nameTH:s.nameTH, passing:s.passing, mins:s.mins },
+    // เกณฑ์ ณ วันที่สอบ ไม่ใช่เกณฑ์ปัจจุบัน — ผล ผ่าน/ไม่ผ่าน ที่เก็บไว้ตัดสินด้วยค่านี้
+    // ถ้าแสดงค่าปัจจุบันแทน หน้าจะขัดกันเองเมื่อมีการปรับเกณฑ์ย้อนหลัง
+    passing: s.passing,
     status:'completed', score:s.score, outcome:s.outcome, raw:s.raw, maxP:s.maxP,
     sections:s.sections, percentile:s.percentile, remainSecs:s.remainSecs, leaves:s.leaves,
   }));
