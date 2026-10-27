@@ -1723,6 +1723,49 @@ const I18N = {
   t_prev_pdf_hint: { th:"ตรวจสอบเลย์เอาต์ก่อนดาวน์โหลดไฟล์ PDF (A4)", en:"Check the layout before downloading the A4 PDF" },
   t_dl_xlsx: { th:"⬇ ดาวน์โหลด Excel", en:"⬇ Download Excel" },
   t_dl_pdf: { th:"⬇ ดาวน์โหลด PDF", en:"⬇ Download PDF" },
+  ty_title_ok: { th:"ขอบคุณที่ทำแบบทดสอบ", en:"Thank you for completing the assessment" },
+  ty_note_ok: { th:"คุณทำแบบทดสอบครบทุกชุดเรียบร้อยแล้ว ผลการทดสอบได้ถูกส่งให้ทีม HR ของ Hino Motors Asia เพื่อพิจารณา", en:"You have completed every test. Your results have been sent to the HR team at Hino Motors Asia." },
+  ty_btn_ok: { th:"เสร็จสิ้น", en:"Done" },
+  ty_title_stuck: { th:"ยังส่งคำตอบไม่สำเร็จ", en:"Your answers have not been sent yet" },
+  ty_note_stuck: { th:"คำตอบ {n} ชุดยังส่งขึ้นระบบไม่ได้ กรุณาอย่าเพิ่งปิดหน้านี้ และตรวจสอบการเชื่อมต่ออินเทอร์เน็ต แล้วกดปุ่มด้านล่างอีกครั้ง ถ้ายังไม่สำเร็จ กรุณาแจ้งฝ่ายทรัพยากรบุคคล — คำตอบของท่านยังอยู่ในเครื่องนี้ ยังไม่หายไปไหน", en:"{n} set(s) of answers could not be sent. Please do not close this page — check your internet connection and press the button below again. If it still does not work, tell HR. Your answers are still on this device; nothing has been lost." },
+  ty_btn_retry: { th:"↻ ส่งคำตอบอีกครั้ง", en:"↻ Send again" },
+  lg_need_both: { th:"กรุณากรอก username และ password", en:"Enter a username and a password" },
+  lg_signing_in: { th:"กำลังเข้าสู่ระบบ...", en:"Signing in…" },
+  t_signin: { th:"เข้าสู่ระบบ", en:"Sign in" },
+  lg_bad_user: { th:"ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง", en:"That username or password is not right" },
+  lg_need_net: { th:"เข้าสู่ระบบแอดมินต้องเชื่อมต่ออินเทอร์เน็ต (ระบบ cloud ไม่พร้อมใช้งาน — อาจถูก ad-blocker บล็อก)", en:"Signing in as an administrator needs an internet connection (the cloud service is unavailable — an ad blocker may be stopping it)" },
+  lg_use_approved: { th:"กรุณาเข้าสู่ระบบด้วยอีเมลแอดมินที่ได้รับอนุมัติ", en:"Please sign in with an approved administrator email" },
+  lg_not_authorised: { th:"บัญชีนี้ยังไม่ได้รับสิทธิ์เข้าระบบแอดมิน — ให้ Super Admin เพิ่มบัญชีนี้ในหน้า “จัดการทีม”", en:"This account is not authorised for the admin area — ask a Super Admin to add it on the Team screen" },
+  lg_bad_email_pw: { th:"อีเมลหรือรหัสผ่านไม่ถูกต้อง", en:"That email or password is not right" },
+  lg_cloud_fail: { th:"เข้าสู่ระบบ cloud ไม่สำเร็จ: ", en:"Cloud sign-in failed: " },
+  nc_need_name: { th:"กรุณากรอกชื่อหมวดหมู่ (ภาษาไทย)", en:"Enter a category name (Thai)" },
+  nc_need_code: { th:"กรุณากรอกรหัสชุดสอบ (อังกฤษ/ตัวเลข)", en:"Enter a test code (letters and digits)" },
+  nc_code_taken: { th:"รหัส \"{code}\" มีอยู่แล้ว — กรุณาใช้รหัสอื่น", en:"The code \"{code}\" is already in use — choose another" },
+  nc_rule1: { th:"เลือกคำตอบที่ดีที่สุดในแต่ละข้อ", en:"Choose the best answer for each question" },
+  nc_rule2: { th:"ทำให้เสร็จภายในเวลาที่กำหนด", en:"Finish within the time allowed" },
+  nc_below: { th:"ต่ำกว่าเกณฑ์", en:"Below the mark" },
+  nc_above: { th:"ผ่านเกณฑ์", en:"Above the mark" },
+  nq_question: { th:"คำถามใหม่", en:"New question" },
+  nq_opt: { th:"ตัวเลือก", en:"Option" },
+  cb_no_cloud: { th:"ระบบ cloud ไม่พร้อมใช้งาน — การจัดการทีมต้องเชื่อมต่ออินเทอร์เน็ต", en:"The cloud service is unavailable — managing the team needs an internet connection" },
+  cb_loading: { th:"⏳ กำลังโหลดรายชื่อทีมจาก cloud…", en:"⏳ Loading the team from the cloud…" },
+  cb_empty: { th:"ยังไม่มีบัญชีผู้ดูแลใน cloud — กด “＋ เพิ่มผู้ดูแล” เพื่อสร้างบัญชีแรก", en:"No administrator accounts in the cloud yet — press “＋ Add administrator” to create the first one" },
+  cb_you: { th:"คุณ", en:"you" },
+  t_edit: { th:"แก้ไข", en:"Edit" },
+  t_delete: { th:"ลบ", en:"Delete" },
+  cs_title: { th:"คลิกเพื่อทดสอบการเชื่อมต่อ และดึงข้อมูลจาก cloud ใหม่", en:"Click to test the connection and reload data from the cloud" },
+  cs_syncing: { th:"☁️ กำลังซิงค์…", en:"☁️ Syncing…" },
+  cs_ok_n: { th:"☁️ เชื่อมต่อ cloud · {n} รายการ", en:"☁️ Cloud connected · {n} records" },
+  cs_ok: { th:"☁️ เชื่อมต่อ cloud", en:"☁️ Cloud connected" },
+  cs_off: { th:"⚠️ ไม่ได้เชื่อม cloud — ล็อกอินด้วยอีเมล", en:"⚠️ Not connected to the cloud — sign in with your email" },
+  cd_no_fb: { th:"❌ Firebase ยังไม่โหลด\n\nอาจเป็นเพราะไม่มีอินเทอร์เน็ต หรือมีตัวบล็อกสคริปต์ (ad-blocker/extension)", en:"❌ Firebase has not loaded\n\nThere may be no internet connection, or a script blocker (ad blocker or extension) is stopping it" },
+  cd_not_signed: { th:"⚠️ ยังไม่ได้ล็อกอินด้วยอีเมล\n\nกรุณาออกจากระบบ แล้วล็อกอินด้วยอีเมล (Firebase) เพื่อซิงค์ข้ามเครื่อง", en:"⚠️ You are not signed in with an email\n\nSign out, then sign in with your email (Firebase) so data syncs across devices" },
+  cd_sync_all: { th:"ซิงค์คลังข้อสอบ + ตำแหน่งขึ้น cloud เรียบร้อยแล้ว\nตอนนี้เครื่องอื่น/ผู้สมัครจะเห็นข้อมูลตรงกัน", en:"The question bank and positions are synced to the cloud.\nOther devices and candidates now see the same data." },
+  cd_sync_partial: { th:"ซิงค์หมวด/ตำแหน่งแล้ว แต่คลังข้อสอบยังไม่ขึ้น cloud — ลองอีกครั้ง", en:"Categories and positions synced, but the question bank did not reach the cloud — try again" },
+  cd_not_loaded: { th:"ยังโหลดค่าจาก cloud ไม่เสร็จ จึงยังไม่เขียนทับค่ากลาง — เปิดหน้าใหม่แล้วลองอีกครั้ง", en:"The cloud data has not finished loading, so nothing central was overwritten — reload the page and try again" },
+  cd_ok: { th:"✅ เชื่อมต่อ cloud สำเร็จ! เขียนข้อมูลขึ้น cloud ได้\n\n", en:"✅ Cloud connected — data can be written to it\n\n" },
+  cd_denied: { th:"🔒 ถูกปฏิเสธสิทธิ์ (permission-denied)\n\nตรวจ Firestore Rules ของ config ว่า Publish แล้วจริง", en:"🔒 Permission denied\n\nCheck that the Firestore rules for config have actually been published" },
+  cd_error: { th:"❌ ผิดพลาด: ", en:"❌ Error: " },
   t_date_taken: { th:"วันเวลาที่สอบ", en:"Date taken" },
   t_perm_note: { th:"เลือกว่าผู้ดูแลแต่ละระดับใช้ฟีเจอร์ใดได้บ้าง — เปลี่ยนแล้ว<strong data-i18n=\"t_takes_effect\">มีผลทันที</strong>", en:"Choose which features each administrator level can use — changes <strong>take effect immediately</strong>" },
   t_expiry_warn: { th:'⏰ Session จะหมดอายุใน <strong id="expiry-time">28 นาที</strong> — กรุณาบันทึกงานแล้วเข้าสู่ระบบใหม่', en:'⏰ Your session expires in <strong id="expiry-time">28 minutes</strong> — please save your work and sign in again' },
@@ -4662,7 +4705,7 @@ function qeSetAudio(i,input) {
   reader.readAsDataURL(file);
 }
 function addQuestion() {
-  getEditQ()[qeActiveSet].push({ q:'คำถามใหม่', opts:[{t:'ตัวเลือก A',p:1},{t:'ตัวเลือก B',p:0},{t:'ตัวเลือก C',p:0},{t:'ตัวเลือก D',p:0}], exp:'', sec:'', diff:'M', type:'mcq', image:null, audio:null });
+  getEditQ()[qeActiveSet].push({ q:t18n('nq_question'), opts:[{t:t18n('nq_opt')+' A',p:1},{t:t18n('nq_opt')+' B',p:0},{t:t18n('nq_opt')+' C',p:0},{t:t18n('nq_opt')+' D',p:0}], exp:'', sec:'', diff:'M', type:'mcq', image:null, audio:null });
   renderQuestionEditor();
   setTimeout(()=>{ const bodies=document.querySelectorAll('.q-editor-body'); bodies[bodies.length-1]?.classList.add('open'); },50);
 }
@@ -4694,12 +4737,12 @@ function submitNewCategory(){
   const mins    = Math.max(1, parseInt(document.getElementById('nc-mins').value,10) || 15);
   const passing = Math.min(100, Math.max(0, parseInt(document.getElementById('nc-passing').value,10) || 70));
   const graded  = document.getElementById('nc-graded').checked;
-  if (!nameTH) return show('กรุณากรอกชื่อหมวดหมู่ (ภาษาไทย)');
-  if (!code)   return show('กรุณากรอกรหัสชุดสอบ (อังกฤษ/ตัวเลข)');
-  if (TESTS.some(t => t.code === code) || ALL_QUESTIONS[code]) return show('รหัส "'+code+'" มีอยู่แล้ว — กรุณาใช้รหัสอื่น');
+  if (!nameTH) return show(t18n('nc_need_name'));
+  if (!code)   return show(t18n('nc_need_code'));
+  if (TESTS.some(t => t.code === code) || ALL_QUESTIONS[code]) return show(t18n('nc_code_taken').replace('{code}', code));
   const test = { code, name, nameTH, mins, passing, graded, custom:true,
-    desc:'', standard:'', rules:['เลือกคำตอบที่ดีที่สุดในแต่ละข้อ','ทำให้เสร็จภายในเวลาที่กำหนด'],
-    bands:[[0,passing,'ต่ำกว่าเกณฑ์'],[passing,101,'ผ่านเกณฑ์']] };
+    desc:'', standard:'', rules:[t18n('nc_rule1'), t18n('nc_rule2')],
+    bands:[[0,passing,t18n('nc_below')],[passing,101,t18n('nc_above')]] };
   TESTS.push(test);
   ALL_QUESTIONS[code] = [];
   getEditQ()[code] = [];
@@ -5219,9 +5262,9 @@ function submitLogin() {
   const p = document.getElementById('l-pass').value;
   const err = document.getElementById('login-err');
   err.style.display = 'none';
-  if (!u||!p) { err.textContent='กรุณากรอก username และ password'; err.style.display='block'; return; }
+  if (!u||!p) { err.textContent=t18n('lg_need_both'); err.style.display='block'; return; }
   const btn = document.getElementById('login-btn');
-  btn.innerHTML = '<span class="spin"></span> กำลังเข้าสู่ระบบ...'; btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> ' + t18n('lg_signing_in'); btn.disabled = true;
 
   const enterAdmin = () => {
     document.getElementById('login-expired').style.display = 'none';
@@ -5230,8 +5273,8 @@ function submitLogin() {
     setTimeout(() => document.getElementById('expiry-banner').classList.add('show'), 3000);
   };
   const fail = (msg) => {
-    btn.innerHTML = 'เข้าสู่ระบบ'; btn.disabled = false;
-    err.textContent = msg || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'; err.style.display = 'block';
+    btn.innerHTML = t18n('t_signin'); btn.disabled = false;
+    err.textContent = msg || t18n('lg_bad_user'); err.style.display = 'block';
   };
 
   // Admin access is cloud-only: authentication always goes through Firebase Auth
@@ -5239,11 +5282,11 @@ function submitLogin() {
   // path — on a public static site a client-side "create admin" flow is not a
   // real security boundary (anyone could appoint themselves), so it was removed.
   if (!cloudEnabled()) {
-    fail('เข้าสู่ระบบแอดมินต้องเชื่อมต่ออินเทอร์เน็ต (ระบบ cloud ไม่พร้อมใช้งาน — อาจถูก ad-blocker บล็อก)');
+    fail(t18n('lg_need_net'));
     return;
   }
   if (!u.includes('@')) {
-    fail('กรุณาเข้าสู่ระบบด้วยอีเมลแอดมินที่ได้รับอนุมัติ');
+    fail(t18n('lg_use_approved'));
     return;
   }
   fbAuth.signInWithEmailAndPassword(u, p)
@@ -5268,7 +5311,7 @@ function submitLogin() {
             try { await db.collection('admin_roles').doc(email).set({ name, email, role: 'superadmin', addedAt: Date.now(), addedBy: 'bootstrap' }); } catch(_) {}
           } else {
             await fbAuth.signOut();
-            fail('บัญชีนี้ยังไม่ได้รับสิทธิ์เข้าระบบแอดมิน — ให้ Super Admin เพิ่มบัญชีนี้ในหน้า “จัดการทีม”');
+            fail(t18n('lg_not_authorised'));
             return;
           }
         }
@@ -5282,14 +5325,14 @@ function submitLogin() {
         role = 'superadmin';
       }
       currentAdmin = { name, username: email, email, role, cloud: true };
-      btn.innerHTML = 'เข้าสู่ระบบ'; btn.disabled = false;
+      btn.innerHTML = t18n('t_signin'); btn.disabled = false;
       enterAdmin();
       cloudFetchAll();   // pull all candidate data
     })
     .catch(e => {
       const m = (e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found')
-        ? 'อีเมลหรือรหัสผ่านไม่ถูกต้อง'
-        : ('เข้าสู่ระบบ cloud ไม่สำเร็จ: ' + (e.code || e.message));
+        ? t18n('lg_bad_email_pw')
+        : (t18n('lg_cloud_fail') + (e.code || e.message));
       fail(m);
     });
 }
@@ -5340,10 +5383,10 @@ async function renderCollabPage() {
   const list = document.getElementById('collab-list');
   if (!list) return;
   if (!cloudEnabled()) {
-    list.innerHTML = '<div class="hint" style="padding:14px 0">ระบบ cloud ไม่พร้อมใช้งาน — การจัดการทีมต้องเชื่อมต่ออินเทอร์เน็ต</div>';
+    list.innerHTML = '<div class="hint" style="padding:14px 0">' + t18n('cb_no_cloud') + '</div>';
     return;
   }
-  list.innerHTML = '<div class="hint" style="padding:14px 0">⏳ กำลังโหลดรายชื่อทีมจาก cloud…</div>';
+  list.innerHTML = '<div class="hint" style="padding:14px 0">' + t18n('cb_loading') + '</div>';
   let roster;
   try {
     roster = await cloudFetchAdminRoster();
@@ -5352,7 +5395,7 @@ async function renderCollabPage() {
     return;
   }
   if (!roster.length) {
-    list.innerHTML = '<div class="hint" style="padding:14px 0">ยังไม่มีบัญชีผู้ดูแลใน cloud — กด “＋ เพิ่มผู้ดูแล” เพื่อสร้างบัญชีแรก</div>';
+    list.innerHTML = '<div class="hint" style="padding:14px 0">' + t18n('cb_empty') + '</div>';
     return;
   }
   const canManage = !!(currentAdmin && ROLE_INFO[currentAdmin.role]?.canManageUsers);
@@ -5370,15 +5413,15 @@ async function renderCollabPage() {
       <div style="display:flex;align-items:flex-start;gap:10px;min-width:0">
         <div class="avatar" style="background:var(--gray-100);color:var(--gray-500);width:34px;height:34px;font-size:14px;margin-top:1px">${esc((u.name || u.email || '?').charAt(0).toUpperCase())}</div>
         <div style="min-width:0">
-          <div style="font-weight:600;font-size:13px">${esc(u.name || '')} ${isSelf ? '<span style="font-size:11px;color:var(--teal)">(คุณ)</span>' : ''}</div>
+          <div style="font-weight:600;font-size:13px">${esc(u.name || '')} ${isSelf ? ('<span style="font-size:11px;color:var(--teal)">(' + t18n('cb_you') + ')</span>') : ''}</div>
           <div style="font-size:12px;color:var(--gray-400)">${esc(u.email || '')}</div>
           <div class="permission-tag">${chips}</div>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
         <span class="role-badge ${role.cls}">${role.label}</span>
-        ${canEdit ? `<button class="btn btn-secondary btn-sm" onclick="editUser('${enc}')">แก้ไข</button>
-        <button class="btn btn-sm" style="background:var(--red-l);color:var(--red)" onclick="deleteUser('${enc}')">ลบ</button>` : ''}
+        ${canEdit ? `<button class="btn btn-secondary btn-sm" onclick="editUser('${enc}')">${t18n('t_edit')}</button>
+        <button class="btn btn-sm" style="background:var(--red-l);color:var(--red)" onclick="deleteUser('${enc}')">${t18n('t_delete')}</button>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -6494,21 +6537,18 @@ function renderThankYou() {
   if (!stuck) {
     badge.textContent = '✓';
     badge.style.background = '';
-    title.textContent = 'ขอบคุณที่ทำแบบทดสอบ';
-    note.textContent  = 'คุณทำแบบทดสอบครบทุกชุดเรียบร้อยแล้ว ' +
-      'ผลการทดสอบได้ถูกส่งให้ทีม HR ของ Hino Motors Asia เพื่อพิจารณา';
-    btn.textContent   = 'เสร็จสิ้น';
+    title.textContent = t18n('ty_title_ok');
+    note.textContent  = t18n('ty_note_ok');
+    btn.textContent   = t18n('ty_btn_ok');
     btn.onclick       = () => goHome();
     return;
   }
 
   badge.textContent = '⏳';
   badge.style.background = 'var(--amber-l)';
-  title.textContent = 'ยังส่งคำตอบไม่สำเร็จ';
-  note.textContent  = `คำตอบ ${stuck} ชุดยังส่งขึ้นระบบไม่ได้ กรุณาอย่าเพิ่งปิดหน้านี้ ` +
-    'และตรวจสอบการเชื่อมต่ออินเทอร์เน็ต แล้วกดปุ่มด้านล่างอีกครั้ง ' +
-    'ถ้ายังไม่สำเร็จ กรุณาแจ้งฝ่ายทรัพยากรบุคคล — คำตอบของท่านยังอยู่ในเครื่องนี้ ยังไม่หายไปไหน';
-  btn.textContent   = '↻ ส่งคำตอบอีกครั้ง';
+  title.textContent = t18n('ty_title_stuck');
+  note.textContent  = t18n('ty_note_stuck').replace('{n}', stuck);
+  btn.textContent   = t18n('ty_btn_retry');
   btn.onclick       = async () => {
     btn.disabled = true;
     try { await flushAnswerQueue(); } catch(e) {}
@@ -6693,19 +6733,19 @@ function updateCloudStatus(state, info){
   el.style.display = 'inline-flex';
   el.style.cursor = 'pointer';
   el.onclick = () => cloudDiagnose();
-  el.title = 'คลิกเพื่อทดสอบการเชื่อมต่อ และดึงข้อมูลจาก cloud ใหม่';
-  if (state === 'loading'){ el.textContent = '☁️ กำลังซิงค์…'; el.style.color = 'var(--gray-400)'; }
-  else if (state === 'ok'){ el.textContent = '☁️ เชื่อมต่อ cloud · ' + (info||0) + ' รายการ'; el.style.color = 'var(--pass)'; }
+  el.title = t18n('cs_title');
+  if (state === 'loading'){ el.textContent = t18n('cs_syncing'); el.style.color = 'var(--gray-400)'; }
+  else if (state === 'ok'){ el.textContent = t18n('cs_ok_n').replace('{n}', info||0); el.style.color = 'var(--pass)'; }
   else if (state === 'error'){ el.textContent = '⚠️ cloud: ' + info; el.style.color = 'var(--amber)'; }
-  else if (cloudSignedIn()){ el.textContent = '☁️ เชื่อมต่อ cloud'; el.style.color = 'var(--pass)'; }
-  else { el.textContent = '⚠️ ไม่ได้เชื่อม cloud — ล็อกอินด้วยอีเมล'; el.style.color = 'var(--amber)'; }
+  else if (cloudSignedIn()){ el.textContent = t18n('cs_ok'); el.style.color = 'var(--pass)'; }
+  else { el.textContent = t18n('cs_off'); el.style.color = 'var(--amber)'; }
 }
 
 // One-click on-screen cloud test (no dev console needed): reports whether the
 // browser can actually WRITE to Firestore, or is blocked / hanging / denied.
 async function cloudDiagnose(){
-  if (!cloudEnabled()) { alert('❌ Firebase ยังไม่โหลด\n\nอาจเป็นเพราะไม่มีอินเทอร์เน็ต หรือมีตัวบล็อกสคริปต์ (ad-blocker/extension)'); return; }
-  if (!cloudSignedIn()) { alert('⚠️ ยังไม่ได้ล็อกอินด้วยอีเมล\n\nกรุณาออกจากระบบ แล้วล็อกอินด้วยอีเมล (Firebase) เพื่อซิงค์ข้ามเครื่อง'); return; }
+  if (!cloudEnabled()) { alert(t18n('cd_no_fb')); return; }
+  if (!cloudSignedIn()) { alert(t18n('cd_not_signed')); return; }
   showToast(t18n('m_cloud_testing'), 12000);
   let settled = false;
   const timer = setTimeout(() => {
@@ -6723,16 +6763,16 @@ async function cloudDiagnose(){
     // Also pull the latest candidate data so the pill really does "re-sync".
     cloudFetchAll();
     const syncMsg = (res.settingsOk && res.bankOk)
-      ? 'ซิงค์คลังข้อสอบ + ตำแหน่งขึ้น cloud เรียบร้อยแล้ว\nตอนนี้เครื่องอื่น/ผู้สมัครจะเห็นข้อมูลตรงกัน'
+      ? t18n('cd_sync_all')
       : res.settingsOk
-        ? 'ซิงค์หมวด/ตำแหน่งแล้ว แต่คลังข้อสอบยังไม่ขึ้น cloud — ลองอีกครั้ง'
-        : 'ยังโหลดค่าจาก cloud ไม่เสร็จ จึงยังไม่เขียนทับค่ากลาง — เปิดหน้าใหม่แล้วลองอีกครั้ง';
-    alert('✅ เชื่อมต่อ cloud สำเร็จ! เขียนข้อมูลขึ้น cloud ได้\n\n' + syncMsg);
+        ? t18n('cd_sync_partial')
+        : t18n('cd_not_loaded');
+    alert(t18n('cd_ok') + syncMsg);
   } catch(e){
     if (settled) return;
     settled = true; clearTimeout(timer);
-    if (e && e.code === 'permission-denied') alert('🔒 ถูกปฏิเสธสิทธิ์ (permission-denied)\n\nตรวจ Firestore Rules ของ config ว่า Publish แล้วจริง');
-    else alert('❌ ผิดพลาด: ' + (e.code || e.message || e));
+    if (e && e.code === 'permission-denied') alert(t18n('cd_denied'));
+    else alert(t18n('cd_error') + (e.code || e.message || e));
   }
 }
 
