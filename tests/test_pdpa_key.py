@@ -1023,6 +1023,66 @@ def test_every_translated_key_has_both_languages(open_exam):
     assert bad == [], f"คีย์ที่ขาดภาษา: {bad}"
 
 
+def test_no_screen_still_speaks_thai_when_english_is_on(open_exam):
+    """เดินดูทุกหน้าในโหมดอังกฤษ แล้วฟ้องถ้ายังมีไทยโผล่ให้เห็น
+
+    เทสต์คีย์อื่นดูได้แค่ว่า "คีย์ครบไหม" ไม่ได้ดูว่าหน้าจอจริงพูดภาษาอะไร
+    ข้อความที่ฝังไทยไว้ในโค้ดตรง ๆ จะไม่มีคีย์ให้ตรวจ — ต้องมาดูของจริง
+
+    ยกเว้นเนื้อหาข้อสอบ (คลังข้อสอบ แบบวัดบุคลิกภาพ และคำชี้แจงเริ่มต้น
+    ที่ผู้ดูแลแก้เองได้) ซึ่งตั้งใจให้เป็นไทย การแปลจะกลายเป็นต้องดูแล
+    ข้อสอบสองชุดคู่กันตลอดไป
+    """
+    CONTENT_IDS = ["qe-list", "intro-body", "instr-body", "instr-preview-body",
+                   "t-qbody", "rv-summary", "t-passage"]
+    SCAN = """(contentIds) => {
+        const bad = [], thai = /[\u0E00-\u0E7F]/;
+        const inContent = el => {
+            for (let n = el; n; n = n.parentElement)
+                if (n.id && contentIds.includes(n.id)) return true;
+            return false;
+        };
+        document.querySelectorAll('.page.active, .overlay.open').forEach(root => {
+            const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+            let n;
+            while ((n = w.nextNode())) {
+                const t = (n.textContent || '').trim();
+                if (!t || !thai.test(t)) continue;
+                const el = n.parentElement;
+                if (!el || inContent(el)) continue;
+                const r = el.getBoundingClientRect();
+                if (r.width === 0 || r.height === 0) continue;
+                bad.push((root.id || root.className) + ' :: ' + t.slice(0, 70));
+            }
+        });
+        return bad;
+    }"""
+    page = open_exam()
+    page.evaluate("() => { LANG = 'en'; applyLang(); }")
+    screens = [
+        ("landing", None),
+        ("register", "() => nav('p-register')"),
+        ("login", "() => nav('p-login')"),
+        ("admin", "() => { currentAdmin = {name:'Pin', role:'superadmin', email:'p@x.com'};"
+                  "        nav('p-admin'); applyRolePerms(); renderAdmin({refetch:false}); }"),
+        ("candidates", "() => admGo('p-candidates')"),
+        ("question editor", "() => admGo('p-question-editor')"),
+        ("instructions", "() => admGo('p-instruction-editor')"),
+        ("positions", "() => admGo('p-position-editor')"),
+        ("team", "() => admGo('p-collab')"),
+        ("thank you", "() => nav('p-thankyou')"),
+    ]
+    leftovers = {}
+    for name, js in screens:
+        if js:
+            page.evaluate(js)
+        page.wait_for_timeout(250)
+        hits = sorted(set(page.evaluate(SCAN, CONTENT_IDS)))
+        if hits:
+            leftovers[name] = hits
+    assert leftovers == {}, f"ยังมีไทยค้างในโหมดอังกฤษ: {leftovers}"
+
+
 def test_no_translation_key_is_defined_twice():
     """คีย์ซ้ำจะถูกตัวหลังทับเงียบ ๆ
 
