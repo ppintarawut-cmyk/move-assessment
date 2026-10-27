@@ -1052,3 +1052,21 @@ def test_the_page_script_parses_and_runs_without_errors(open_exam):
     real = [e for e in errors if "favicon" not in e and "net::" not in e
             and "Failed to load resource" not in e]
     assert real == [], f"สคริปต์มีข้อผิดพลาด: {real[:3]}"
+
+
+def test_no_toast_carries_a_hard_coded_thai_message():
+    """ข้อความแจ้งเตือนต้องมาจากพจนานุกรม ไม่ใช่เขียนไทยไว้ในโค้ดตรง ๆ
+
+    อ่านไฟล์ตรง ๆ ไม่ผ่านเบราว์เซอร์ เพราะต้องการดูว่า "เขียนไว้แบบไหน"
+    ไม่ใช่ "แสดงผลออกมาเป็นอะไร" — ข้อความที่ฝังไทยไว้จะไม่มีวันเปลี่ยนภาษา
+    """
+    import pathlib
+    import re
+    src = pathlib.Path(__file__).resolve().parent.parent / "index.html"
+    thai = re.compile(r"[฀-๿]")
+    bad = []
+    for n, line in enumerate(src.read_text().split("\n"), 1):
+        for m in re.finditer(r"showToast\(\s*([`'\"])((?:(?!\1).)*)\1", line):
+            if thai.search(m.group(2)):
+                bad.append(f"บรรทัด {n}: {m.group(2)[:50]}")
+    assert bad == [], "ข้อความแจ้งเตือนที่ยังฝังภาษาไทยไว้:\n" + "\n".join(bad)

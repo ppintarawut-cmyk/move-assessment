@@ -1577,6 +1577,91 @@ const I18N = {
   t_attempt_n: { th:"ครั้งที่ {n}", en:"Attempt {n}" },
   t_view_result: { th:"ดูผล", en:"View" },
   t_hello: { th:"สวัสดี", en:"Hello" },
+  m_need_pos: { th:"ต้องมีอย่างน้อย 1 ตำแหน่ง", en:"At least one position is required" },
+  m_pos_need_test: { th:"ทุกตำแหน่งต้องเลือกข้อสอบอย่างน้อย 1 ชุด", en:"Every position needs at least one test" },
+  m_pos_need_name: { th:"กรุณาตั้งชื่อทุกตำแหน่ง", en:"Every position needs a name" },
+  m_pos_synced: { th:"☁️ ซิงค์ตำแหน่ง/ชุดสอบขึ้น cloud แล้ว", en:"☁️ Positions and tests synced to the cloud" },
+  m_saved_local: { th:"⚠️ บันทึกในเครื่องนี้แล้ว — ล็อกอินด้วยอีเมลเพื่อซิงค์ข้ามเครื่อง", en:"⚠️ Saved on this device — sign in with your email to sync across devices" },
+  m_pos_saved: { th:"บันทึกชุดข้อสอบตามตำแหน่งแล้ว", en:"Tests by position saved" },
+  m_reset_pending: { th:"คืนค่าเริ่มต้นแล้ว — กด บันทึก เพื่อยืนยัน", en:"Reset to default — press Save to confirm" },
+  m_no_delete: { th:"❌ ไม่มีสิทธิ์ลบข้อมูล", en:"❌ You do not have permission to delete" },
+  m_pick_cand: { th:"เลือกผู้สมัครก่อน", en:"Select a candidate first" },
+  m_pick_2: { th:"เลือกอย่างน้อย 2 คนเพื่อเปรียบเทียบ", en:"Select at least 2 candidates to compare" },
+  m_max_6: { th:"เปรียบเทียบได้สูงสุด 6 คน", en:"You can compare up to 6 candidates" },
+  m_no_xlsx: { th:"❌ ไลบรารี Excel ไม่พร้อม", en:"❌ The spreadsheet library is not available" },
+  m_xlsx_ok: { th:"✅ ดาวน์โหลด Excel สำเร็จ", en:"✅ Excel downloaded" },
+  m_no_pdf: { th:"❌ ไลบรารี PDF ไม่พร้อม", en:"❌ The PDF library is not available" },
+  m_pdf_ok: { th:"✅ ดาวน์โหลด PDF สำเร็จ", en:"✅ PDF downloaded" },
+  m_pdf_fail: { th:"❌ สร้าง PDF ไม่สำเร็จ", en:"❌ Could not create the PDF" },
+  m_no_fullscreen: { th:"ไม่รองรับ Fullscreen ในเบราว์เซอร์นี้", en:"This browser does not support full screen" },
+  m_leave_warn: { th:"⚠️ ระบบจะตรวจจับหากออกจากหน้าสอบ", en:"⚠️ Leaving the exam window is recorded" },
+  m_xlsx2_ok: { th:"✅ ดาวน์โหลด Excel (.xlsx) สำเร็จ", en:"✅ Excel (.xlsx) downloaded" },
+  m_csv_ok: { th:"✅ ดาวน์โหลด CSV สำเร็จ", en:"✅ CSV downloaded" },
+  m_no_data: { th:"ยังไม่มีข้อมูล", en:"No data yet" },
+  m_del_custom_only: { th:"❌ ลบได้เฉพาะหมวดหมู่ที่สร้างเอง", en:"❌ Only categories you created can be deleted" },
+  m_bank_synced: { th:"☁️ ซิงค์ข้อสอบขึ้น cloud แล้ว", en:"☁️ Questions synced to the cloud" },
+  m_partial_sync: { th:"⚠️ ซิงค์หมวด/ตำแหน่งแล้ว แต่คลังข้อสอบยังไม่ขึ้น cloud", en:"⚠️ Categories and positions synced, but the question bank has not reached the cloud" },
+  m_sync_fail: { th:"⚠️ ยังซิงค์ขึ้น cloud ไม่สำเร็จ", en:"⚠️ Could not sync to the cloud yet" },
+  m_no_perm_edit: { th:"❌ ไม่มีสิทธิ์แก้ไขสิทธิ์การใช้งาน", en:"❌ You do not have permission to change permissions" },
+  m_no_perm: { th:"❌ ไม่มีสิทธิ์", en:"❌ You do not have permission" },
+  m_perm_reset: { th:"↺ คืนค่าสิทธิ์เริ่มต้นแล้ว", en:"↺ Permissions reset to default" },
+  m_no_admin_mgmt: { th:"❌ ไม่มีสิทธิ์จัดการผู้ดูแล", en:"❌ You do not have permission to manage administrators" },
+  m_add_needs_cloud: { th:"❌ การเพิ่มผู้ดูแลต้องเชื่อมต่อ cloud", en:"❌ Adding an administrator needs a cloud connection" },
+  m_cloud_down: { th:"❌ ระบบ cloud ไม่พร้อมใช้งาน", en:"❌ The cloud service is not available" },
+  m_need_display: { th:"❌ กรอกชื่อแสดง", en:"❌ Enter a display name" },
+  m_bad_email: { th:"❌ อีเมลไม่ถูกต้อง", en:"❌ That email address is not valid" },
+  m_pw_short: { th:"❌ รหัสผ่านอย่างน้อย 6 ตัวอักษร", en:"❌ The password must be at least 6 characters" },
+  m_email_exists: { th:"❌ อีเมลนี้อยู่ในทีมแล้ว", en:"❌ That email is already on the team" },
+  m_saving: { th:"⏳ กำลังบันทึก…", en:"⏳ Saving…" },
+  m_revoked: { th:"✅ เพิกถอนสิทธิ์แล้ว", en:"✅ Access revoked" },
+  m_img_ok: { th:"✅ อัปโหลดรูปสำเร็จ", en:"✅ Image uploaded" },
+  m_cand_missing: { th:"❌ ไม่พบข้อมูลผู้สมัคร", en:"❌ Candidate not found" },
+  m_content_missing: { th:"❌ ไม่พบเนื้อหา", en:"❌ Nothing to show" },
+  m_popup_blocked: { th:"❌ เบราว์เซอร์บล็อก popup — อนุญาตแล้วลองใหม่", en:"❌ Your browser blocked the pop-up — allow it and try again" },
+  m_print_open: { th:"🖨️ เปิดหน้าต่างพิมพ์ — เลือก “บันทึกเป็น PDF / Save as PDF”", en:"🖨️ Print dialog opened — choose “Save as PDF”" },
+  m_no_preview: { th:"❌ ไม่มีข้อมูลพรีวิว", en:"❌ Nothing to preview" },
+  m_dash_pdf_ok: { th:"✅ ดาวน์โหลดแดชบอร์ดคะแนน (PDF A4) สำเร็จ", en:"✅ Score dashboard (A4 PDF) downloaded" },
+  m_build_fail: { th:"❌ เตรียมส่งคำตอบไม่สำเร็จ — กรุณาแจ้งเจ้าหน้าที่", en:"❌ Could not prepare your answers for sending — please tell the staff" },
+  m_send_fail: { th:"⚠️ ส่งคำตอบขึ้นระบบไม่สำเร็จ — ระบบจะส่งใหม่อัตโนมัติเมื่อเชื่อมต่อได้", en:"⚠️ Your answers could not be sent — they will be sent again automatically once you are back online" },
+  m_queue_sent: { th:"☁️ ส่งคำตอบที่ค้างขึ้นระบบสำเร็จแล้ว", en:"☁️ The answers that were waiting have been sent" },
+  m_cloud_up_fail: { th:"⚠️ อัปโหลดผลขึ้น cloud ไม่สำเร็จ — ระบบจะลองใหม่อัตโนมัติเมื่อเชื่อมต่อได้", en:"⚠️ Results could not be uploaded — this will retry automatically once you are back online" },
+  m_cloud_up_ok: { th:"☁️ อัปโหลดผลที่ค้างขึ้น cloud สำเร็จแล้ว", en:"☁️ The results that were waiting have been uploaded" },
+  m_cloud_testing: { th:"🔧 กำลังทดสอบการเชื่อมต่อ cloud…", en:"🔧 Testing the cloud connection…" },
+  m_cloud_loading: { th:"⌛ ยังโหลดค่าจาก cloud ไม่เสร็จ — รอสักครู่แล้วลองใหม่", en:"⌛ Still loading from the cloud — wait a moment and try again" },
+  m_no_rule_config: { th:"⚠️ ซิงค์ไม่ได้ — ยังไม่ได้เพิ่ม Firestore rule ของ config", en:"⚠️ Cannot sync — the Firestore rule for config has not been added" },
+  m_key_loading: { th:"⌛ ยังโหลดเฉลยจากระบบไม่เสร็จ — รอสักครู่แล้วลองใหม่", en:"⌛ Still loading the answer key — wait a moment and try again" },
+  m_no_rule_bank: { th:"⚠️ คลังข้อสอบซิงค์ไม่ได้ — ตรวจ Firestore rule ของ config/bank", en:"⚠️ The question bank cannot sync — check the Firestore rule for config/bank" },
+  m_bank_too_big: { th:"⚠️ คลังข้อสอบใหญ่เกินไป (รูปเยอะ?) — ตำแหน่ง/หมวดซิงค์แล้ว แต่ข้อสอบยังไม่ขึ้น", en:"⚠️ The question bank is too large (too many images?) — positions and categories synced, the questions did not" },
+  m_endpoint_unreachable: { th:"⚠️ ระบบตรวจคะแนนยังติดต่อไม่ได้ — กรุณาลองใหม่อีกครั้งในอีกสักครู่ ถ้ายังไม่ได้ กรุณาแจ้งฝ่ายทรัพยากรบุคคลก่อนเริ่มทำข้อสอบ", en:"⚠️ The scoring service is not answering — please try again in a moment. If it still does not work, tell HR before you start." },
+  m_bank_load_fail: { th:"❌ โหลดชุดข้อสอบจากระบบไม่สำเร็จ — กรุณารีเฟรชหน้า หรือแจ้งเจ้าหน้าที่", en:"❌ The question set could not be loaded — please refresh the page, or tell the staff" },
+  m_no_endpoint: { th:"❌ ระบบตรวจคะแนนยังไม่พร้อมใช้งาน — ยังไม่ได้ตั้งที่อยู่ระบบตรวจคะแนน กรุณาแจ้งเจ้าหน้าที่", en:"❌ The scoring service is not set up — its address has not been configured. Please tell the staff" },
+  m_dash_not_ready: { th:"📊 ยังเปิดแดชบอร์ดคะแนนไม่ได้ — ผลสอบของผู้สมัครรายนี้ยังมาไม่ถึงระบบ ถ้าเพิ่งสอบเสร็จ รอสักครู่แล้วกดรีเฟรช", en:"📊 The score dashboard cannot open yet — this candidate’s results have not reached the system. If they have just finished, wait a moment and refresh." },
+  m_cat_deleted: { th:"🗑 ลบหมวดหมู่ {code} แล้ว", en:"🗑 Category {code} deleted" },
+  m_export_xlsx_of: { th:"✅ Export Excel {who} สำเร็จ", en:"✅ Excel for {who} exported" },
+  m_export_of: { th:"✅ Export {who} สำเร็จ", en:"✅ {who} exported" },
+  m_pdf_of: { th:"✅ ดาวน์โหลด PDF {who} สำเร็จ", en:"✅ PDF for {who} downloaded" },
+  m_preview_fail: { th:"❌ สร้างพรีวิวไม่สำเร็จ: ", en:"❌ Could not build the preview: " },
+  m_answers_refused: { th:"❌ ระบบตรวจคะแนนไม่รับคำตอบชุดนี้ ({code}) — กรุณาแจ้งเจ้าหน้าที่", en:"❌ The scoring service refused these answers ({code}) — please tell the staff" },
+  m_pos_sync_fail: { th:"⚠️ ซิงค์ตำแหน่ง/หมวดไม่สำเร็จ: ", en:"⚠️ Positions and categories did not sync: " },
+  m_bank_save_fail: { th:"⚠️ บันทึกข้อสอบขึ้นระบบไม่สำเร็จ ({code})", en:"⚠️ The questions were not saved to the system ({code})" },
+  m_key_load_fail: { th:"⚠️ โหลดเฉลยไม่สำเร็จ ({code})", en:"⚠️ Could not load the answer key ({code})" },
+  m_key_missing: { th:"❌ ยังไม่ได้โหลดเฉลยของ {list} — ไม่บันทึก เพราะจะทับเฉลยเดิมหาย กรุณารีเฟรชแล้วลองใหม่", en:"❌ The answer key for {list} has not loaded — nothing was saved, because it would overwrite the existing key. Refresh and try again." },
+  m_perm_on: { th:"✅ เปิด “{what}” สำหรับ {role}", en:"✅ “{what}” enabled for {role}" },
+  m_perm_off: { th:"🚫 ปิด “{what}” สำหรับ {role}", en:"🚫 “{what}” disabled for {role}" },
+  m_note_adopted: { th:" (ใช้บัญชี Firebase เดิม — รหัสผ่านไม่เปลี่ยน)", en:" (reusing the existing Firebase account — the password is unchanged)" },
+  m_note_new: { th:" — ล็อกอินด้วยอีเมล/รหัสผ่านนี้ได้ทุกเครื่อง", en:" — they can sign in with this email and password on any device" },
+  m_deleted_n: { th:"✅ ลบข้อมูล {n} คนแล้ว", en:"✅ {n} candidates deleted" },
+  m_deleted_who: { th:"✅ ลบข้อมูล {who} แล้ว", en:"✅ {who} deleted" },
+  m_cat_added: { th:"✅ เพิ่มหมวดหมู่ \"{name}\" (รหัส {code}) — เพิ่มข้อสอบแล้วกด 💾 บันทึก", en:"✅ Category \"{name}\" added (code {code}) — add questions, then press 💾 Save" },
+  m_bank_saved: { th:"✅ บันทึกข้อสอบแล้ว", en:"✅ Questions saved" },
+  m_save_fail_rules: { th:"❌ บันทึกไม่สำเร็จ (ตรวจ Firestore Rules): ", en:"❌ Could not save (check the Firestore rules): " },
+  m_del_fail_rules: { th:"❌ ลบไม่สำเร็จ (ตรวจ Firestore Rules): ", en:"❌ Could not delete (check the Firestore rules): " },
+  m_user_updated: { th:"✅ อัปเดต {who} ({role}) แล้ว", en:"✅ {who} ({role}) updated" },
+  m_user_added: { th:"✅ เพิ่ม {who} ({role}) แล้ว", en:"✅ {who} ({role}) added" },
+  m_instr_saved: { th:"✅ บันทึกคำแนะนำ {set} แล้ว", en:"✅ Instructions for {set} saved" },
+  m_role_rules: { th:"บันทึกบทบาทไม่สำเร็จ — ยังไม่ได้ตั้ง Firestore Rules ให้ admin_roles (ตั้งใน Firebase Console)", en:"Could not save the role — the Firestore rules for admin_roles are not set (set them in the Firebase console)" },
+  m_role_fail: { th:"บันทึกบทบาทไม่สำเร็จ: ", en:"Could not save the role: " },
+  m_role_ok_no_login: { th:"บันทึกบทบาทแล้ว แต่สร้างบัญชีล็อกอินไม่ได้ — เปิด Email/Password provider ใน Firebase Console แล้วเพิ่มอีเมลนี้อีกครั้ง", en:"The role was saved but the sign-in account could not be created — enable the Email/Password provider in the Firebase console, then add this email again" },
   t_date_taken: { th:"วันเวลาที่สอบ", en:"Date taken" },
   t_perm_note: { th:"เลือกว่าผู้ดูแลแต่ละระดับใช้ฟีเจอร์ใดได้บ้าง — เปลี่ยนแล้ว<strong data-i18n=\"t_takes_effect\">มีผลทันที</strong>", en:"Choose which features each administrator level can use — changes <strong>take effect immediately</strong>" },
   t_expiry_warn: { th:'⏰ Session จะหมดอายุใน <strong id="expiry-time">28 นาที</strong> — กรุณาบันทึกงานแล้วเข้าสู่ระบบใหม่', en:'⏰ Your session expires in <strong id="expiry-time">28 minutes</strong> — please save your work and sign in again' },
@@ -1838,29 +1923,29 @@ function peAddGroup(){
   renderPositionEditor();
 }
 function peDeleteGroup(gi){
-  if (peDraft.length<=1){ showToast('ต้องมีอย่างน้อย 1 ตำแหน่ง'); return; }
+  if (peDraft.length<=1){ showToast(t18n('m_need_pos')); return; }
   peDraft.splice(gi,1);
   renderPositionEditor();
 }
 function savePositionEditor(btn){
   for (const g of peDraft){
-    if (!g.tests || g.tests.length===0){ showToast('ทุกตำแหน่งต้องเลือกข้อสอบอย่างน้อย 1 ชุด'); return; }
-    if (!(g.labelTH||'').trim() && !(g.labelEN||'').trim()){ showToast('กรุณาตั้งชื่อทุกตำแหน่ง'); return; }
+    if (!g.tests || g.tests.length===0){ showToast(t18n('m_pos_need_test')); return; }
+    if (!(g.labelTH||'').trim() && !(g.labelEN||'').trim()){ showToast(t18n('m_pos_need_name')); return; }
     if (!g.labelTH) g.labelTH=g.labelEN; if (!g.labelEN) g.labelEN=g.labelTH;
   }
   savePresets(peDraft);
   if (typeof cloudSaveQuestionBank === 'function' && typeof cloudEnabled === 'function' && cloudEnabled() && cloudSignedIn()) {
-    cloudSaveQuestionBank().then(ok => { if (ok) showToast('☁️ ซิงค์ตำแหน่ง/ชุดสอบขึ้น cloud แล้ว'); });
+    cloudSaveQuestionBank().then(ok => { if (ok) showToast(t18n('m_pos_synced')); });
   } else if (typeof cloudEnabled === 'function' && cloudEnabled() && !cloudSignedIn()) {
-    showToast('⚠️ บันทึกในเครื่องนี้แล้ว — ล็อกอินด้วยอีเมลเพื่อซิงค์ข้ามเครื่อง', 5000);
+    showToast(t18n('m_saved_local'), 5000);
   }
   if (btn){ const o=btn.textContent; btn.textContent='✓ บันทึกแล้ว'; setTimeout(()=>btn.textContent=o,1500); }
-  showToast('บันทึกชุดข้อสอบตามตำแหน่งแล้ว');
+  showToast(t18n('m_pos_saved'));
 }
 function resetPositionPresets(){
   peDraft = JSON.parse(JSON.stringify(DEFAULT_POSITION_PRESETS));
   renderPositionEditor();
-  showToast('คืนค่าเริ่มต้นแล้ว — กด บันทึก เพื่อยืนยัน');
+  showToast(t18n('m_reset_pending'));
 }
 
 
@@ -2093,8 +2178,7 @@ async function scoringEndpointReachable() {
 
 async function readyToSit() {
   if (await scoringEndpointReachable()) return true;
-  showToast('⚠️ ระบบตรวจคะแนนยังติดต่อไม่ได้ — กรุณาลองใหม่อีกครั้งในอีกสักครู่ ' +
-            'ถ้ายังไม่ได้ กรุณาแจ้งฝ่ายทรัพยากรบุคคลก่อนเริ่มทำข้อสอบ', 7000);
+  showToast(t18n('m_endpoint_unreachable'), 7000);
   return false;
 }
 
@@ -3291,9 +3375,9 @@ function updateCandSelBar(){
 }
 
 function bulkDeleteCandidates(){
-  if (!(currentAdmin && ROLE_INFO[currentAdmin.role]?.canDelete)){ showToast('❌ ไม่มีสิทธิ์ลบข้อมูล'); return; }
+  if (!(currentAdmin && ROLE_INFO[currentAdmin.role]?.canDelete)){ showToast(t18n('m_no_delete')); return; }
   const nids = [...candSelected];
-  if (!nids.length){ showToast('เลือกผู้สมัครก่อน'); return; }
+  if (!nids.length){ showToast(t18n('m_pick_cand')); return; }
   if (!confirm(`⚠️ ลบข้อมูลผู้สมัคร ${nids.length} คนที่เลือก?\n\nการกระทำนี้ไม่สามารถย้อนกลับได้`)) return;
   // กวาดทุก alias ของทุกคนที่เลือก ไม่ใช่แค่ key เดียว — คนเดียวกันอาจถูก key คนละแบบใน
   // exam_records กับ result_snapshots (ดูคอมเมนต์ที่ candKeyAliases)
@@ -3310,7 +3394,7 @@ function bulkDeleteCandidates(){
   // guard นี้อ่อนกว่าการเทียบตรง ๆ แบบเดิม (ดู F11 ใน task-2-report.md)
   if (applicant && (aliases.has(candKey(applicant)) || nids.includes(candKey(applicant)))){ applicant = null; sessions = []; curSess = null; clearPersistedSession(); }
   candSelected.clear();
-  showToast(`✅ ลบข้อมูล ${nids.length} คนแล้ว`);
+  showToast(t18n('m_deleted_n').replace('{n}', nids.length));
   renderCandidatesPage();
 }
 
@@ -3320,8 +3404,8 @@ let compareData  = [];   // candidates currently being compared
 
 function openCompare(){
   const list = getCandidateList().filter(p => candSelected.has(candKey(p)));
-  if (list.length < 2){ showToast('เลือกอย่างน้อย 2 คนเพื่อเปรียบเทียบ'); return; }
-  if (list.length > 6){ showToast('เปรียบเทียบได้สูงสุด 6 คน'); return; }
+  if (list.length < 2){ showToast(t18n('m_pick_2')); return; }
+  if (list.length > 6){ showToast(t18n('m_max_6')); return; }
   compareData = list;
   openModal('mod-compare');
   requestAnimationFrame(renderCompare);
@@ -3430,7 +3514,7 @@ function buildComparePreviewHTML(){
 }
 
 function exportCompareXLSX(){
-  if (!window.XLSX){ showToast('❌ ไลบรารี Excel ไม่พร้อม'); return; }
+  if (!window.XLSX){ showToast(t18n('m_no_xlsx')); return; }
   const XLSX = window.XLSX, CODES = allTestCodes(), list = compareData;
   const activeCodes = CODES.filter(c => list.some(p => p[c+'_score'] != null));
   const header = ['รายการ', ...list.map(p => p.name||'—')];
@@ -3454,13 +3538,13 @@ function exportCompareXLSX(){
   XLSX.utils.book_append_sheet(wb, ws, 'เปรียบเทียบ');
   XLSX.writeFile(wb, 'MoveAssessment_Compare_' + new Date().toISOString().slice(0,10) + '.xlsx');
   closeModal('mod-export-preview');
-  showToast('✅ ดาวน์โหลด Excel สำเร็จ');
+  showToast(t18n('m_xlsx_ok'));
 }
 
 async function exportComparePDF(){
   const jsPDFCtor = window.jspdf && window.jspdf.jsPDF;
   const el = document.getElementById('cmp-export-root');
-  if (!(jsPDFCtor && typeof window.html2canvas === 'function' && el)){ showToast('❌ ไลบรารี PDF ไม่พร้อม'); return; }
+  if (!(jsPDFCtor && typeof window.html2canvas === 'function' && el)){ showToast(t18n('m_no_pdf')); return; }
   const btn = document.getElementById('exp-confirm-btn'), orig = btn.innerHTML;
   btn.innerHTML = '<span class="spin"></span> กำลังสร้าง...'; btn.disabled = true;
   try {
@@ -3471,8 +3555,8 @@ async function exportComparePDF(){
     pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 10, 10, pw, ph);
     pdf.save('MoveAssessment_Compare_' + new Date().toISOString().slice(0,10) + '.pdf');
     closeModal('mod-export-preview');
-    showToast('✅ ดาวน์โหลด PDF สำเร็จ');
-  } catch(e){ console.error(e); showToast('❌ สร้าง PDF ไม่สำเร็จ'); }
+    showToast(t18n('m_pdf_ok'));
+  } catch(e){ console.error(e); showToast(t18n('m_pdf_fail')); }
   finally { btn.innerHTML = orig; btn.disabled = false; }
 }
 
@@ -3858,7 +3942,7 @@ function toggleFullscreen() {
     document.documentElement.requestFullscreen().then(() => {
       btn.textContent = '⊠';
       btn.title = 'ออกจากเต็มจอ';
-    }).catch(() => showToast('ไม่รองรับ Fullscreen ในเบราว์เซอร์นี้'));
+    }).catch(() => showToast(t18n('m_no_fullscreen')));
   } else {
     document.exitFullscreen().then(() => {
       btn.textContent = '⛶';
@@ -3897,7 +3981,7 @@ function startFocusGuard() {
   // แจ้งเตือนก่อนเริ่มจับ
   if (!guardWarned) {
     guardWarned = true;
-    showToast('⚠️ ระบบจะตรวจจับหากออกจากหน้าสอบ', 4000);
+    showToast(t18n('m_leave_warn'), 4000);
   }
   document.addEventListener('visibilitychange', onVisibilityChange);
   window.addEventListener('blur', onWindowBlur);
@@ -4058,7 +4142,7 @@ function saveExamData() {
 // ④ Delete applicant data (Super Admin only)
 function deleteApplicantData(encodedKey) {
   if (!currentAdmin || !(ROLE_INFO[currentAdmin.role] && ROLE_INFO[currentAdmin.role].canDelete)) {
-    showToast('❌ ไม่มีสิทธิ์ลบข้อมูล'); return;
+    showToast(t18n('m_no_delete')); return;
   }
   const key = JSON.parse(decodeURIComponent(encodedKey));
   const name = `${key.fn} ${key.ln}`;
@@ -4095,7 +4179,7 @@ function deleteApplicantData(encodedKey) {
   }
 
   candSelected.delete(key.candKey);
-  showToast(`✅ ลบข้อมูล ${name} แล้ว`);
+  showToast(t18n('m_deleted_who').replace('{who}', name));
   filterAdmin(); // refresh admin overview table
   if (document.getElementById('p-candidates')?.classList.contains('active')) renderCandidatesPage();
 }
@@ -4135,11 +4219,11 @@ function exportAdminPDF(btn) {
   const orig = btn.innerHTML;
   btn.innerHTML = '<span class="spin"></span> กำลังสร้าง...'; btn.disabled = true;
   try {
-    if (window.XLSX) { exportToXLSX(); showToast('✅ ดาวน์โหลด Excel (.xlsx) สำเร็จ'); }
-    else              { exportToCSV();  showToast('✅ ดาวน์โหลด CSV สำเร็จ'); }
+    if (window.XLSX) { exportToXLSX(); showToast(t18n('m_xlsx2_ok')); }
+    else              { exportToCSV();  showToast(t18n('m_csv_ok')); }
   } catch(e) {
     console.error(e);
-    try { exportToCSV(); showToast('✅ ดาวน์โหลด CSV สำเร็จ'); } catch(e2) { showToast('❌ ' + e2.message); }
+    try { exportToCSV(); showToast(t18n('m_csv_ok')); } catch(e2) { showToast('❌ ' + e2.message); }
   } finally {
     setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 800);
   }
@@ -4203,7 +4287,7 @@ function buildExportData() {
 // ── CSV export ────────────────────────────────────────────────────────
 function exportToCSV() {
   const data = buildExportData();
-  if (!data.length) { showToast('ยังไม่มีข้อมูล'); return; }
+  if (!data.length) { showToast(t18n('m_no_data')); return; }
   const headers = Object.keys(data[0]);
   const csv = [headers, ...data.map(r => headers.map(h => r[h]))].map(row =>
     row.map(csvCell).join(',')
@@ -4563,11 +4647,11 @@ function submitNewCategory(){
   closeModal('mod-add-category');
   qeActiveSet = code;
   renderQuestionEditor();
-  showToast('✅ เพิ่มหมวดหมู่ "'+nameTH+'" (รหัส '+code+') — เพิ่มข้อสอบแล้วกด 💾 บันทึก');
+  showToast(t18n('m_cat_added').replace('{name}', nameTH).replace('{code}', code));
 }
 function deleteTestCategory(code){
   const tdef = TESTS.find(t => t.code === code);
-  if (!tdef || !tdef.custom) { showToast('❌ ลบได้เฉพาะหมวดหมู่ที่สร้างเอง'); return; }
+  if (!tdef || !tdef.custom) { showToast(t18n('m_del_custom_only')); return; }
   if (!confirm('ลบหมวดหมู่ "'+(tdef.nameTH||code)+'" และข้อสอบทั้งหมดในหมวดนี้?\nการกระทำนี้ย้อนกลับไม่ได้')) return;
   const idx = TESTS.indexOf(tdef);
   if (idx >= 0) TESTS.splice(idx, 1);
@@ -4581,7 +4665,7 @@ function deleteTestCategory(code){
   if (typeof cloudSaveQuestionBank === 'function') cloudSaveQuestionBank();
   qeActiveSet = 'IQ';
   renderQuestionEditor();
-  showToast('🗑 ลบหมวดหมู่ '+code+' แล้ว');
+  showToast(t18n('m_cat_deleted').replace('{code}', code));
 }
 function saveQuestions() {
   const EQ=getEditQ();
@@ -4611,12 +4695,12 @@ function saveQuestions() {
   // Sync the bank to the cloud so other devices/candidates get the changes
   if (typeof cloudSaveQuestionBank === 'function' && cloudEnabled() && cloudSignedIn()) {
     cloudSaveQuestionBank().then(res => {
-      if (res.settingsOk && res.bankOk) showToast('☁️ ซิงค์ข้อสอบขึ้น cloud แล้ว');
-      else if (res.settingsOk)          showToast('⚠️ ซิงค์หมวด/ตำแหน่งแล้ว แต่คลังข้อสอบยังไม่ขึ้น cloud', 6000);
-      else                               showToast('⚠️ ยังซิงค์ขึ้น cloud ไม่สำเร็จ', 6000);
+      if (res.settingsOk && res.bankOk) showToast(t18n('m_bank_synced'));
+      else if (res.settingsOk)          showToast(t18n('m_partial_sync'), 6000);
+      else                               showToast(t18n('m_sync_fail'), 6000);
     });
   }
-  showToast('✅ บันทึกข้อสอบแล้ว ' + Object.keys(EQ).map(k=>`${k}(${EQ[k].length})`).join(', '));
+  showToast(t18n('m_bank_saved') + ' ' + Object.keys(EQ).map(k=>`${k}(${EQ[k].length})`).join(', '));
 }
 
 // Restore admin-created custom test categories first, so their questions
@@ -4870,7 +4954,7 @@ window.openTest = function() {
   // handed to candidates anyway, with nobody told. Stop instead.
   if (serverScoringEnabled() && !_cloudBankLoaded) {
     if (typeof showToast === 'function')
-      showToast('❌ โหลดชุดข้อสอบจากระบบไม่สำเร็จ — กรุณารีเฟรชหน้า หรือแจ้งเจ้าหน้าที่', 10000);
+      showToast(t18n('m_bank_load_fail'), 10000);
     return;
   }
   // No endpoint and no answer key here either: there is nothing that could
@@ -4879,7 +4963,7 @@ window.openTest = function() {
   if (!serverScoringEnabled() && !canGradeLocally((sessions[curSess] || {}).test
                                                    && sessions[curSess].test.code)) {
     if (typeof showToast === 'function')
-      showToast('❌ ระบบตรวจคะแนนยังไม่พร้อมใช้งาน — ยังไม่ได้ตั้งที่อยู่ระบบตรวจคะแนน กรุณาแจ้งเจ้าหน้าที่', 12000);
+      showToast(t18n('m_no_endpoint'), 12000);
     return;
   }
   // Settle the sitting id before the autosave below, so a refresh mid-sitting
@@ -5283,7 +5367,7 @@ function renderPermMatrix() {
 
 function setRolePerm(role, key, checked) {
   if (!(currentAdmin && ROLE_INFO[currentAdmin.role]?.canManageUsers)) {
-    showToast('❌ ไม่มีสิทธิ์แก้ไขสิทธิ์การใช้งาน'); renderPermMatrix(); return;
+    showToast(t18n('m_no_perm_edit')); renderPermMatrix(); return;
   }
   if (role === 'superadmin' || !EDITABLE_ROLES.includes(role)) { renderPermMatrix(); return; }
   const rp = getRolePerms();
@@ -5293,22 +5377,22 @@ function setRolePerm(role, key, checked) {
   if (typeof renderAdminNav === 'function') renderAdminNav();
   renderCollabPage();
   const f = FEATURES.find(x => x.key === key);
-  showToast(`${checked ? '✅ เปิด' : '🚫 ปิด'} “${f ? f.label : key}” สำหรับ ${ROLE_INFO[role].label}`);
+  showToast(t18n(checked ? 'm_perm_on' : 'm_perm_off').replace('{what}', f ? f.label : key).replace('{role}', ROLE_INFO[role].label));
 }
 
 function resetRolePerms() {
-  if (!(currentAdmin && ROLE_INFO[currentAdmin.role]?.canManageUsers)) { showToast('❌ ไม่มีสิทธิ์'); return; }
+  if (!(currentAdmin && ROLE_INFO[currentAdmin.role]?.canManageUsers)) { showToast(t18n('m_no_perm')); return; }
   if (!confirm('คืนค่าสิทธิ์ทุกระดับกลับเป็นค่าเริ่มต้น?')) return;
   try { localStorage.removeItem('hma_role_perms'); } catch(e) {}
   applyRolePerms();
   if (typeof renderAdminNav === 'function') renderAdminNav();
   renderCollabPage();
-  showToast('↺ คืนค่าสิทธิ์เริ่มต้นแล้ว');
+  showToast(t18n('m_perm_reset'));
 }
 
 function openAddUser() {
-  if (!(currentAdmin && ROLE_INFO[currentAdmin.role]?.canManageUsers)) { showToast('❌ ไม่มีสิทธิ์จัดการผู้ดูแล'); return; }
-  if (!cloudEnabled()) { showToast('❌ การเพิ่มผู้ดูแลต้องเชื่อมต่อ cloud'); return; }
+  if (!(currentAdmin && ROLE_INFO[currentAdmin.role]?.canManageUsers)) { showToast(t18n('m_no_admin_mgmt')); return; }
+  if (!cloudEnabled()) { showToast(t18n('m_add_needs_cloud')); return; }
   document.getElementById('mod-adduser-title').textContent = 'เพิ่มผู้ดูแลระบบ';
   document.getElementById('nu-name').value = '';
   const em = document.getElementById('nu-email');
@@ -5338,32 +5422,32 @@ function editUser(encEmail) {
 }
 
 async function saveUser() {
-  if (!(currentAdmin && ROLE_INFO[currentAdmin.role]?.canManageUsers)) { showToast('❌ ไม่มีสิทธิ์'); return; }
-  if (!cloudEnabled()) { showToast('❌ ระบบ cloud ไม่พร้อมใช้งาน'); return; }
+  if (!(currentAdmin && ROLE_INFO[currentAdmin.role]?.canManageUsers)) { showToast(t18n('m_no_perm')); return; }
+  if (!cloudEnabled()) { showToast(t18n('m_cloud_down')); return; }
   const name  = document.getElementById('nu-name').value.trim();
   const role  = document.getElementById('nu-role').value;
   const editEmail = document.getElementById('nu-edit-email').value;
-  if (!name) { showToast('❌ กรอกชื่อแสดง'); return; }
+  if (!name) { showToast(t18n('m_need_display')); return; }
 
   // ── Edit: update name + role only ──
   if (editEmail) {
     try {
       await db.collection('admin_roles').doc(editEmail.toLowerCase()).set({ name, role }, { merge: true });
-    } catch (e) { showToast('❌ บันทึกไม่สำเร็จ (ตรวจ Firestore Rules): ' + (e.code || e.message), 6000); return; }
+    } catch (e) { showToast(t18n('m_save_fail_rules') + (e.code || e.message), 6000); return; }
     closeModal('mod-adduser');
     await renderCollabPage();
-    showToast(`✅ อัปเดต ${name} (${ROLE_INFO[role]?.label}) แล้ว`);
+    showToast(t18n('m_user_updated').replace('{who}', name).replace('{role}', ROLE_INFO[role]?.label));
     return;
   }
 
   // ── Add: write the role entry, then create the login account ──
   const email = document.getElementById('nu-email').value.trim().toLowerCase();
   const pass  = document.getElementById('nu-pass').value;
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('❌ อีเมลไม่ถูกต้อง'); return; }
-  if (!pass || pass.length < 6) { showToast('❌ รหัสผ่านอย่างน้อย 6 ตัวอักษร'); return; }
-  if (_adminRoster.find(u => (u.email || '').toLowerCase() === email)) { showToast('❌ อีเมลนี้อยู่ในทีมแล้ว'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast(t18n('m_bad_email')); return; }
+  if (!pass || pass.length < 6) { showToast(t18n('m_pw_short')); return; }
+  if (_adminRoster.find(u => (u.email || '').toLowerCase() === email)) { showToast(t18n('m_email_exists')); return; }
 
-  showToast('⏳ กำลังบันทึก…');
+  showToast(t18n('m_saving'));
   // Order matters: write the ROLE first, then create the login account. If the
   // role write is going to fail (e.g. Firestore rules for admin_roles not
   // configured yet), it fails here — before any Firebase Auth account exists —
@@ -5375,8 +5459,8 @@ async function saveUser() {
     }, { merge: true });
   } catch (e) {
     const m = e.code === 'permission-denied'
-        ? 'บันทึกบทบาทไม่สำเร็จ — ยังไม่ได้ตั้ง Firestore Rules ให้ admin_roles (ตั้งใน Firebase Console)'
-      : ('บันทึกบทบาทไม่สำเร็จ: ' + (e.code || e.message));
+        ? t18n('m_role_rules')
+      : (t18n('m_role_fail') + (e.code || e.message));
     showToast('❌ ' + m, 8000);
     return;
   }
@@ -5405,30 +5489,30 @@ async function saveUser() {
   await renderCollabPage();
   if (authErr) {
     const m = authErr.code === 'auth/operation-not-allowed'
-        ? 'บันทึกบทบาทแล้ว แต่สร้างบัญชีล็อกอินไม่ได้ — เปิด Email/Password provider ใน Firebase Console แล้วเพิ่มอีเมลนี้อีกครั้ง'
+        ? t18n('m_role_ok_no_login')
       : ('บันทึกบทบาทแล้ว แต่สร้างบัญชีล็อกอินไม่สำเร็จ: ' + (authErr.code || authErr.message) + ' — เพิ่มอีเมลเดิมอีกครั้งเพื่อลองใหม่');
     showToast('⚠️ ' + m, 8000);
     return;
   }
-  const note = adopted ? ' (ใช้บัญชี Firebase เดิม — รหัสผ่านไม่เปลี่ยน)' : ' — ล็อกอินด้วยอีเมล/รหัสผ่านนี้ได้ทุกเครื่อง';
-  showToast(`✅ เพิ่ม ${name} (${ROLE_INFO[role]?.label}) แล้ว${note}`, 6000);
+  const note = t18n(adopted ? 'm_note_adopted' : 'm_note_new');
+  showToast(t18n('m_user_added').replace('{who}', name).replace('{role}', ROLE_INFO[role]?.label) + note, 6000);
 }
 
 // Delete = revoke the role entry. The orphaned Firebase Auth account can no
 // longer reach the admin portal (login denies accounts not in the roster);
 // remove it permanently in the Firebase Console if desired.
 async function deleteUser(encEmail) {
-  if (!(currentAdmin && ROLE_INFO[currentAdmin.role]?.canManageUsers)) { showToast('❌ ไม่มีสิทธิ์'); return; }
-  if (!cloudEnabled()) { showToast('❌ ระบบ cloud ไม่พร้อมใช้งาน'); return; }
+  if (!(currentAdmin && ROLE_INFO[currentAdmin.role]?.canManageUsers)) { showToast(t18n('m_no_perm')); return; }
+  if (!cloudEnabled()) { showToast(t18n('m_cloud_down')); return; }
   const email = decodeURIComponent(encEmail);
   const u = _adminRoster.find(x => (x.email || '').toLowerCase() === email.toLowerCase());
   if (!u) return;
   if (!confirm(`เพิกถอนสิทธิ์แอดมินของ ${u.name || email}?\n\nบัญชีนี้จะเข้าหน้าแอดมินไม่ได้อีก (บัญชี Firebase Auth ยังอยู่ — ลบถาวรได้ใน Firebase Console)`)) return;
   try {
     await db.collection('admin_roles').doc(email.toLowerCase()).delete();
-  } catch (e) { showToast('❌ ลบไม่สำเร็จ (ตรวจ Firestore Rules): ' + (e.code || e.message), 6000); return; }
+  } catch (e) { showToast(t18n('m_del_fail_rules') + (e.code || e.message), 6000); return; }
   await renderCollabPage();
-  showToast('✅ เพิกถอนสิทธิ์แล้ว');
+  showToast(t18n('m_revoked'));
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -5576,7 +5660,7 @@ function instrSetImage(input) {
     saveInstructions(instr);
     document.getElementById('instr-img-preview').innerHTML =
       `<img src="${e.target.result}" class="instruction-img" style="max-height:120px">`;
-    showToast('✅ อัปโหลดรูปสำเร็จ');
+    showToast(t18n('m_img_ok'));
   };
   reader.readAsDataURL(file);
 }
@@ -5588,7 +5672,7 @@ function saveInstruction() {
   instr[instrActiveSet].body  = document.getElementById('instr-body').value;
   saveInstructions(instr);
   if (typeof cloudSaveQuestionBank === 'function' && cloudEnabled() && cloudSignedIn()) cloudSaveQuestionBank();
-  showToast(`✅ บันทึกคำแนะนำ ${instrActiveSet} แล้ว`);
+  showToast(t18n('m_instr_saved').replace('{set}', instrActiveSet));
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -5680,7 +5764,7 @@ function downloadIndivCSV() {
     ws['!merges'] = [{s:{r:0,c:0},e:{r:0,c:4}},{s:{r:1,c:0},e:{r:1,c:4}}];
     window.XLSX.utils.book_append_sheet(wb, ws, 'ผลสอบ');
     window.XLSX.writeFile(wb, 'MoveAssessment_' + fname + '_' + date + '.xlsx');
-    showToast('✅ Export Excel ' + person + ' สำเร็จ');
+    showToast(t18n('m_export_xlsx_of').replace('{who}', person));
   } else {
     const headers = ['ชุดสอบ','วัน/เวลา','เวลาที่ใช้','คะแนน','เกณฑ์ผ่าน','ผล','ออกจากหน้าจอ','ชื่อ','รหัสผู้สมัคร','ตำแหน่ง'];
     const csvRows = rows.map(r=>[r.test, r.date, r.time, r.score, indivPassing(r), r.out, (r.leaves==null?'':r.leaves), person, candKey(r), r.pos]);
@@ -5690,13 +5774,13 @@ function downloadIndivCSV() {
     const a = document.createElement('a');
     a.href=url; a.download='MoveAssessment_'+fname+'_'+date+'.csv';
     a.click(); URL.revokeObjectURL(url);
-    showToast('✅ Export ' + person + ' สำเร็จ');
+    showToast(t18n('m_export_of').replace('{who}', person));
   }
 }
 
 // ── Real PDF export of an individual candidate's result ──────────────
 async function exportIndivPDF(btn) {
-  if (!indivExportData) { showToast('❌ ไม่พบข้อมูลผู้สมัคร'); return; }
+  if (!indivExportData) { showToast(t18n('m_cand_missing')); return; }
   const { rows } = indivExportData;
   const person = (rows[0].fn + ' ' + rows[0].ln).trim();
   const fname  = person.replace(/\s+/g,'_');
@@ -5726,7 +5810,7 @@ async function exportIndivPDF(btn) {
         heightLeft -= ph;
       }
       pdf.save('MoveAssessment_' + fname + '_' + date + '.pdf');
-      showToast('✅ ดาวน์โหลด PDF ' + person + ' สำเร็จ');
+      showToast(t18n('m_pdf_of').replace('{who}', person));
     } else {
       printIndivPDF(person);   // libraries unavailable → browser print fallback
     }
@@ -5742,9 +5826,9 @@ async function exportIndivPDF(btn) {
 // Clones the app's own <style> tags so colors/layout render correctly + Thai text stays selectable.
 function printIndivPDF(person) {
   const el = document.getElementById('ipdf-content');
-  if (!el) { showToast('❌ ไม่พบเนื้อหา'); return; }
+  if (!el) { showToast(t18n('m_content_missing')); return; }
   const w = window.open('', '_blank');
-  if (!w) { showToast('❌ เบราว์เซอร์บล็อก popup — อนุญาตแล้วลองใหม่'); return; }
+  if (!w) { showToast(t18n('m_popup_blocked')); return; }
   const styles = Array.from(document.querySelectorAll('style')).map(s => s.outerHTML).join('');
   w.document.write(
     '<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8">' +
@@ -5755,7 +5839,7 @@ function printIndivPDF(person) {
   );
   w.document.close(); w.focus();
   setTimeout(() => { try { w.print(); } catch(e){} }, 350);
-  showToast('🖨️ เปิดหน้าต่างพิมพ์ — เลือก “บันทึกเป็น PDF / Save as PDF”');
+  showToast(t18n('m_print_open'));
 }
 
 // Export the FULL admin score dashboard as a multi-page A4 PDF.
@@ -5789,7 +5873,7 @@ async function captureResultsPages(){
 // Capture, then show a preview modal BEFORE downloading.
 async function exportResultsPDF(btn){
   const jsPDFCtor = window.jspdf && window.jspdf.jsPDF;
-  if (!(jsPDFCtor && typeof window.html2canvas === 'function')) { showToast('❌ ไลบรารี PDF ไม่พร้อม'); return; }
+  if (!(jsPDFCtor && typeof window.html2canvas === 'function')) { showToast(t18n('m_no_pdf')); return; }
   const orig = btn ? btn.innerHTML : '';
   if (btn){ btn.innerHTML = '<span class="spin"></span> กำลังสร้างพรีวิว...'; btn.disabled = true; }
   try {
@@ -5799,7 +5883,7 @@ async function exportResultsPDF(btn){
     showPdfPreviewModal(pages);
   } catch(e){
     console.error(e);
-    showToast('❌ สร้างพรีวิวไม่สำเร็จ: ' + (e.message || e));
+    showToast(t18n('m_preview_fail') + (e.message || e));
   } finally {
     if (btn){ btn.innerHTML = orig; btn.disabled = false; }
   }
@@ -5828,7 +5912,7 @@ function showPdfPreviewModal(pages){
 
 function downloadResultsPDF(btn){
   const pages = _resultsPagesCache;
-  if (!pages || !pages.length) { showToast('❌ ไม่มีข้อมูลพรีวิว'); return; }
+  if (!pages || !pages.length) { showToast(t18n('m_no_preview')); return; }
   const jsPDFCtor = window.jspdf.jsPDF;
   const person = (typeof applicant !== 'undefined' && applicant && applicant.name) ? applicant.name : 'candidate';
   const fname  = ('MoveAssessment_Dashboard_' + person).replace(/\s+/g,'_');
@@ -5846,7 +5930,7 @@ function downloadResultsPDF(btn){
   });
   pdf.save(fname + '_' + date + '.pdf');
   closeModal('mod-pdf-preview');
-  showToast('✅ ดาวน์โหลดแดชบอร์ดคะแนน (PDF A4) สำเร็จ');
+  showToast(t18n('m_dash_pdf_ok'));
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -6031,8 +6115,7 @@ function adminOpenScoreDash(nid){
   const snaps = getResultSnapshots().filter(x => aliasesIntersect(candKeyAliases(x), aliases));
   if (!snaps.length){
     // "ไม่มีข้อมูล" อย่างเดียวทำให้ดูเหมือนปุ่มเสีย ทั้งที่สาเหตุคือผลยังมาไม่ถึง
-    showToast('📊 ยังเปิดแดชบอร์ดคะแนนไม่ได้ — ผลสอบของผู้สมัครรายนี้ยังมาไม่ถึงระบบ ' +
-              'ถ้าเพิ่งสอบเสร็จ รอสักครู่แล้วกดรีเฟรช', 6000);
+    showToast(t18n('m_dash_not_ready'), 6000);
     return;
   }
   const snap = snaps[snaps.length - 1];
@@ -6286,7 +6369,7 @@ async function submitAnswersForScoring(s) {
   } catch(e) {
     console.warn('could not build the answer submission:', e);
     if (typeof showToast === 'function')
-      showToast('❌ เตรียมส่งคำตอบไม่สำเร็จ — กรุณาแจ้งเจ้าหน้าที่', 10000);
+      showToast(t18n('m_build_fail'), 10000);
     return;
   }
   let outcome;
@@ -6296,14 +6379,14 @@ async function submitAnswersForScoring(s) {
   if (outcome.retry) {
     queueAnswers(submission);
     if (typeof showToast === 'function')
-      showToast('⚠️ ส่งคำตอบขึ้นระบบไม่สำเร็จ — ระบบจะส่งใหม่อัตโนมัติเมื่อเชื่อมต่อได้', 6000);
+      showToast(t18n('m_send_fail'), 6000);
     return;
   }
   // Not worth retrying: these answers cannot be scored as they stand. Saying so
   // beats leaving the candidate believing they were recorded.
   console.warn('scoring refused the submission:', outcome.code, outcome.error);
   if (typeof showToast === 'function')
-    showToast('❌ ระบบตรวจคะแนนไม่รับคำตอบชุดนี้ (' + outcome.code + ') — กรุณาแจ้งเจ้าหน้าที่', 10000);
+    showToast(t18n('m_answers_refused').replace('{code}', outcome.code), 10000);
 }
 
 async function flushAnswerQueue() {
@@ -6320,7 +6403,7 @@ async function flushAnswerQueue() {
   }
   try { localStorage.setItem(ANSWER_QUEUE_KEY, JSON.stringify(remain)); } catch(e) {}
   if (q.length && !remain.length && typeof showToast === 'function')
-    showToast('☁️ ส่งคำตอบที่ค้างขึ้นระบบสำเร็จแล้ว');
+    showToast(t18n('m_queue_sent'));
   // The thank-you page states whether anything is still waiting, so it has to
   // be redrawn whenever that changes — including a flush the candidate did not
   // ask for, on a page that is already open.
@@ -6476,7 +6559,7 @@ async function cloudPushOnComplete(){
       q.push({ rec: recs[recs.length-1], snap: snaps[snaps.length-1], at: Date.now() });
       localStorage.setItem('hma_cloud_pending', JSON.stringify(q));
     } catch(_){}
-    if (typeof showToast === 'function') showToast('⚠️ อัปโหลดผลขึ้น cloud ไม่สำเร็จ — ระบบจะลองใหม่อัตโนมัติเมื่อเชื่อมต่อได้', 6000);
+    if (typeof showToast === 'function') showToast(t18n('m_cloud_up_fail'), 6000);
   }
 }
 
@@ -6513,7 +6596,7 @@ async function cloudFlushPending(){
     } catch(e){ remain.push(item); }
   }
   try { localStorage.setItem('hma_cloud_pending', JSON.stringify(remain)); } catch(e){}
-  if (q.length && !remain.length && typeof showToast === 'function') showToast('☁️ อัปโหลดผลที่ค้างขึ้น cloud สำเร็จแล้ว');
+  if (q.length && !remain.length && typeof showToast === 'function') showToast(t18n('m_cloud_up_ok'));
 }
 
 // Admin side: pull all candidate data and merge into local cache so every
@@ -6561,7 +6644,7 @@ function updateCloudStatus(state, info){
 async function cloudDiagnose(){
   if (!cloudEnabled()) { alert('❌ Firebase ยังไม่โหลด\n\nอาจเป็นเพราะไม่มีอินเทอร์เน็ต หรือมีตัวบล็อกสคริปต์ (ad-blocker/extension)'); return; }
   if (!cloudSignedIn()) { alert('⚠️ ยังไม่ได้ล็อกอินด้วยอีเมล\n\nกรุณาออกจากระบบ แล้วล็อกอินด้วยอีเมล (Firebase) เพื่อซิงค์ข้ามเครื่อง'); return; }
-  showToast('🔧 กำลังทดสอบการเชื่อมต่อ cloud…', 12000);
+  showToast(t18n('m_cloud_testing'), 12000);
   let settled = false;
   const timer = setTimeout(() => {
     if (settled) return;
@@ -6615,7 +6698,7 @@ async function cloudSaveQuestionBank(){
   // otherwise a fresh/blocked browser would push empty customTests/presets over
   // everyone else's data (e.g. via the status-pill diagnostic).
   if (!_cloudSettingsLoaded) {
-    if (typeof showToast === 'function') showToast('⌛ ยังโหลดค่าจาก cloud ไม่เสร็จ — รอสักครู่แล้วลองใหม่', 5000);
+    if (typeof showToast === 'function') showToast(t18n('m_cloud_loading'), 5000);
     return { settingsOk:false, bankOk:false };
   }
   const stamp = firebase.firestore.FieldValue.serverTimestamp();
@@ -6643,8 +6726,8 @@ async function cloudSaveQuestionBank(){
     settingsOk = true;
   } catch(e){
     console.warn('cloud settings save failed:', e);
-    if (e && e.code === 'permission-denied') showToast('⚠️ ซิงค์ไม่ได้ — ยังไม่ได้เพิ่ม Firestore rule ของ config', 5000);
-    else showToast('⚠️ ซิงค์ตำแหน่ง/หมวดไม่สำเร็จ: ' + (e.code || e.message), 5000);
+    if (e && e.code === 'permission-denied') showToast(t18n('m_no_rule_config'), 5000);
+    else showToast(t18n('m_pos_sync_fail') + (e.code || e.message), 5000);
   }
   // With scoring on the endpoint, the bank goes there to be split: the browser
   // must not write config/bank itself, or it would be writing the public half
@@ -6657,20 +6740,19 @@ async function cloudSaveQuestionBank(){
       // for everybody. Refuse, and say what to do about it.
       console.warn('refusing to publish a bank with no answer key for:', missing.join(', '));
       if (typeof showToast === 'function')
-        showToast('❌ ยังไม่ได้โหลดเฉลยของ ' + missing.join(', ') +
-                  ' — ไม่บันทึก เพราะจะทับเฉลยเดิมหาย กรุณารีเฟรชแล้วลองใหม่', 12000);
+        showToast(t18n('m_key_missing').replace('{list}', missing.join(', ')), 12000);
       return { settingsOk, bankOk: false };
     }
     if (!_fullBankLoaded) {
       if (typeof showToast === 'function')
-        showToast('⌛ ยังโหลดเฉลยจากระบบไม่เสร็จ — รอสักครู่แล้วลองใหม่', 6000);
+        showToast(t18n('m_key_loading'), 6000);
       return { settingsOk, bankOk: false };
     }
     const outcome = await publishBankToEndpoint(customQuestions);
     if (!outcome.ok) {
       console.warn('publishing the bank failed:', outcome.code, outcome.error);
       if (typeof showToast === 'function')
-        showToast('⚠️ บันทึกข้อสอบขึ้นระบบไม่สำเร็จ (' + outcome.code + ')', 7000);
+        showToast(t18n('m_bank_save_fail').replace('{code}', outcome.code), 7000);
     }
     return { settingsOk, bankOk: outcome.ok };
   }
@@ -6687,9 +6769,9 @@ async function cloudSaveQuestionBank(){
     // Report the failure honestly (including permission-denied) so callers don't
     // claim the question bank synced when it didn't.
     if (e && e.code === 'permission-denied')
-      showToast('⚠️ คลังข้อสอบซิงค์ไม่ได้ — ตรวจ Firestore rule ของ config/bank', 7000);
+      showToast(t18n('m_no_rule_bank'), 7000);
     else
-      showToast('⚠️ คลังข้อสอบใหญ่เกินไป (รูปเยอะ?) — ตำแหน่ง/หมวดซิงค์แล้ว แต่ข้อสอบยังไม่ขึ้น', 7000);
+      showToast(t18n('m_bank_too_big'), 7000);
   }
   return { settingsOk, bankOk };
 }
@@ -6721,7 +6803,7 @@ async function adminLoadFullBank() {
       // 401/403 is the ordinary case for an HR or viewer account: they are not
       // allowed the answer key, and that is not an error worth shouting about.
       if (res.status !== 401 && res.status !== 403 && typeof showToast === 'function')
-        showToast('⚠️ โหลดเฉลยไม่สำเร็จ (' + (body.code || res.status) + ')', 6000);
+        showToast(t18n('m_key_load_fail').replace('{code}', body.code || res.status), 6000);
       return false;
     }
     const { bank } = await res.json();
