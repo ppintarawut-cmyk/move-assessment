@@ -1901,6 +1901,79 @@ const I18N = {
   t_cheat_copy: { th:"พยายาม Copy/Cut/Paste ข้อความ", en:"Tried to copy, cut or paste text" },
   t_cheat_tab: { th:"สลับ Tab หรือออกจากหน้าต่าง", en:"Switched tab or left the window" },
   t_cheat_blur: { th:"คลิกออกนอกหน้าต่างเบราว์เซอร์", en:"Clicked outside the browser window" },
+  // ── Question editor ──
+  qe_category: { th:"หมวดหมู่", en:"Category" },
+  qe_del_cat_n: { th:"ลบหมวด {code}", en:"Delete {code}" },
+  qe_pass_of: { th:"เกณฑ์ผ่านของชุด {code}:", en:"Pass mark for {code}:" },
+  qe_out_of_100: { th:"คะแนน (จาก 100)", en:"points (out of 100)" },
+  qe_shuffle_opts: { th:"สุ่มลำดับตัวเลือก", en:"Shuffle the options" },
+  qe_shuffle_hint: { th:"(ปิดสำหรับชุดที่ตัวเลือกเรียงตามลำดับ เช่น บุคลิกภาพ)",
+                     en:"(turn off where the options are an ordered scale, e.g. personality)" },
+  qe_pass_note: { th:"ผู้สมัครที่ได้คะแนนถึงเกณฑ์จะแสดงผลเป็น “ผ่าน” · กด 💾 บันทึก เพื่อจัดเก็บการตั้งค่า",
+                  en:"A candidate who reaches the mark is shown as “Passed” · press 💾 Save to keep the setting" },
+  qe_multi: { th:"หลายข้อ", en:"Multi-select" },
+  qe_open: { th:"อัตนัย", en:"Open answer" },
+  qe_mcq: { th:"MCQ (เลือก 1)", en:"MCQ (pick one)" },
+  qe_key: { th:"เฉลย", en:"Key" },
+  qe_type: { th:"ประเภทข้อสอบ", en:"Question type" },
+  qe_passage: { th:"📄 บทความ / เนื้อเรื่อง", en:"📄 Passage" },
+  qe_passage_hint: { th:"(ไม่บังคับ — แสดงเหนือคำถาม เช่น NOTICE, บทอ่าน; ใช้ได้ทุกประเภท)",
+                     en:"(optional — shown above the question, e.g. a notice or reading text; works with any type)" },
+  qe_stem: { th:"โจทย์", en:"Question" },
+  qe_image: { th:"🖼 รูปประกอบโจทย์", en:"🖼 Question image" },
+  qe_audio: { th:"🔊 เสียงโจทย์", en:"🔊 Question audio" },
+  qe_options: { th:"ตัวเลือก", en:"Options" },
+  qe_options_hint: { th:"(ทำเครื่องหมาย ✓ ที่เฉลย)", en:"(tick the correct one)" },
+  qe_add_opt: { th:"เพิ่มตัวเลือก", en:"Add an option" },
+  qe_model_answer: { th:"แนวคำตอบ/เฉลย", en:"Model answer" },
+  qe_explanation: { th:"คำอธิบายเฉลย", en:"Explanation" },
+  qe_new_opt: { th:"ตัวเลือกใหม่", en:"New option" },
+  c_del_item: { th:"ลบข้อ {n}?", en:"Delete question {n}?" },
+  // ── Confirmations ──
+  c_irreversible: { th:"การกระทำนี้ไม่สามารถย้อนกลับได้", en:"This cannot be undone." },
+  c_del_selected: { th:"⚠️ ลบข้อมูลผู้สมัคร {n} คนที่เลือก?", en:"⚠️ Delete the {n} selected candidates?" },
+  c_del_one: { th:"⚠️ ลบข้อมูลทั้งหมดของ “{who}” ({id})?", en:"⚠️ Delete everything for “{who}” ({id})?" },
+  c_del_category: { th:"ลบหมวดหมู่ “{name}” และข้อสอบทั้งหมดในหมวดนี้?",
+                    en:"Delete the category “{name}” and every question in it?" },
+  c_reset_perms: { th:"คืนค่าสิทธิ์ทุกระดับกลับเป็นค่าเริ่มต้น?", en:"Reset every role to its default permissions?" },
+  c_revoke_admin: { th:"เพิกถอนสิทธิ์แอดมินของ {who}?", en:"Revoke administrator access for {who}?" },
+  c_revoke_note: { th:"บัญชีนี้จะเข้าหน้าแอดมินไม่ได้อีก (บัญชี Firebase Auth ยังอยู่ — ลบถาวรได้ใน Firebase Console)",
+                   en:"They will no longer reach the admin portal. The sign-in account itself remains and can be deleted in the Firebase console." },
+  // ── Busy labels and shared words ──
+  t_building: { th:"กำลังสร้าง...", en:"Building…" },
+  t_building_preview: { th:"กำลังสร้างพรีวิว...", en:"Building the preview…" },
+  t_close: { th:"ปิด", en:"Close" },
+  t_illustration: { th:"รูปประกอบ", en:"Illustration" },
+  t_instr_for: { th:"คำชี้แจงการสอบ —", en:"Instructions —" },
+  t_cand_results: { th:"ผลการทดสอบผู้สมัคร", en:"Candidate results" },
+  t_page_of: { th:"หน้า {i}/{n}", en:"Page {i}/{n}" },
+  t_pdf_preview_n: { th:"🔍 พรีวิว PDF (A4) — {n} หน้า", en:"🔍 PDF preview (A4) — {n} pages" },
+  // ── Resume bar ──
+  t_resume_yours: { th:"คุณมีแบบทดสอบที่ทำค้างไว้ ({who}) — ทำต่อได้เลย",
+                    en:"You have an unfinished assessment ({who}) — pick it up where you left off" },
+  t_resume_other: { th:"มีแบบทดสอบค้างอยู่ของ {who}", en:"An unfinished assessment is saved for {who}" },
+  t_resume_go_short: { th:"ทำต่อ →", en:"Continue →" },
+  t_resume_doing: { th:"กำลังทำ: {test} ข้อ {n}", en:"In progress: {test}, question {n}" },
+  t_resume_pending: { th:"ค้างอยู่ {n} ชุด", en:"{n} tests still to do" },
+  // ── Team and permissions ──
+  t_full_rights: { th:"เต็มสิทธิ์", en:"Full access" },
+  t_feature_col: { th:"ฟีเจอร์ / หน้าที่เกี่ยวข้อง", en:"Feature / what it covers" },
+  t_adduser_add: { th:"เพิ่มผู้ดูแลระบบ", en:"Add an administrator" },
+  t_adduser_edit: { th:"แก้ไขบทบาทผู้ดูแล", en:"Edit this administrator's role" },
+  m_team_load_fail: { th:"โหลดรายชื่อไม่สำเร็จ (ตรวจ Firestore Rules ให้ผู้ล็อกอินอ่าน admin_roles ได้)",
+                      en:"Could not load the team (check that the Firestore rules let a signed-in user read admin_roles)" },
+  m_role_saved_no_login: { th:"บันทึกบทบาทแล้ว แต่สร้างบัญชีล็อกอินไม่สำเร็จ:",
+                           en:"The role was saved but the sign-in account could not be created:" },
+  m_retry_same_email: { th:"เพิ่มอีเมลเดิมอีกครั้งเพื่อลองใหม่", en:"add the same email again to retry" },
+  // ── Scoring and cloud errors ──
+  m_pdf_demo: { th:"✅ ในระบบจริง: PDF จะถูกสร้างด้วย jsPDF + html2canvas และดาวน์โหลดอัตโนมัติ",
+                en:"✅ In the live system the PDF is built with jsPDF + html2canvas and downloads on its own." },
+  m_filename: { th:"ชื่อไฟล์:", en:"File name:" },
+  m_https_only: { th:"ต้องเปิดหน้านี้ผ่าน https เท่านั้น (ระบบตรวจคะแนนต้องใช้)",
+                  en:"This page has to be served over https — the scoring service requires it." },
+  m_not_signed_in: { th:"ยังไม่ได้ล็อกอิน", en:"Not signed in" },
+  m_firestore_hung: { th:"⏱️ การเชื่อมต่อ Firestore ค้าง (เกิน 10 วินาที)\n\nเครือข่าย/เบราว์เซอร์นี้น่าจะบล็อก Firestore\n\nลองวิธีใดวิธีหนึ่ง:\n• ใช้เน็ตอื่น (มือถือ 4G/5G)\n• ปิด ad-blocker / privacy extension แล้วลองใหม่\n• ลองเครื่อง/เบราว์เซอร์อื่น",
+                      en:"⏱️ The connection to Firestore has hung (over 10 seconds).\n\nThis network or browser is most likely blocking Firestore.\n\nTry one of these:\n• a different connection (phone 4G/5G)\n• turn off any ad-blocker or privacy extension and retry\n• another device or browser" },
 };
 
 function t18n(key){ const e = I18N[key]; return e ? (e[LANG] || e.th) : key; }
@@ -2996,7 +3069,7 @@ function fakePDF(btn) {
   btn.innerHTML='<span class="spin"></span> ' + t18n('t_making_pdf'); btn.disabled=true;
   setTimeout(()=>{
     btn.innerHTML=orig; btn.disabled=false;
-    alert('✅ ในระบบจริง: PDF จะถูกสร้างด้วย jsPDF + html2canvas และดาวน์โหลดอัตโนมัติ\nชื่อไฟล์: MoveAssessment_TestResult_'+applicant?.name?.replace(/\s/g,'_')+'_'+new Date().toISOString().slice(0,10)+'.pdf');
+    alert(t18n('m_pdf_demo') + '\n' + t18n('m_filename') + ' MoveAssessment_TestResult_'+applicant?.name?.replace(/\s/g,'_')+'_'+new Date().toISOString().slice(0,10)+'.pdf');
   }, 1500);
 }
 
@@ -3594,7 +3667,7 @@ function bulkDeleteCandidates(){
   if (!(currentAdmin && ROLE_INFO[currentAdmin.role]?.canDelete)){ showToast(t18n('m_no_delete')); return; }
   const nids = [...candSelected];
   if (!nids.length){ showToast(t18n('m_pick_cand')); return; }
-  if (!confirm(`⚠️ ลบข้อมูลผู้สมัคร ${nids.length} คนที่เลือก?\n\nการกระทำนี้ไม่สามารถย้อนกลับได้`)) return;
+  if (!confirm(t18n('c_del_selected').replace('{n}', nids.length) + '\n\n' + t18n('c_irreversible'))) return;
   // กวาดทุก alias ของทุกคนที่เลือก ไม่ใช่แค่ key เดียว — คนเดียวกันอาจถูก key คนละแบบใน
   // exam_records กับ result_snapshots (ดูคอมเมนต์ที่ candKeyAliases)
   const aliases = new Set();
@@ -3762,7 +3835,7 @@ async function exportComparePDF(){
   const el = document.getElementById('cmp-export-root');
   if (!(jsPDFCtor && typeof window.html2canvas === 'function' && el)){ showToast(t18n('m_no_pdf')); return; }
   const btn = document.getElementById('exp-confirm-btn'), orig = btn.innerHTML;
-  btn.innerHTML = '<span class="spin"></span> กำลังสร้าง...'; btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> ' + t18n('t_building'); btn.disabled = true;
   try {
     const canvas = await window.html2canvas(el, { scale:2, backgroundColor:'#ffffff' });
     const pdf = new jsPDFCtor('p','mm','a4');
@@ -4362,7 +4435,7 @@ function deleteApplicantData(encodedKey) {
   }
   const key = JSON.parse(decodeURIComponent(encodedKey));
   const name = `${key.fn} ${key.ln}`;
-  if (!confirm(`⚠️ ลบข้อมูลทั้งหมดของ "${name}" (${key.candKey})?\n\nการกระทำนี้ไม่สามารถย้อนกลับได้`)) return;
+  if (!confirm(t18n('c_del_one').replace('{who}', name).replace('{id}', key.candKey) + '\n\n' + t18n('c_irreversible'))) return;
 
   // กวาดทุก alias ของผู้สมัครคนนี้ก่อนลบ — record ก่อน migration อาจถูก key ด้วยอีเมลใน
   // exam_records แต่ถูก key ด้วยเลขบัตรใน result_snapshots (ไม่งั้น snapshot จะรอดจากการลบ)
@@ -4433,7 +4506,7 @@ async function cloudDeleteCandidate(aliases){
 // ─── Export CSV ───────────────────────────────────────────
 function exportAdminPDF(btn) {
   const orig = btn.innerHTML;
-  btn.innerHTML = '<span class="spin"></span> กำลังสร้าง...'; btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> ' + t18n('t_building'); btn.disabled = true;
   try {
     if (window.XLSX) { exportToXLSX(); showToast(t18n('m_xlsx2_ok')); }
     else              { exportToCSV();  showToast(t18n('m_csv_ok')); }
@@ -4658,31 +4731,31 @@ function renderQuestionEditor() {
       const star = tdef && tdef.custom ? ' ★' : '';
       return `<button class="btn btn-sm ${k===qeActiveSet?'btn-primary':'btn-secondary'}" onclick="qeSwitch('${k}')">${k}${star}</button>`;
     }).join('')
-    + `<button class="btn btn-sm btn-secondary" style="border-style:dashed" onclick="addTestCategory()" title="เพิ่มหมวดหมู่ข้อสอบใหม่">＋ หมวดหมู่</button>`
-    + (isCustom ? `<button class="btn btn-sm" style="background:var(--red-l);color:var(--red)" onclick="deleteTestCategory('${qeActiveSet}')" title="ลบหมวดหมู่นี้">🗑 ลบหมวด ${qeActiveSet}</button>` : '');
+    + `<button class="btn btn-sm btn-secondary" style="border-style:dashed" onclick="addTestCategory()" title="${t18n('a_add_cat')}">＋ ${t18n('qe_category')}</button>`
+    + (isCustom ? `<button class="btn btn-sm" style="background:var(--red-l);color:var(--red)" onclick="deleteTestCategory('${qeActiveSet}')" title="${t18n('a_del_cat')}">🗑 ${t18n('qe_del_cat_n').replace('{code}', qeActiveSet)}</button>` : '');
   // Per-test passing criteria (editable) — shown in the candidate report so the
   // final-round committee sees the threshold and whether each test passed it.
   const tdef = TESTS.find(t => t.code === qeActiveSet) || {};
   const metaEl = document.getElementById('qe-meta');
   if (metaEl) {
     metaEl.innerHTML = `<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:12px 14px">
-      <label style="font-size:13px;font-weight:600;color:var(--gray-700)">เกณฑ์ผ่านของชุด ${qeActiveSet}:</label>
+      <label style="font-size:13px;font-weight:600;color:var(--gray-700)">${t18n('qe_pass_of').replace('{code}', qeActiveSet)}</label>
       <input type="number" min="0" max="100" step="1" value="${tdef.passing != null ? tdef.passing : 70}"
         oninput="qeSetPassing(this.value)"
         style="width:80px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;font-family:inherit;text-align:center">
-      <span style="font-size:13px;color:var(--gray-500)">คะแนน (จาก 100)</span>
+      <span style="font-size:13px;color:var(--gray-500)">${t18n('qe_out_of_100')}</span>
       <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;color:var(--gray-700);margin-left:auto;padding-left:12px;border-left:1px solid var(--gray-200)">
         <input type="checkbox" ${tdef.shuffleOpts !== false ? 'checked' : ''} onchange="qeSetShuffle(this.checked)" style="width:16px;height:16px;accent-color:var(--teal)">
-        <span>สุ่มลำดับตัวเลือก <small style="color:var(--gray-400)">(ปิดสำหรับชุดที่ตัวเลือกเรียงตามลำดับ เช่น บุคลิกภาพ)</small></span>
+        <span>${t18n('qe_shuffle_opts')} <small style="color:var(--gray-400)">${t18n('qe_shuffle_hint')}</small></span>
       </label>
     </div>
-    <p style="font-size:11px;color:var(--gray-400);margin-top:6px">ผู้สมัครที่ได้คะแนนถึงเกณฑ์จะแสดงผลเป็น “ผ่าน” · กด 💾 บันทึก เพื่อจัดเก็บการตั้งค่า</p>`;
+    <p style="font-size:11px;color:var(--gray-400);margin-top:6px">${t18n('qe_pass_note')}</p>`;
   }
   // List
   const qs = EQ[qeActiveSet];
   document.getElementById('qe-list').innerHTML = qs.map((q, i) => {
     const type = q.type || 'mcq';
-    const typeBadge = { mcq:`<span class="q-type-badge qt-mcq">MCQ</span>`, graded:`<span class="q-type-badge qt-multi">Graded</span>`, multi:`<span class="q-type-badge qt-multi">หลายข้อ</span>`, text:`<span class="q-type-badge qt-text">อัตนัย</span>` }[type] || '';
+    const typeBadge = { mcq:`<span class="q-type-badge qt-mcq">MCQ</span>`, graded:`<span class="q-type-badge qt-multi">Graded</span>`, multi:`<span class="q-type-badge qt-multi">${t18n('qe_multi')}</span>`, text:`<span class="q-type-badge qt-text">${t18n('qe_open')}</span>` }[type] || '';
     const imgThumb = q.image ? `<img src="${q.image}" class="img-preview">` : '';
     const audioEl  = q.audio ? `<audio controls src="${q.audio}" style="width:100%;margin-top:6px;height:32px"></audio>` : '';
     // opts is [{t,p}]
@@ -4695,61 +4768,61 @@ function renderQuestionEditor() {
         ? `<select onchange="qeSetOptP(${i},${j},+this.value)" style="width:52px;border:1px solid var(--gray-200);border-radius:4px;padding:3px 4px;font-size:12px">
             ${[0,1,2,3,4].map(n=>`<option value="${n}" ${o.p===n?'selected':''}>${n}</option>`).join('')}
            </select>`
-        : `<input type="${type==='multi'?'checkbox':'radio'}" name="ans_${qeActiveSet}_${i}" ${isBest?'checked':''} onchange="qeSetOptBest(${i},${j})" title="ทำเครื่องหมายเฉลย" style="width:16px;height:16px;accent-color:var(--teal)">`;
+        : `<input type="${type==='multi'?'checkbox':'radio'}" name="ans_${qeActiveSet}_${i}" ${isBest?'checked':''} onchange="qeSetOptBest(${i},${j})" title="${t18n('a_mark_correct')}" style="width:16px;height:16px;accent-color:var(--teal)">`;
       return `<div class="choice-edit-row">
         <span style="font-size:12px;font-weight:600;color:var(--gray-500);width:16px">${['A','B','C','D','E'][j]}</span>
         ${scoreInput}
-        <span class="correct-lbl" style="font-size:10px;color:var(--gray-400)">${type==='graded'?'คะแนน':'เฉลย'}</span>
+        <span class="correct-lbl" style="font-size:10px;color:var(--gray-400)">${type==='graded'?t18n('x_score'):t18n('qe_key')}</span>
         <input type="text" value="${o.t}" oninput="qeSetOptT(${i},${j},this.value)" style="flex:1;padding:6px 8px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;font-family:inherit">
-        ${opts.length>2?`<button onclick="qeRemoveOpt(${i},${j})" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:16px;padding:0 4px" title="ลบ">×</button>`:''}
+        ${opts.length>2?`<button onclick="qeRemoveOpt(${i},${j})" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:16px;padding:0 4px" title="${t18n('a_del_opt')}">×</button>`:''}
       </div>`;
     }).join('');
     return `<div class="q-editor-card">
       <div class="q-editor-head" onclick="qeToggle(${i})">
         <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:12px;font-weight:600;color:var(--gray-400)">ข้อ ${i+1}</span>
+          <span style="font-size:12px;font-weight:600;color:var(--gray-400)">${t18n('t_item')} ${i+1}</span>
           ${typeBadge}
           <span style="font-size:12px;color:var(--gray-700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:340px">${q.q.slice(0,60)}${q.q.length>60?'…':''}</span>
         </div>
         <div style="display:flex;gap:6px">
-          <button onclick="event.stopPropagation();qeDeleteQ(${i})" class="btn btn-sm" style="background:var(--red-l);color:var(--red);padding:3px 8px">ลบ</button>
+          <button onclick="event.stopPropagation();qeDeleteQ(${i})" class="btn btn-sm" style="background:var(--red-l);color:var(--red);padding:3px 8px">${t18n('a_del_opt')}</button>
           <span style="color:var(--gray-400);font-size:16px">▾</span>
         </div>
       </div>
       <div class="q-editor-body" id="qe-body-${i}">
         <div style="margin-bottom:10px">
-          <label style="font-size:12px;font-weight:500;color:var(--gray-500);display:block;margin-bottom:4px">ประเภทข้อสอบ</label>
+          <label style="font-size:12px;font-weight:500;color:var(--gray-500);display:block;margin-bottom:4px">${t18n('qe_type')}</label>
           <div style="display:flex;gap:6px">
-            <button class="btn btn-sm ${q.type==='mcq'?'btn-primary':'btn-secondary'}" onclick="qeSetType(${i},'mcq')">MCQ (เลือก 1)</button>
-            <button class="btn btn-sm ${q.type==='multi'?'btn-primary':'btn-secondary'}" onclick="qeSetType(${i},'multi')">หลายข้อ</button>
-            <button class="btn btn-sm ${q.type==='text'?'btn-primary':'btn-secondary'}" onclick="qeSetType(${i},'text')">อัตนัย</button>
+            <button class="btn btn-sm ${q.type==='mcq'?'btn-primary':'btn-secondary'}" onclick="qeSetType(${i},'mcq')">${t18n('qe_mcq')}</button>
+            <button class="btn btn-sm ${q.type==='multi'?'btn-primary':'btn-secondary'}" onclick="qeSetType(${i},'multi')">${t18n('qe_multi')}</button>
+            <button class="btn btn-sm ${q.type==='text'?'btn-primary':'btn-secondary'}" onclick="qeSetType(${i},'text')">${t18n('qe_open')}</button>
           </div>
         </div>
         <div style="margin-bottom:10px">
-          <label style="font-size:12px;font-weight:500;color:var(--gray-500);display:block;margin-bottom:4px">📄 บทความ / เนื้อเรื่อง <small style="color:var(--gray-400)">(ไม่บังคับ — แสดงเหนือคำถาม เช่น NOTICE, บทอ่าน; ใช้ได้ทุกประเภท)</small></label>
-          <textarea class="q-inp" oninput="qeSetPassage(${i},this.value)" placeholder="เว้นว่างไว้ถ้าไม่ต้องการบทความ" style="min-height:56px">${esc(q.passage||'')}</textarea>
+          <label style="font-size:12px;font-weight:500;color:var(--gray-500);display:block;margin-bottom:4px">${t18n('qe_passage')} <small style="color:var(--gray-400)">${t18n('qe_passage_hint')}</small></label>
+          <textarea class="q-inp" oninput="qeSetPassage(${i},this.value)" placeholder="${t18n('ph_passage')}" style="min-height:56px">${esc(q.passage||'')}</textarea>
         </div>
         <div style="margin-bottom:10px">
-          <label style="font-size:12px;font-weight:500;color:var(--gray-500);display:block;margin-bottom:4px">โจทย์</label>
+          <label style="font-size:12px;font-weight:500;color:var(--gray-500);display:block;margin-bottom:4px">${t18n('qe_stem')}</label>
           <textarea class="q-inp" oninput="qeSetQ(${i},this.value)">${esc(q.q)}</textarea>
         </div>
         <div style="margin-bottom:8px">
-          <label style="font-size:12px;font-weight:500;color:var(--gray-500);display:block;margin-bottom:4px">🖼 รูปประกอบโจทย์</label>
+          <label style="font-size:12px;font-weight:500;color:var(--gray-500);display:block;margin-bottom:4px">${t18n('qe_image')}</label>
           <input type="file" accept="image/*" onchange="qeSetImage(${i},this)" style="font-size:12px">
           ${imgThumb}
         </div>
         <div style="margin-bottom:10px">
-          <label style="font-size:12px;font-weight:500;color:var(--gray-500);display:block;margin-bottom:4px">🔊 เสียงโจทย์</label>
+          <label style="font-size:12px;font-weight:500;color:var(--gray-500);display:block;margin-bottom:4px">${t18n('qe_audio')}</label>
           <input type="file" accept="audio/*" onchange="qeSetAudio(${i},this)" style="font-size:12px">
           ${audioEl}
         </div>
         ${q.type!=='text' ? `<div style="margin-bottom:8px">
-          <label style="font-size:12px;font-weight:500;color:var(--gray-500);display:block;margin-bottom:6px">ตัวเลือก <small style="color:var(--gray-400)">(ทำเครื่องหมาย ✓ ที่เฉลย)</small></label>
+          <label style="font-size:12px;font-weight:500;color:var(--gray-500);display:block;margin-bottom:6px">${t18n('qe_options')} <small style="color:var(--gray-400)">${t18n('qe_options_hint')}</small></label>
           ${choiceRows}
-          ${opts.length<5?`<button class="btn btn-secondary btn-sm" onclick="qeAddOpt(${i})" style="margin-top:4px">＋ เพิ่มตัวเลือก</button>`:''}
-        </div>` : `<div style="margin-bottom:8px"><label style="font-size:12px;font-weight:500;color:var(--gray-500)">แนวคำตอบ/เฉลย</label><textarea class="q-inp" oninput="qeSetExp(${i},this.value)" style="min-height:50px">${q.exp||''}</textarea></div>`}
+          ${opts.length<5?`<button class="btn btn-secondary btn-sm" onclick="qeAddOpt(${i})" style="margin-top:4px">＋ ${t18n('qe_add_opt')}</button>`:''}
+        </div>` : `<div style="margin-bottom:8px"><label style="font-size:12px;font-weight:500;color:var(--gray-500)">${t18n('qe_model_answer')}</label><textarea class="q-inp" oninput="qeSetExp(${i},this.value)" style="min-height:50px">${q.exp||''}</textarea></div>`}
         <div style="margin-bottom:4px">
-          <label style="font-size:12px;font-weight:500;color:var(--gray-500);display:block;margin-bottom:4px">คำอธิบายเฉลย</label>
+          <label style="font-size:12px;font-weight:500;color:var(--gray-500);display:block;margin-bottom:4px">${t18n('qe_explanation')}</label>
           <textarea class="q-inp" oninput="qeSetExp(${i},this.value)" style="min-height:44px">${q.exp||''}</textarea>
         </div>
       </div>
@@ -4812,7 +4885,7 @@ function qeSetOptBest(i,j) {
 function qeAddOpt(i) {
   const q=getEditQ()[qeActiveSet][i];
   if(!q.opts) q.opts=[];
-  if(q.opts.length<5){ q.opts.push({t:'ตัวเลือกใหม่',p:0}); renderQuestionEditor(); document.getElementById(`qe-body-${i}`)?.classList.add('open'); }
+  if(q.opts.length<5){ q.opts.push({t:t18n('qe_new_opt'),p:0}); renderQuestionEditor(); document.getElementById(`qe-body-${i}`)?.classList.add('open'); }
 }
 function qeRemoveOpt(i,j) {
   const q=getEditQ()[qeActiveSet][i];
@@ -4821,7 +4894,7 @@ function qeRemoveOpt(i,j) {
   document.getElementById(`qe-body-${i}`)?.classList.add('open');
 }
 function qeDeleteQ(i) {
-  if(!confirm(`ลบข้อ ${i+1}?`)) return;
+  if(!confirm(t18n('c_del_item').replace('{n}', i+1))) return;
   getEditQ()[qeActiveSet].splice(i,1);
   renderQuestionEditor();
 }
@@ -4889,7 +4962,7 @@ function submitNewCategory(){
 function deleteTestCategory(code){
   const tdef = TESTS.find(t => t.code === code);
   if (!tdef || !tdef.custom) { showToast(t18n('m_del_custom_only')); return; }
-  if (!confirm('ลบหมวดหมู่ "'+(tdef.nameTH||code)+'" และข้อสอบทั้งหมดในหมวดนี้?\nการกระทำนี้ย้อนกลับไม่ได้')) return;
+  if (!confirm(t18n('c_del_category').replace('{name}', tdef.nameTH||code) + '\n' + t18n('c_irreversible'))) return;
   const idx = TESTS.indexOf(tdef);
   if (idx >= 0) TESTS.splice(idx, 1);
   delete ALL_QUESTIONS[code];
@@ -5266,12 +5339,12 @@ function initResumeCheck() {
     + 'font-size:13px;box-shadow:0 2px 10px rgba(0,0,0,.18)';
   const nm = esc(data.applicant.name);
   const label = inProg
-    ? `🔄 คุณมีแบบทดสอบที่ทำค้างไว้ (${nm}) — ทำต่อได้เลย`
-    : `🔄 มีแบบทดสอบค้างอยู่ของ ${nm}`;
+    ? '🔄 ' + t18n('t_resume_yours').replace('{who}', nm)
+    : '🔄 ' + t18n('t_resume_other').replace('{who}', nm);
   bar.innerHTML = `<span>${label}</span>
     <span style="display:flex;gap:8px;flex-shrink:0">
-      <button onclick="resumeFromBar()" style="background:#fff;color:var(--teal,#0a8f73);border:none;border-radius:6px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer">ทำต่อ →</button>
-      <button onclick="dismissResumeBar()" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6);border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">ปิด</button>
+      <button onclick="resumeFromBar()" style="background:#fff;color:var(--teal,#0a8f73);border:none;border-radius:6px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer">${t18n('t_resume_go_short')}</button>
+      <button onclick="dismissResumeBar()" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6);border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer">${t18n('t_close')}</button>
     </span>`;
   document.body.appendChild(bar);
 }
@@ -5300,7 +5373,9 @@ function checkAndShowResume() {
     banner.style.display = 'flex';
     document.getElementById('resume-name').textContent = data.applicant.name;
     document.getElementById('resume-detail').textContent =
-      st.inProg > 0 ? `กำลังทำ: ${data.sessions[data.curSess]?.test?.name} ข้อ ${(data.curQ||0)+1}` : `ค้างอยู่ ${st.pending} ชุด`;
+      st.inProg > 0
+        ? t18n('t_resume_doing').replace('{test}', data.sessions[data.curSess]?.test?.name).replace('{n}', (data.curQ||0)+1)
+        : t18n('t_resume_pending').replace('{n}', st.pending);
   } else {
     banner.style.display = 'none';
     // Tidy up a stale all-completed session so it never lingers.
@@ -5524,7 +5599,7 @@ async function renderCollabPage() {
   try {
     roster = await cloudFetchAdminRoster();
   } catch (e) {
-    list.innerHTML = `<div class="hint" style="padding:14px 0;color:var(--red)">โหลดรายชื่อไม่สำเร็จ (ตรวจ Firestore Rules ให้ผู้ล็อกอินอ่าน admin_roles ได้): ${esc(e.code || e.message)}</div>`;
+    list.innerHTML = `<div class="hint" style="padding:14px 0;color:var(--red)">${t18n('m_team_load_fail')}: ${esc(e.code || e.message)}</div>`;
     return;
   }
   if (!roster.length) {
@@ -5574,7 +5649,7 @@ function renderPermMatrix() {
 
   const head = roleCols.map(r => {
     const ri = ROLE_INFO[r];
-    const lock = r === 'superadmin' ? '<span class="pm-lock">🔒 เต็มสิทธิ์</span>' : '';
+    const lock = r === 'superadmin' ? '<span class="pm-lock">🔒 ' + t18n('t_full_rights') + '</span>' : '';
     return `<th><div class="pm-col-head"><span class="role-badge ${ri.cls}">${ri.label}</span>${lock}</div></th>`;
   }).join('');
 
@@ -5598,7 +5673,7 @@ function renderPermMatrix() {
   }).join('');
 
   host.innerHTML = `<table class="pm-table">
-    <thead><tr><th>ฟีเจอร์ / หน้าที่เกี่ยวข้อง</th>${head}</tr></thead>
+    <thead><tr><th>${t18n('t_feature_col')}</th>${head}</tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
 }
@@ -5620,7 +5695,7 @@ function setRolePerm(role, key, checked) {
 
 function resetRolePerms() {
   if (!(currentAdmin && ROLE_INFO[currentAdmin.role]?.canManageUsers)) { showToast(t18n('m_no_perm')); return; }
-  if (!confirm('คืนค่าสิทธิ์ทุกระดับกลับเป็นค่าเริ่มต้น?')) return;
+  if (!confirm(t18n('c_reset_perms'))) return;
   try { localStorage.removeItem('hma_role_perms'); } catch(e) {}
   applyRolePerms();
   if (typeof renderAdminNav === 'function') renderAdminNav();
@@ -5631,7 +5706,7 @@ function resetRolePerms() {
 function openAddUser() {
   if (!(currentAdmin && ROLE_INFO[currentAdmin.role]?.canManageUsers)) { showToast(t18n('m_no_admin_mgmt')); return; }
   if (!cloudEnabled()) { showToast(t18n('m_add_needs_cloud')); return; }
-  document.getElementById('mod-adduser-title').textContent = 'เพิ่มผู้ดูแลระบบ';
+  document.getElementById('mod-adduser-title').textContent = t18n('t_adduser_add');
   document.getElementById('nu-name').value = '';
   const em = document.getElementById('nu-email');
   em.value = ''; em.disabled = false;
@@ -5648,7 +5723,7 @@ function editUser(encEmail) {
   const email = decodeURIComponent(encEmail);
   const u = _adminRoster.find(x => (x.email || '').toLowerCase() === email.toLowerCase());
   if (!u) return;
-  document.getElementById('mod-adduser-title').textContent = 'แก้ไขบทบาทผู้ดูแล';
+  document.getElementById('mod-adduser-title').textContent = t18n('t_adduser_edit');
   document.getElementById('nu-name').value = u.name || '';
   const em = document.getElementById('nu-email');
   em.value = u.email || ''; em.disabled = true;
@@ -5728,7 +5803,7 @@ async function saveUser() {
   if (authErr) {
     const m = authErr.code === 'auth/operation-not-allowed'
         ? t18n('m_role_ok_no_login')
-      : ('บันทึกบทบาทแล้ว แต่สร้างบัญชีล็อกอินไม่สำเร็จ: ' + (authErr.code || authErr.message) + ' — เพิ่มอีเมลเดิมอีกครั้งเพื่อลองใหม่');
+      : (t18n('m_role_saved_no_login') + ' ' + (authErr.code || authErr.message) + ' — ' + t18n('m_retry_same_email'));
     showToast('⚠️ ' + m, 8000);
     return;
   }
@@ -5745,7 +5820,7 @@ async function deleteUser(encEmail) {
   const email = decodeURIComponent(encEmail);
   const u = _adminRoster.find(x => (x.email || '').toLowerCase() === email.toLowerCase());
   if (!u) return;
-  if (!confirm(`เพิกถอนสิทธิ์แอดมินของ ${u.name || email}?\n\nบัญชีนี้จะเข้าหน้าแอดมินไม่ได้อีก (บัญชี Firebase Auth ยังอยู่ — ลบถาวรได้ใน Firebase Console)`)) return;
+  if (!confirm(t18n('c_revoke_admin').replace('{who}', u.name || email) + '\n\n' + t18n('c_revoke_note'))) return;
   try {
     await db.collection('admin_roles').doc(email.toLowerCase()).delete();
   } catch (e) { showToast(t18n('m_del_fail_rules') + (e.code || e.message), 6000); return; }
@@ -5813,7 +5888,7 @@ function showIntro(test, instr) {
   document.getElementById('intro-meta').textContent = '';
   const imgWrap = document.getElementById('intro-img-wrap');
   imgWrap.innerHTML = instr.image
-    ? `<img src="${instr.image}" class="instruction-img" alt="รูปประกอบ">`
+    ? `<img src="${instr.image}" class="instruction-img" alt="${t18n('t_illustration')}">`
     : '';
   nav('p-intro');
 }
@@ -5868,7 +5943,7 @@ function renderInstructionEditor() {
   }).join('');
   const cur  = instr[instrActiveSet] || {};
   const tdef = TESTS.find(t => t.code === instrActiveSet) || {};
-  document.getElementById('instr-title').value = cur.title || ('คำชี้แจงการสอบ — ' + (tdef.nameTH || tdef.name || instrActiveSet));
+  document.getElementById('instr-title').value = cur.title || (t18n('t_instr_for') + ' ' + (tdef.nameTH || tdef.name || instrActiveSet));
   document.getElementById('instr-body').value  = cur.body || defaultInstrBody(tdef);
   document.getElementById('instr-img-preview').innerHTML = cur.image
     ? `<img src="${cur.image}" class="instruction-img" style="max-height:120px">` : '';
@@ -6074,10 +6149,10 @@ function printIndivPDF(person) {
   const styles = Array.from(document.querySelectorAll('style')).map(s => s.outerHTML).join('');
   w.document.write(
     '<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8">' +
-    '<title>Move Assessment · ผลการทดสอบ — ' + esc(person) + '</title>' + styles +
+    '<title>Move Assessment · ' + t18n('t_test_results') + ' — ' + esc(person) + '</title>' + styles +
     '<style>body{background:#fff;margin:0;padding:24px;font-family:"Segoe UI",Tahoma,sans-serif}' +
     'h2{font-size:16px;margin:0 0 14px}@media print{@page{margin:14mm}}</style></head>' +
-    '<body><h2>Move Assessment — ผลการทดสอบผู้สมัคร</h2>' + el.innerHTML + '</body></html>'
+    '<body><h2>Move Assessment — ' + t18n('t_cand_results') + '</h2>' + el.innerHTML + '</body></html>'
   );
   w.document.close(); w.focus();
   setTimeout(() => { try { w.print(); } catch(e){} }, 350);
@@ -6117,7 +6192,7 @@ async function exportResultsPDF(btn){
   const jsPDFCtor = window.jspdf && window.jspdf.jsPDF;
   if (!(jsPDFCtor && typeof window.html2canvas === 'function')) { showToast(t18n('m_no_pdf')); return; }
   const orig = btn ? btn.innerHTML : '';
-  if (btn){ btn.innerHTML = '<span class="spin"></span> กำลังสร้างพรีวิว...'; btn.disabled = true; }
+  if (btn){ btn.innerHTML = '<span class="spin"></span> ' + t18n('t_building_preview'); btn.disabled = true; }
   try {
     const pages = await captureResultsPages();
     if (!pages.length) throw new Error('no content');
@@ -6137,16 +6212,16 @@ function showPdfPreviewModal(pages){
   const sheets = pages.map((imgs, idx) => {
     const inner = imgs.map(im => `<img src="${im.data}" style="width:100%;display:block;margin-bottom:6px">`).join('');
     return `<div style="background:#fff;width:100%;max-width:400px;margin:0 auto 16px;box-shadow:0 2px 14px rgba(0,0,0,.2);border-radius:4px;padding:16px;box-sizing:border-box">
-        <div style="font-size:10px;color:#999;text-align:right;margin-bottom:8px">A4 · หน้า ${idx+1}/${pages.length}</div>${inner}
+        <div style="font-size:10px;color:#999;text-align:right;margin-bottom:8px">A4 · ${t18n('t_page_of').replace('{i}', idx+1).replace('{n}', pages.length)}</div>${inner}
       </div>`;
   }).join('');
   modal.innerHTML = `<div class="modal" style="max-width:520px;max-height:92vh;display:flex;flex-direction:column">
-      <div class="modal-head"><span style="font-weight:600">🔍 พรีวิว PDF (A4) — ${pages.length} หน้า</span>
+      <div class="modal-head"><span style="font-weight:600">${t18n('t_pdf_preview_n').replace('{n}', pages.length)}</span>
         <button onclick="closeModal('mod-pdf-preview')" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--gray-400)">✕</button></div>
       <div class="modal-body" style="background:var(--gray-100);overflow:auto;padding:16px">${sheets}</div>
       <div class="modal-foot">
-        <button class="btn btn-secondary" onclick="closeModal('mod-pdf-preview')">ปิด</button>
-        <button class="btn btn-primary" onclick="downloadResultsPDF(this)">⬇ ดาวน์โหลด PDF</button>
+        <button class="btn btn-secondary" onclick="closeModal('mod-pdf-preview')">${t18n('t_close')}</button>
+        <button class="btn btn-primary" onclick="downloadResultsPDF(this)">${t18n('t_dl_pdf')}</button>
       </div>
     </div>`;
   openModal('mod-pdf-preview');
@@ -6529,7 +6604,7 @@ async function questionSetFingerprint(code) {
   // http (a LAN IP rather than the real site) cannot produce this. Say which
   // problem it is, rather than failing as "could not prepare the answers".
   if (!(window.crypto && crypto.subtle))
-    throw new Error('ต้องเปิดหน้านี้ผ่าน https เท่านั้น (ระบบตรวจคะแนนต้องใช้)');
+    throw new Error(t18n('m_https_only'));
   const text   = _canonicalJSON(publicShapeOfQuestions(ALL_QUESTIONS[code]));
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
   return [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
@@ -6888,7 +6963,7 @@ async function cloudDiagnose(){
   const timer = setTimeout(() => {
     if (settled) return;
     settled = true;
-    alert('⏱️ การเชื่อมต่อ Firestore ค้าง (เกิน 10 วินาที)\n\nเครือข่าย/เบราว์เซอร์นี้น่าจะบล็อก Firestore\n\nลองวิธีใดวิธีหนึ่ง:\n• ใช้เน็ตอื่น (มือถือ 4G/5G)\n• ปิด ad-blocker / privacy extension แล้วลองใหม่\n• ลองเครื่อง/เบราว์เซอร์อื่น');
+    alert(t18n('m_firestore_hung'));
   }, 10000);
   try {
     const email = fbAuth.currentUser.email;
@@ -7025,7 +7100,7 @@ async function cloudSaveQuestionBank(){
 var _fullBankLoaded = false;
 
 async function _adminIdToken() {
-  if (!cloudSignedIn()) throw new Error('ยังไม่ได้ล็อกอิน');
+  if (!cloudSignedIn()) throw new Error(t18n('m_not_signed_in'));
   return fbAuth.currentUser.getIdToken();
 }
 
