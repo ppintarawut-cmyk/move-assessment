@@ -1033,3 +1033,22 @@ def test_no_translation_key_is_referenced_without_being_defined(open_exam):
             .filter(k => !keys.has(k));
     }""")
     assert missing == [], f"อ้างถึงคีย์ที่ไม่มีในพจนานุกรม: {missing}"
+
+
+def test_the_page_script_parses_and_runs_without_errors(open_exam):
+    """สคริปต์ของหน้าต้องรันได้ทั้งก้อน
+
+    ถ้าไวยากรณ์พังแม้จุดเดียว ทั้งไฟล์จะไม่ทำงานเลย แล้วเทสต์อื่นจะฟ้องว่า
+    "หมดเวลา" ซึ่งอ่านไม่ออกว่าเกิดอะไรขึ้น เทสต์นี้ฟ้องตรงจุดแทน
+    """
+    errors = []
+    page = open_exam()
+    page.on("pageerror", lambda e: errors.append(str(e)))
+    page.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
+    page.reload()
+    page.wait_for_function("typeof submitReg !== 'undefined'")
+    page.evaluate("() => { nav('p-admin'); nav('p-candidates'); nav('p-landing'); }")
+    page.wait_for_timeout(200)
+    real = [e for e in errors if "favicon" not in e and "net::" not in e
+            and "Failed to load resource" not in e]
+    assert real == [], f"สคริปต์มีข้อผิดพลาด: {real[:3]}"

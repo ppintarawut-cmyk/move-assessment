@@ -1105,7 +1105,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
     <!-- ── Exam Results Table ── -->
     <div class="card" style="margin-bottom:10px;padding:14px">
       <div class="filter-row">
-        <input type="text" placeholder="🔍 ค้นหาชื่อผู้สมัคร..." id="f-name" oninput="filterAdmin()">
+        <input type="text" data-i18n-ph="t_search_cand" placeholder="🔍 ค้นหาชื่อผู้สมัคร..." id="f-name" oninput="filterAdmin()">
         <select id="f-test" onchange="filterAdmin()">
           <option data-i18n="t_all_tests" value="">ชุดสอบทั้งหมด</option>
           <option>IQ</option><option>EQ</option><option>ENGLISH</option>
@@ -1549,6 +1549,34 @@ const I18N = {
   t_pos_note: { th:"กำหนดว่าผู้สมัครแต่ละ <strong data-i18n=\"t_position\">ตำแหน่ง</strong> จะต้องทำชุดข้อสอบใดบ้าง — ผู้สมัครจะเลือกตำแหน่งนี้ตอนลงทะเบียน แล้วระบบจับคู่ชุดข้อสอบให้อัตโนมัติ ค่าที่บันทึกมีผลกับผู้สมัครที่ลงทะเบียนใหม่ทันที", en:"Choose which tests a candidate in each <strong data-i18n=\"t_position\">Position</strong> has to sit" },
   t_code_label: { th:"รหัสชุดสอบ <small data-i18n=\"t_code_hint\" style=\"color:var(--gray-400)\">(อังกฤษ/ตัวเลข ไม่เว้นวรรค)</small>", en:"Test code <small style=\"color:var(--gray-400)\">(letters and digits, no spaces)</small>" },
   t_graded_label: { th:"ให้คะแนนแบบไล่ระดับ 0–2 ต่อข้อ <small data-i18n=\"t_graded_hint\" style=\"color:var(--gray-400)\">(เช่น EQ / ภาวะผู้นำ) — ไม่ติ๊ก = ถูก/ผิด</small>", en:"Score each question on a 0–2 scale <small style=\"color:var(--gray-400)\">(e.g. EQ / leadership) — unticked means right or wrong</small>" },
+  nav_candidates: { th:"ผู้สมัคร", en:"Candidates" },
+  nav_editq: { th:"จัดการข้อสอบ", en:"Questions" },
+  nav_instr: { th:"จัดการคำแนะนำ", en:"Instructions" },
+  nav_postype: { th:"ชุดสอบ/ตำแหน่ง", en:"Tests / positions" },
+  nav_collab: { th:"จัดการทีม", en:"Team" },
+  nav_export: { th:"Export Excel", en:"Export Excel" },
+  t_candidates: { th:"ผู้สมัคร", en:"Candidates" },
+  t_passed_p: { th:"ผ่าน (P)", en:"Passed (P)" },
+  t_failed_np: { th:"ไม่ผ่าน (NP)", en:"Not passed (NP)" },
+  t_sessions_all: { th:"Sessions ทั้งหมด", en:"Sessions in total" },
+  t_sitting_now: { th:"กำลังสอบอยู่", en:"Sitting now" },
+  t_hide: { th:"ซ่อน ▲", en:"Hide ▲" },
+  t_show: { th:"แสดง ▼", en:"Show ▼" },
+  t_sort_asc: { th:"↑ น้อย→มาก", en:"↑ Low→high" },
+  t_sort_desc: { th:"↓ มาก→น้อย", en:"↓ High→low" },
+  t_selected_n: { th:"เลือกแล้ว {n} คน", en:"{n} selected" },
+  t_page_range: { th:"{a}–{b} จาก {n} คน", en:"{a}–{b} of {n}" },
+  t_people_none: { th:"0 คน", en:"None" },
+  t_cand_count: { th:"ผู้สมัคร {n} คน ({src})", en:"{n} candidates ({src})" },
+  t_incl_live: { th:"รวม session ปัจจุบัน", en:"including the current session" },
+  t_from_history: { th:"จากประวัติ", en:"from history" },
+  t_no_candidates: { th:"ยังไม่มีข้อมูลผู้สมัคร", en:"No candidates yet" },
+  t_delete_this: { th:"ลบผู้สมัครนี้", en:"Delete this candidate" },
+  t_search_cand: { th:"🔍 ค้นหาชื่อผู้สมัคร...", en:"🔍 Search candidates…" },
+  t_found_n: { th:"พบ {n} รายการ", en:"{n} found" },
+  t_attempt_n: { th:"ครั้งที่ {n}", en:"Attempt {n}" },
+  t_view_result: { th:"ดูผล", en:"View" },
+  t_hello: { th:"สวัสดี", en:"Hello" },
   t_date_taken: { th:"วันเวลาที่สอบ", en:"Date taken" },
   t_perm_note: { th:"เลือกว่าผู้ดูแลแต่ละระดับใช้ฟีเจอร์ใดได้บ้าง — เปลี่ยนแล้ว<strong data-i18n=\"t_takes_effect\">มีผลทันที</strong>", en:"Choose which features each administrator level can use — changes <strong>take effect immediately</strong>" },
   t_expiry_warn: { th:'⏰ Session จะหมดอายุใน <strong id="expiry-time">28 นาที</strong> — กรุณาบันทึกงานแล้วเข้าสู่ระบบใหม่', en:'⏰ Your session expires in <strong id="expiry-time">28 minutes</strong> — please save your work and sign in again' },
@@ -1736,7 +1764,9 @@ function applyLang(){
   const active = document.querySelector('.page.active');
   const id = active ? active.id : '';
   try {
-    if (id==='p-dash' && applicant) renderDash();
+    if (id==='p-admin') { renderAdminNav(); renderAdmin({ refetch:false }); }
+    else if (id==='p-candidates') renderCandidatesPage();
+    else if (id==='p-dash' && applicant) renderDash();
     else if (id==='p-test' && sessions[curSess]) renderQ();
     else if (id==='p-results') renderResults();
     else if (id==='p-review' && window._lastReviewIdx!=null) renderReview(window._lastReviewIdx);
@@ -2790,12 +2820,15 @@ function getAllRows() {
   return [...live, ...filteredStored, ...ADMIN_DATA];
 }
 
-function renderAdmin() {
+// `refetch:false` redraws what is already loaded without going back to the
+// cloud. Switching language is a redraw, not a reason to download everything
+// again — and a fetch that cannot complete would hang the redraw behind it.
+function renderAdmin({ refetch = true } = {}) {
   adminViewingResults = false;   // leaving any read-only score view
   updateAdminUI();
   if (typeof updateCloudStatus === 'function') updateCloudStatus();
   // Pull the latest cross-device data whenever HR opens the dashboard.
-  if (typeof cloudFetchAll === 'function' && typeof cloudSignedIn === 'function' && cloudSignedIn() && !_cloudSyncing) cloudFetchAll();
+  if (refetch && typeof cloudFetchAll === 'function' && typeof cloudSignedIn === 'function' && cloudSignedIn() && !_cloudSyncing) cloudFetchAll();
   renderCandidates();   // ← render candidate profiles first
   const all    = getAllRows();
   const ids    = new Set(all.map(r => r.id));
@@ -2808,10 +2841,10 @@ function renderAdmin() {
   const uniqueApplicants = new Set(all.map(r => r.fn + r.ln + candKey(r))).size;
 
   document.getElementById('a-metrics').innerHTML = [
-    {l:'ผู้สมัคร',v:uniqueApplicants,c:'var(--gray-900)'},
-    {l:'ผ่าน (P)',v:passed,c:'var(--teal)'},
-    {l:'ไม่ผ่าน (NP)',v:failed,c:'var(--red)'},
-    {l:'คะแนนเฉลี่ย',v:avg,c:'#185fa5'},
+    {l:t18n("t_candidates"),v:uniqueApplicants,c:'var(--gray-900)'},
+    {l:t18n("t_passed_p"),v:passed,c:'var(--teal)'},
+    {l:t18n("t_failed_np"),v:failed,c:'var(--red)'},
+    {l:t18n("t_avg_score"),v:avg,c:'#185fa5'},
   ].map(({l,v,c})=>`<div class="metric"><div class="metric-val" style="color:${c}">${v}</div><div class="metric-lbl">${l}</div></div>`).join('');
 
   // Pass rate per test
@@ -2832,8 +2865,8 @@ function renderAdmin() {
 
   const inProg = sessions.filter(s=>s.status==='in_progress').length;
   document.getElementById('a-session-sum').innerHTML = [
-    {l:'Sessions ทั้งหมด',v:all.length,bg:'var(--gray-50)',c:'var(--gray-900)'},
-    {l:'กำลังสอบอยู่',v:inProg,bg:'var(--amber-l)',c:'var(--amber)'},
+    {l:t18n("t_sessions_all"),v:all.length,bg:'var(--gray-50)',c:'var(--gray-900)'},
+    {l:t18n("t_sitting_now"),v:inProg,bg:'var(--amber-l)',c:'var(--amber)'},
   ].map(({l,v,bg,c})=>`<div class="metric" style="background:${bg}"><div class="metric-val" style="color:${c}">${v}</div><div class="metric-lbl">${l}</div></div>`).join('');
 
   filterAdmin();
@@ -2946,7 +2979,7 @@ function toggleCandidates() {
   const body = document.getElementById('a-candidates-body');
   const btn  = document.getElementById('a-cand-toggle');
   if (body) body.style.display = candidatesExpanded ? '' : 'none';
-  if (btn)  btn.textContent     = candidatesExpanded ? 'ซ่อน ▲' : 'แสดง ▼';
+  if (btn)  btn.textContent     = candidatesExpanded ? t18n('t_hide') : t18n('t_show');
 }
 
 function renderCandidates() {
@@ -2990,16 +3023,20 @@ function renderCandidates() {
   }
 
   const countEl = document.getElementById('a-cand-count');
-  if (countEl) countEl.textContent = `ผู้สมัคร ${all.length} คน (${all.filter(p=>p.isLive).length > 0 ? 'รวม session ปัจจุบัน' : 'จากประวัติ'})`;
+  if (countEl) countEl.textContent = t18n('t_cand_count').replace('{n}', all.length)
+    .replace('{src}', all.filter(p=>p.isLive).length > 0 ? t18n('t_incl_live') : t18n('t_from_history'));
 
   const colors = ['#E1F5EE','#FAEEDA','#E6F1FB','#FCEBEB','#EAF3DE'];
   const textc  = ['#085041','#633806','#0C447C','#791F1F','#27500A'];
+
+  const toggleBtn = document.getElementById('a-cand-toggle');
+  if (toggleBtn) toggleBtn.textContent = candidatesExpanded ? t18n('t_hide') : t18n('t_show');
 
   const tbody = document.getElementById('a-cand-tbody');
   if (!tbody) return;
 
   if (!all.length) {
-    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--gray-400);font-size:13px">ยังไม่มีข้อมูลผู้สมัคร</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--gray-400);font-size:13px">${t18n('t_no_candidates')}</td></tr>`;
     return;
   }
 
@@ -3138,7 +3175,7 @@ function renderCandidatesPage(){
   const tb = document.getElementById('cand-tbody');
   if (!tb) return;
   if (!total){
-    tb.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:24px;color:var(--gray-400);font-size:13px">ยังไม่มีข้อมูลผู้สมัคร</td></tr>`;
+    tb.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:24px;color:var(--gray-400);font-size:13px">${t18n('t_no_candidates')}</td></tr>`;
   } else {
     tb.innerHTML = pageRows.map(p => {
       const nid  = candKey(p);
@@ -3159,7 +3196,7 @@ function renderCandidatesPage(){
       // แทน (ดู addEventListener('click', ...) ท้าย renderCandidatesPage นี้)
       const rowKeyEnc = encodeURIComponent(rowKey);
       const delBtn = canDelete
-        ? `<button class="btn btn-sm js-del-btn" style="background:var(--red-l);color:var(--red);font-size:11px;padding:3px 8px" data-row-key="${rowKeyEnc}" title="ลบผู้สมัครนี้">🗑</button>`
+        ? `<button class="btn btn-sm js-del-btn" style="background:var(--red-l);color:var(--red);font-size:11px;padding:3px 8px" data-row-key="${rowKeyEnc}" title="${t18n('t_delete_this')}">🗑</button>`
         : '';
       return `<tr>
         <td style="text-align:center"><input type="checkbox" class="cand-check js-cand-select" ${checked} data-cand-key="${esc(nid)}"></td>
@@ -3174,7 +3211,7 @@ function renderCandidatesPage(){
         <td style="font-size:12px;color:var(--gray-400);white-space:nowrap">${esc(p.datetime||'—')}</td>
         <td style="font-size:11px;line-height:1.9">${pills}</td>
         <td style="text-align:center;font-weight:600;color:${p.avg!=null?(p.avg>=70?'var(--pass)':'var(--red)'):'var(--gray-400)'}">${p.avg!=null?p.avg:'—'}</td>
-        <td style="white-space:nowrap"><button class="btn btn-secondary btn-sm js-pdf-btn" style="font-size:11px" data-row-key="${rowKeyEnc}">📄 ดูผล</button> ${delBtn}</td>
+        <td style="white-space:nowrap"><button class="btn btn-secondary btn-sm js-pdf-btn" style="font-size:11px" data-row-key="${rowKeyEnc}">📄 ${t18n('t_view_result')}</button> ${delBtn}</td>
       </tr>`;
     }).join('');
   }
@@ -3183,7 +3220,10 @@ function renderCandidatesPage(){
   if (selAll){ const nids = pageRows.map(p=>candKey(p)); selAll.checked = nids.length>0 && nids.every(n=>candSelected.has(n)); }
 
   const info = document.getElementById('cand-pginfo');
-  if (info) info.textContent = total ? `${start+1}–${Math.min(start+candPageSize,total)} จาก ${total} คน` : '0 คน';
+  if (info) info.textContent = total
+    ? t18n('t_page_range').replace('{a}', start+1)
+        .replace('{b}', Math.min(start+candPageSize,total)).replace('{n}', total)
+    : t18n('t_people_none');
   renderCandPager(pages);
   updateCandSelBar();
   const delSel = document.getElementById('cand-delbtn'); if (delSel) delSel.style.display = canDelete ? '' : 'none';
@@ -3233,7 +3273,7 @@ function setCandSort(k){
   candPage = 1; renderCandidatesPage();
 }
 function toggleCandDir(){ candDir = candDir==='asc'?'desc':'asc'; candPage = 1; renderCandidatesPage(); }
-function syncCandDirLabel(){ const b = document.getElementById('cand-dir'); if (b) b.textContent = candDir==='asc' ? '↑ น้อย→มาก' : '↓ มาก→น้อย'; }
+function syncCandDirLabel(){ const b = document.getElementById('cand-dir'); if (b) b.textContent = candDir==='asc' ? t18n('t_sort_asc') : t18n('t_sort_desc'); }
 
 function toggleCandSelect(nid){ candSelected.has(nid) ? candSelected.delete(nid) : candSelected.add(nid); renderCandidatesPage(); }
 function toggleCandSelectAll(cb){
@@ -3247,7 +3287,7 @@ function updateCandSelBar(){
   if (!bar) return;
   const n = candSelected.size;
   bar.style.display = n>0 ? 'flex' : 'none';
-  if (cnt) cnt.textContent = `เลือกแล้ว ${n} คน`;
+  if (cnt) cnt.textContent = t18n('t_selected_n').replace('{n}', n);
 }
 
 function bulkDeleteCandidates(){
@@ -3445,7 +3485,7 @@ function filterAdmin() {
     const fn=`${r.fn}${r.ln}`.toLowerCase();
     return (!name||fn.includes(name))&&(!test||r.test===test)&&(!out||r.out===out);
   });
-  document.getElementById('f-count').textContent=`พบ ${filtered.length} รายการ`;
+  document.getElementById('f-count').textContent = t18n('t_found_n').replace('{n}', filtered.length);
 
   const colors=['#E1F5EE','#FAEEDA','#E6F1FB','#FCEBEB','#EAF3DE'];
   const textc =['#085041','#633806','#0C447C','#791F1F','#27500A'];
@@ -3465,7 +3505,7 @@ function filterAdmin() {
     const rowKeyEnc = encodeURIComponent(rowKey);
     const attempts = attemptMap[candKey(r)] || 0;
     const attemptTag = attempts > 1
-      ? `<span style="font-size:10px;background:var(--amber-l);color:var(--amber);padding:1px 6px;border-radius:8px;margin-left:4px">ครั้งที่ ${attempts}</span>`
+      ? `<span style="font-size:10px;background:var(--amber-l);color:var(--amber);padding:1px 6px;border-radius:8px;margin-left:4px">${t18n('t_attempt_n').replace('{n}', attempts)}</span>`
       : attempts===1 ? `<span style="font-size:10px;background:var(--gray-100);color:var(--gray-500);padding:1px 6px;border-radius:8px;margin-left:4px">ครั้งที่ 1</span>` : '';
     const delBtn = canDelete
       ? `<button class="btn btn-sm js-del-btn" style="background:var(--red-l);color:var(--red);font-size:11px;padding:3px 8px" data-row-key="${rowKeyEnc}">🗑</button>`
@@ -3483,7 +3523,7 @@ function filterAdmin() {
       <td class="js-row-detail" data-row-key="${rowKeyEnc}" style="font-size:12px;white-space:nowrap">${esc(r.time)}</td>
       <td class="js-row-detail" data-row-key="${rowKeyEnc}">${sc}</td>
       <td class="js-row-detail" data-row-key="${rowKeyEnc}">${pill}</td>
-      <td style="white-space:nowrap"><button class="btn btn-secondary btn-sm js-pdf-btn" style="font-size:11px" data-row-key="${rowKeyEnc}">📄 ดูผล</button> ${delBtn}</td>
+      <td style="white-space:nowrap"><button class="btn btn-secondary btn-sm js-pdf-btn" style="font-size:11px" data-row-key="${rowKeyEnc}">📄 ${t18n('t_view_result')}</button> ${delBtn}</td>
     </tr>`;
   }).join('');
 }
@@ -3921,7 +3961,7 @@ function leaveBadgeHtml(leaves) {
 function triggerCheat(reason, type='other') {
   cheatCount++;
   const banner = document.getElementById('cheat-banner');
-  document.getElementById('cheat-count').textContent = `ครั้งที่ ${cheatCount}`;
+  document.getElementById('cheat-count').textContent = t18n('t_attempt_n').replace('{n}', cheatCount);
   banner.classList.add('show');
   // log ลง session
   if (sessions[curSess]) {
@@ -5117,7 +5157,7 @@ function updateAdminUI() {
   const role = ROLE_INFO[currentAdmin.role] || ROLE_INFO.viewer;
   // Update greeting
   const greet = document.getElementById('a-greet');
-  if (greet) greet.innerHTML = `สวัสดี <strong>${esc(currentAdmin.name)}</strong> <span class="role-badge ${role.cls}" style="margin-left:4px">${role.label}</span>`;
+  if (greet) greet.innerHTML = `${t18n('t_hello')} <strong>${esc(currentAdmin.name)}</strong> <span class="role-badge ${role.cls}" style="margin-left:4px">${role.label}</span>`;
   // Re-render the sidebar so menu items respect this role's permissions
   if (typeof renderAdminNav === 'function') renderAdminNav();
 }
@@ -5903,12 +5943,13 @@ const NAV_ICONS = {
 };
 
 const ADMIN_MENU = [
-  { key:'candidates', label:'ผู้สมัคร',    action:"admGo('p-candidates')" },
-  { key:'editq',   label:'จัดการข้อสอบ',   action:"admGo('p-question-editor')",    perm:'canEditQ' },
-  { key:'instr',   label:'จัดการคำแนะนำ',  action:"admGo('p-instruction-editor')", perm:'canEditQ' },
-  { key:'postype', label:'ชุดสอบ/ตำแหน่ง', action:"admGo('p-position-editor')", perm:'canManagePos' },
-  { key:'collab',  label:'จัดการทีม',      action:"admGo('p-collab')",             perm:'canManageUsers' },
-  { key:'export',  label:'Export Excel',   action:"admExport(this)",               perm:'canExport' },
+  // label เป็นคีย์คำแปล ไม่ใช่ข้อความ — navItemHTML() แปลตอนวาด เมนูจึงเปลี่ยนภาษาได้
+  { key:'candidates', label:'nav_candidates', action:"admGo('p-candidates')" },
+  { key:'editq',   label:'nav_editq',   action:"admGo('p-question-editor')",    perm:'canEditQ' },
+  { key:'instr',   label:'nav_instr',   action:"admGo('p-instruction-editor')", perm:'canEditQ' },
+  { key:'postype', label:'nav_postype', action:"admGo('p-position-editor')", perm:'canManagePos' },
+  { key:'collab',  label:'nav_collab',  action:"admGo('p-collab')",             perm:'canManageUsers' },
+  { key:'export',  label:'nav_export',  action:"admExport(this)",               perm:'canExport' },
 ];
 function menuAllowed(m){
   if (!m.perm) return true;
@@ -5920,7 +5961,7 @@ function menuAllowed(m){
 function navItemHTML(m){
   return '<div class="adm-navitem" onclick="' + m.action + '">' +
     '<span class="ico">' + (NAV_ICONS[m.key] || '') + '</span>' +
-    '<span class="nav-label">' + m.label + '</span>' +
+    '<span class="nav-label">' + t18n(m.label) + '</span>' +
   '</div>';
 }
 
