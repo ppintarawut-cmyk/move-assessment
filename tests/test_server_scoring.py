@@ -35,8 +35,19 @@ SETUP = """
   // Record every POST instead of making one, so the payload can be inspected.
   window.__posts = [];
   window.__nextResponse = { ok:true, status:200, body:{ ok:true, recorded:true } };
+  // /health เป็น GET ไม่มี body และแยกคิวบันทึกไว้ต่างหาก เพื่อไม่ให้ไปปนกับ
+  // การส่งคำตอบที่เทสต์อื่นตรวจตามลำดับอยู่
+  window.__gets = [];
+  window.__healthResponse = { ok:true, status:200, body:{ ok:true } };
   window.fetch = async (url, init) => {
-    window.__posts.push({ url: String(url), body: JSON.parse(init.body) });
+    const u = String(url);
+    if (u.endsWith('/health')) {
+      window.__gets.push(u);
+      const h = window.__healthResponse;
+      if (h === 'throw') throw new Error('network down');
+      return { ok: h.ok, status: h.status, json: async () => h.body };
+    }
+    window.__posts.push({ url: u, body: (init && init.body) ? JSON.parse(init.body) : null });
     const r = window.__nextResponse;
     return { ok: r.ok, status: r.status, json: async () => r.body };
   };
@@ -685,3 +696,308 @@ def test_the_old_result_queue_still_works_while_scoring_is_local(open_exam):
     page.evaluate("() => cloudFlushPending()")
     page.wait_for_function("() => window.__writes.length > 0")
     assert page.evaluate("() => window.__writes[0][0]") == "exam_records"
+
+
+# ── ไม่ให้ผู้สมัครหายไปเงียบ ๆ ──────────────────────────────────
+#
+# เมื่อตรวจคะแนนที่เซิร์ฟเวอร์ หน้าเว็บไม่เขียนอะไรลงเครื่องเลย การสอบจึง "มีอยู่"
+# ก็ต่อเมื่อเซิร์ฟเวอร์ตรวจไปแล้วอย่างน้อยหนึ่งชุด ผู้สมัครที่ส่งคำตอบไม่สำเร็จจึง
+# ไม่เหลือร่องรอยใด ๆ และ HR แยกไม่ออกจากคนที่ไม่เคยมา
+
+
+def _reg_posts(page):
+    return page.evaluate(
+        "() => window.__posts.filter(p => p.url.endsWith('/register')).map(p => p.body)")
+
+
+def test_starting_a_sitting_tells_the_endpoint_who_is_sitting_it(open_exam):
+    page = open_exam()
+    _setup(page)
+    page.evaluate("""() => {
+        applicant = { name:'สมชาย ทดสอบ', email:'somchai@example.com', pos:'ช่างเทคนิค',
+                      phone:'0812345678', age:28, exp:3 };
+        pendingReg = { ...applicant, postype:'', preset:null };
+        startRegisteredSession();
+    }""")
+    page.wait_for_function("() => window.__posts.some(p => p.url.endsWith('/register'))")
+    body = _reg_posts(page)[0]
+    assert body["candidate"]["key"] == "somchai@example.com"
+    assert body["candidate"]["name"] == "สมชาย ทดสอบ"
+    assert body["candidate"]["phone"] == "0812345678"
+    assert body["candidate"]["pos"] == "ช่างเทคนิค"
+    assert body["sitting"], "ไม่ได้บอกว่าเป็นการสอบครั้งไหน"
+    # ไม่มีคะแนนและไม่มีคำตอบติดไปด้วย — นี่คือการแจ้งตัวตน ไม่ใช่การส่งข้อสอบ
+    assert "answers" not in body and "score" not in body
+
+
+def test_a_registration_that_cannot_be_sent_is_queued_and_retried(open_exam):
+    page = open_exam()
+    _setup(page)
+    page.evaluate("""() => {
+        window.__nextResponse = { ok:false, status:503, body:{ code:'down' } };
+        applicant = { name:'สมชาย ทดสอบ', email:'somchai@example.com', pos:'ช่างเทคนิค',
+                      phone:'', age:'', exp:'' };
+        pendingReg = { ...applicant, postype:'', preset:null };
+        startRegisteredSession();
+    }""")
+    page.wait_for_function(
+        "() => JSON.parse(localStorage.getItem('hma_registration_queue') || '[]').length > 0")
+
+    page.evaluate("() => { window.__nextResponse = { ok:true, status:200, body:{ ok:true } }; }")
+    page.evaluate("() => flushRegistrationQueue()")
+    page.wait_for_function(
+        "() => JSON.parse(localStorage.getItem('hma_registration_queue') || '[]').length === 0")
+
+
+def test_a_registration_the_endpoint_refuses_outright_is_not_queued(open_exam):
+    # 4xx คือรูปแบบผิด ส่งใหม่กี่ครั้งก็ผิดเหมือนเดิม ไม่ต้องวนค้างคิว
+    page = open_exam()
+    _setup(page)
+    page.evaluate("""async () => {
+        window.__nextResponse = { ok:false, status:400, body:{ code:'bad_request' } };
+        applicant = { name:'สมชาย', email:'somchai@example.com', pos:'x', phone:'', age:'', exp:'' };
+        await registerSitting();
+    }""")
+    assert page.evaluate(
+        "() => window.__posts.filter(p => p.url.endsWith('/register')).length") == 1
+    assert page.evaluate(
+        "() => JSON.parse(localStorage.getItem('hma_registration_queue') || '[]').length") == 0
+
+
+def test_registering_never_blocks_the_candidate_from_starting(open_exam):
+    # งานเอกสารล้มเหลวไม่ใช่เหตุให้ห้ามคนเข้าสอบ
+    page = open_exam()
+    _setup(page)
+    page.evaluate("""() => {
+        window.__nextResponse = { ok:false, status:503, body:{} };
+        applicant = { name:'สมชาย', email:'somchai@example.com', pos:'x', phone:'', age:'', exp:'' };
+        pendingReg = { ...applicant, postype:'', preset:null };
+        startRegisteredSession();
+    }""")
+    assert page.locator("#p-dash").is_visible()
+
+
+# ── ไม่ให้เริ่มสอบถ้าระบบตรวจคะแนนไม่ตอบ ────────────────────────
+
+
+def test_a_test_does_not_start_while_the_endpoint_is_unreachable(open_exam):
+    page = open_exam()
+    _setup(page)
+    page.evaluate("""() => {
+        window.__healthResponse = { ok:false, status:503, body:{} };
+        sessions[0].status = 'not_started';
+    }""")
+    page.evaluate("() => startTest(0)")
+    page.wait_for_function("() => (window.__gets || []).length > 0")
+    page.wait_for_timeout(150)
+    assert page.evaluate("() => (document.querySelector('.page.active')||{}).id") != "p-test"
+    assert "ติดต่อไม่ได้" in page.inner_text("#toast")
+
+
+def test_a_test_starts_once_the_endpoint_answers(open_exam):
+    page = open_exam()
+    _setup(page)
+    page.evaluate("() => { sessions[0].status = 'not_started'; }")
+    page.evaluate("() => startTest(0)")
+    page.wait_for_function("() => (document.querySelector('.page.active')||{}).id === 'p-test'")
+    assert page.evaluate("() => (window.__gets || []).length") == 1
+
+
+def test_the_endpoint_is_only_asked_once_while_it_keeps_answering(open_exam):
+    # เช็กทุกครั้งที่กดเริ่มคือการถ่วงเวลาผู้สมัครโดยไม่ได้อะไรเพิ่ม
+    page = open_exam()
+    _setup(page)
+    page.evaluate("() => { sessions[0].status = 'not_started'; }")
+    page.evaluate("() => startTest(0)")
+    page.wait_for_function("() => (document.querySelector('.page.active')||{}).id === 'p-test'")
+    page.evaluate("() => startTest(0)")
+    page.wait_for_timeout(150)
+    assert page.evaluate("() => (window.__gets || []).length") == 1
+
+
+def test_a_candidate_who_was_turned_away_can_try_again(open_exam):
+    # ความล้มเหลวครั้งแรกต้องไม่ถูกจำไปตลอดทั้งเซสชัน
+    page = open_exam()
+    _setup(page)
+    page.evaluate("""() => {
+        window.__healthResponse = { ok:false, status:503, body:{} };
+        sessions[0].status = 'not_started';
+    }""")
+    page.evaluate("() => startTest(0)")
+    page.wait_for_function("() => (window.__gets || []).length > 0")
+    page.evaluate("() => { window.__healthResponse = { ok:true, status:200, body:{ ok:true } }; }")
+    page.evaluate("() => startTest(0)")
+    page.wait_for_function("() => (document.querySelector('.page.active')||{}).id === 'p-test'")
+
+
+def test_resuming_a_test_already_under_way_is_not_blocked(open_exam):
+    # นาฬิกาเดินไปแล้ว กั้นไว้ก็เสียเวลาเท่ากัน และคำตอบที่ทำไปแล้วปลอดภัยกว่า
+    # ถ้าได้ทำจนจบแล้วเข้าคิว มากกว่าถูกทิ้งค้างไว้
+    page = open_exam()
+    _setup(page)
+    page.evaluate("""() => {
+        window.__healthResponse = 'throw';
+        sessions[0].status = 'in_progress';
+    }""")
+    page.evaluate("() => continueTest(0)")
+    assert page.evaluate("() => (document.querySelector('.page.active')||{}).id") == "p-test"
+
+
+# ── หน้าขอบคุณต้องไม่โกหก ───────────────────────────────────────
+
+
+def test_the_thank_you_page_says_the_results_went_out_only_when_they_did(open_exam):
+    page = open_exam()
+    _setup(page)
+    page.evaluate("() => { localStorage.removeItem('hma_answer_queue'); nav('p-thankyou'); }")
+    assert "ส่งให้ทีม HR" in page.inner_text("#ty-note")
+    assert page.inner_text("#ty-badge") == "✓"
+
+
+def test_the_thank_you_page_admits_when_answers_are_still_stuck(open_exam):
+    page = open_exam()
+    _setup(page)
+    page.evaluate("""() => {
+        localStorage.setItem('hma_answer_queue', JSON.stringify([
+            { submission: { testCode:'TESTSET', sitting:'s1', answers:[0] }, at: 1 }]));
+        nav('p-thankyou');
+    }""")
+    note = page.inner_text("#ty-note")
+    assert "ส่งให้ทีม HR" not in note, "ยังบอกว่าส่งแล้วทั้งที่ยังไม่ได้ส่ง"
+    assert "อย่าเพิ่งปิดหน้านี้" in note
+    assert "ยังไม่หายไปไหน" in note, "ต้องบอกด้วยว่าคำตอบยังอยู่ ไม่ได้หาย"
+    assert page.inner_text("#ty-title") == "ยังส่งคำตอบไม่สำเร็จ"
+
+
+def test_the_thank_you_page_updates_itself_once_the_queue_clears(open_exam):
+    page = open_exam()
+    _setup(page)
+    page.evaluate("""() => {
+        localStorage.setItem('hma_answer_queue', JSON.stringify([
+            { submission: { testCode:'TESTSET', sitting:'s1', answers:[0] }, at: 1 }]));
+        nav('p-thankyou');
+    }""")
+    assert page.inner_text("#ty-title") == "ยังส่งคำตอบไม่สำเร็จ"
+    page.evaluate("() => flushAnswerQueue()")
+    page.wait_for_function("() => document.getElementById('ty-title').textContent.includes('ขอบคุณ')")
+    assert "ส่งให้ทีม HR" in page.inner_text("#ty-note")
+
+
+# ── ผลที่ยังไม่ได้ตรวจ ไม่ใช่ผลสอบ ──────────────────────────────
+#
+# เมื่อตรวจคะแนนที่เซิร์ฟเวอร์ หน้าเว็บไม่รู้คะแนน เซสชันที่ทำเสร็จแล้วแต่ผลยังไม่กลับมา
+# เคยถูกแสดงเป็นแถวผลสอบ ทำให้ HR เห็น "null/100" — ผลที่ไม่เคยมี กลับอ่านเหมือนมี
+
+
+def _finish_without_a_score(page):
+    """ทำข้อสอบจนจบโดยที่เซิร์ฟเวอร์ยังไม่ได้ส่งคะแนนกลับมา"""
+    shown = _setup(page)
+    page.evaluate("() => { window.__nextResponse = { ok:false, status:503, body:{} }; }")
+    _answer(page, [0] * len(shown))
+    page.wait_for_function("() => sessions[0].status === 'completed'")
+
+
+def test_a_finished_test_with_no_score_yet_is_not_shown_as_a_result(open_exam):
+    page = open_exam()
+    _finish_without_a_score(page)
+    rows = page.evaluate("() => getAllRows().map(r => ({ test: r.test, score: r.score }))")
+    assert all(r["score"] is not None for r in rows), f"มีแถวที่คะแนนว่างหลุดมา: {rows}"
+
+
+def test_the_candidate_still_appears_in_the_hr_list_without_a_score(open_exam):
+    # ไม่แสดงเป็นผลสอบ ไม่ได้แปลว่าให้หายไปทั้งคน — นั่นคือปัญหาที่เรากำลังแก้
+    page = open_exam()
+    _finish_without_a_score(page)
+    profile = page.evaluate("""() => {
+        const key = applicantKey(applicant);
+        const live = { candidate_key: key };
+        // เรียกผ่านทางเดียวกับที่หน้าผู้ดูแลใช้
+        renderCandidates();
+        const rows = [...document.querySelectorAll('#a-cand-tbody tr')].map(r => r.textContent);
+        return rows.filter(t => t.includes('cand@example.com')).length;
+    }""")
+    assert profile >= 1, "ผู้สมัครหายไปจากรายชื่อฝั่ง HR"
+
+
+def test_a_scored_test_still_shows_as_a_result(open_exam):
+    # กันไม่ให้ตัวกรองข้างบนกวาดผลจริงทิ้งไปด้วย
+    page = open_exam()
+    shown = _setup(page)
+    page.evaluate("() => { window.SCORING_ENDPOINT = ''; }")   # ตรวจคะแนนในเครื่องเหมือนเดิม
+    _answer(page, [0] * len(shown))
+    page.wait_for_function("() => sessions[0].status === 'completed'")
+    rows = page.evaluate("() => getAllRows().filter(r => r.test === 'TESTSET')")
+    assert len(rows) == 1 and rows[0]["score"] is not None
+
+
+# ── หน้าต่างต้องอยู่เหนือแถบเมนูของผู้ดูแล ───────────────────────
+
+
+def test_a_modal_sits_above_the_admin_sidebar(open_exam):
+    # แถบเมนูเป็น z-index 71 ส่วนหน้าต่างเคยเป็น 50 เปิดผลสอบขณะเมนูเปิดอยู่
+    # แล้วเมนูจะทับหน้าต่างไว้
+    page = open_exam()
+    page.set_viewport_size({"width": 1440, "height": 900})
+    on_top = page.evaluate("""() => {
+        // แถบเมนูอยู่ในหน้าผู้ดูแล ถ้าไม่เปิดหน้านั้นก่อน มันจะกว้างเป็นศูนย์
+        // แล้วเทสต์จะผ่านโดยไม่ได้วัดอะไรเลย
+        nav('p-admin');
+        toggleAdminSidebar(true);
+        openModal('mod-indiv-pdf');
+        const sb = document.getElementById('adm-sidebar').getBoundingClientRect();
+        if (sb.width < 100) return 'แถบเมนูไม่ได้เปิดจริง';
+        const el = document.elementFromPoint(sb.x + sb.width / 2, sb.y + sb.height / 2);
+        return el && el.closest('#adm-sidebar') ? 'เมนู' : 'หน้าต่าง';
+    }""")
+    assert on_top == "หน้าต่าง", f"แถบเมนูยังทับหน้าต่างอยู่ ({on_top})"
+
+
+def test_the_score_dashboard_says_why_it_cannot_open_yet(open_exam):
+    # "ไม่มีข้อมูล" เฉย ๆ ทำให้ดูเหมือนปุ่มเสีย
+    page = open_exam()
+    _setup(page)
+    page.evaluate("() => adminOpenScoreDash('nobody@example.com')")
+    msg = page.inner_text("#toast")
+    assert "ยังมาไม่ถึง" in msg and "รอสักครู่" in msg
+
+
+
+def test_the_hr_row_shows_no_score_badge_while_the_result_is_still_coming(open_exam):
+    # โปรไฟล์ผู้สมัครเคยหยิบ s.score มาใส่ทั้งที่ยังเป็นค่าว่าง ทำให้แถวขึ้น "null"
+    page = open_exam()
+    _finish_without_a_score(page)
+    row = page.evaluate("""() => {
+        nav('p-admin');
+        renderCandidates();
+        const tr = [...document.querySelectorAll('#a-cand-tbody tr')]
+            .find(r => r.textContent.includes('cand@example.com'));
+        return tr ? tr.textContent : null;
+    }""")
+    assert row is not None, "ผู้สมัครหายไปจากรายชื่อ"
+    assert "null" not in row and "undefined" not in row, f"แถวโชว์คะแนนที่ยังไม่มี: {row}"
+
+
+def test_a_result_already_recorded_is_not_wiped_by_the_sitting_in_flight(open_exam):
+    """ผลที่ตรวจแล้วต้องไม่ถูกเซสชันที่ยังไม่ได้คะแนนทับหายไป
+
+    renderCandidates() รวมโปรไฟล์ที่เก็บไว้กับเซสชันปัจจุบันด้วยการ spread ทับกัน
+    ถ้าเซสชันปัจจุบันใส่คะแนนเป็นค่าว่างลงไป คะแนนจริงที่เคยตรวจแล้วจะถูกทับหาย
+    — HR จะเห็นผู้สมัครที่เคยมีผล กลายเป็นไม่มีผล
+    """
+    page = open_exam(exam_records=[{
+        "datetime": "3/8/2569 10:00:00", "_ts": 1785000000000,
+        "candidate_key": "cand@example.com", "name": "ผู้สมัคร ทดสอบ",
+        "email": "cand@example.com", "phone": "", "age": "", "experience": "",
+        "position": "Engineer", "attempt": 1, "attempt_label": "ครั้งที่ 1",
+        "_complete": True, "TESTSET_score": 88, "TESTSET_outcome": "P",
+    }])
+    _finish_without_a_score(page)
+    row = page.evaluate("""() => {
+        nav('p-admin');
+        renderCandidates();
+        const tr = [...document.querySelectorAll('#a-cand-tbody tr')]
+            .find(r => r.textContent.includes('cand@example.com'));
+        return tr ? tr.textContent.replace(/\s+/g, ' ') : null;
+    }""")
+    assert row is not None, "ผู้สมัครหายไปจากรายชื่อ"
+    assert "TESTSET 88" in row, f"คะแนนที่ตรวจแล้วถูกทับหายไป: {row}"

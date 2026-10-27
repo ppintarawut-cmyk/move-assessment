@@ -992,3 +992,159 @@ def test_result_dashboard_never_scrolls_sideways(open_exam):
         assert page.evaluate(
             "() => document.documentElement.scrollWidth <= window.innerWidth"), \
             f"หน้าเลื่อนแนวนอนที่ {width}x{height}"
+
+
+# ── สองภาษา ──
+#
+# ปุ่มสลับภาษามีอยู่ทุกหน้า แต่ฝั่งผู้ดูแลเคยไม่ผูกคำแปลไว้เลย กดแล้วไม่มีอะไรเปลี่ยน
+
+
+def test_the_admin_tables_follow_the_language_toggle(open_exam):
+    page = open_exam()
+    page.evaluate("() => nav('p-admin')")
+    heads = lambda: page.evaluate(
+        "() => [...document.querySelectorAll('#p-admin table th')]"
+        ".map(t => t.textContent.trim()).filter(Boolean)")
+    th = heads()
+    assert "ผู้สมัคร" in th and "คะแนนเฉลี่ย" in th
+    page.click("#lang-fab")
+    en = heads()
+    assert "Candidate" in en and "Average score" in en, f"หัวตารางไม่เปลี่ยนภาษา: {en}"
+    page.click("#lang-fab")
+    assert heads() == th, "กลับมาภาษาไทยแล้วไม่เหมือนเดิม"
+
+
+def test_every_translated_key_has_both_languages(open_exam):
+    # คีย์ที่มีแต่ภาษาไทยจะทำให้ผู้ใช้ที่เลือกอังกฤษเห็นไทยค้างโดยไม่มีใครรู้
+    page = open_exam()
+    bad = page.evaluate("""() => Object.entries(I18N)
+        .filter(([k, v]) => !v || !v.th || !v.en)
+        .map(([k]) => k)""")
+    assert bad == [], f"คีย์ที่ขาดภาษา: {bad}"
+
+
+def test_no_screen_still_speaks_thai_when_english_is_on(open_exam):
+    """เดินดูทุกหน้าในโหมดอังกฤษ แล้วฟ้องถ้ายังมีไทยโผล่ให้เห็น
+
+    เทสต์คีย์อื่นดูได้แค่ว่า "คีย์ครบไหม" ไม่ได้ดูว่าหน้าจอจริงพูดภาษาอะไร
+    ข้อความที่ฝังไทยไว้ในโค้ดตรง ๆ จะไม่มีคีย์ให้ตรวจ — ต้องมาดูของจริง
+
+    ยกเว้นเนื้อหาข้อสอบ (คลังข้อสอบ แบบวัดบุคลิกภาพ และคำชี้แจงเริ่มต้น
+    ที่ผู้ดูแลแก้เองได้) ซึ่งตั้งใจให้เป็นไทย การแปลจะกลายเป็นต้องดูแล
+    ข้อสอบสองชุดคู่กันตลอดไป
+    """
+    CONTENT_IDS = ["qe-list", "intro-body", "instr-body", "instr-preview-body",
+                   "t-qbody", "rv-summary", "t-passage"]
+    SCAN = """(contentIds) => {
+        const bad = [], thai = /[\u0E00-\u0E7F]/;
+        const inContent = el => {
+            for (let n = el; n; n = n.parentElement)
+                if (n.id && contentIds.includes(n.id)) return true;
+            return false;
+        };
+        document.querySelectorAll('.page.active, .overlay.open').forEach(root => {
+            const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+            let n;
+            while ((n = w.nextNode())) {
+                const t = (n.textContent || '').trim();
+                if (!t || !thai.test(t)) continue;
+                const el = n.parentElement;
+                if (!el || inContent(el)) continue;
+                const r = el.getBoundingClientRect();
+                if (r.width === 0 || r.height === 0) continue;
+                bad.push((root.id || root.className) + ' :: ' + t.slice(0, 70));
+            }
+        });
+        return bad;
+    }"""
+    page = open_exam()
+    page.evaluate("() => { LANG = 'en'; applyLang(); }")
+    screens = [
+        ("landing", None),
+        ("register", "() => nav('p-register')"),
+        ("login", "() => nav('p-login')"),
+        ("admin", "() => { currentAdmin = {name:'Pin', role:'superadmin', email:'p@x.com'};"
+                  "        nav('p-admin'); applyRolePerms(); renderAdmin({refetch:false}); }"),
+        ("candidates", "() => admGo('p-candidates')"),
+        ("question editor", "() => admGo('p-question-editor')"),
+        ("instructions", "() => admGo('p-instruction-editor')"),
+        ("positions", "() => admGo('p-position-editor')"),
+        ("team", "() => admGo('p-collab')"),
+        ("thank you", "() => nav('p-thankyou')"),
+    ]
+    leftovers = {}
+    for name, js in screens:
+        if js:
+            page.evaluate(js)
+        page.wait_for_timeout(250)
+        hits = sorted(set(page.evaluate(SCAN, CONTENT_IDS)))
+        if hits:
+            leftovers[name] = hits
+    assert leftovers == {}, f"ยังมีไทยค้างในโหมดอังกฤษ: {leftovers}"
+
+
+def test_no_translation_key_is_defined_twice():
+    """คีย์ซ้ำจะถูกตัวหลังทับเงียบ ๆ
+
+    JavaScript ไม่เตือนเมื่อ object literal มีคีย์ซ้ำ ตัวที่อยู่ล่างสุดชนะ
+    ที่ผ่านมาเคยทำให้ตัวนับข้อในหน้าสอบเปลี่ยนจาก "ข้อ 3 / 20" เป็น
+    "รายการ 3 / 20" โดยไม่มีเทสต์ไหนจับได้ อ่านจากไฟล์ตรง ๆ เพราะ
+    เบราว์เซอร์จะเหลือให้เห็นแค่ตัวที่ชนะ
+    """
+    import pathlib
+    import re
+    src = (pathlib.Path(__file__).resolve().parent.parent / "index.html").read_text(encoding="utf-8")
+    start = src.index("const I18N = {")
+    body = src[start:src.index("\n};", start)]
+    keys = re.findall(r"^\s{2}([A-Za-z0-9_]+)\s*:\s*\{", body, re.M)
+    dups = sorted({k for k in keys if keys.count(k) > 1})
+    assert dups == [], f"คีย์ที่ประกาศซ้ำ: {dups}"
+
+
+def test_no_translation_key_is_referenced_without_being_defined(open_exam):
+    page = open_exam()
+    missing = page.evaluate("""() => {
+        const keys = new Set(Object.keys(I18N));
+        return [...document.querySelectorAll('[data-i18n],[data-i18n-html],[data-i18n-ph]')]
+            .map(e => e.getAttribute('data-i18n') || e.getAttribute('data-i18n-html')
+                     || e.getAttribute('data-i18n-ph'))
+            .filter(k => !keys.has(k));
+    }""")
+    assert missing == [], f"อ้างถึงคีย์ที่ไม่มีในพจนานุกรม: {missing}"
+
+
+def test_the_page_script_parses_and_runs_without_errors(open_exam):
+    """สคริปต์ของหน้าต้องรันได้ทั้งก้อน
+
+    ถ้าไวยากรณ์พังแม้จุดเดียว ทั้งไฟล์จะไม่ทำงานเลย แล้วเทสต์อื่นจะฟ้องว่า
+    "หมดเวลา" ซึ่งอ่านไม่ออกว่าเกิดอะไรขึ้น เทสต์นี้ฟ้องตรงจุดแทน
+    """
+    errors = []
+    page = open_exam()
+    page.on("pageerror", lambda e: errors.append(str(e)))
+    page.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
+    page.reload()
+    page.wait_for_function("typeof submitReg !== 'undefined'")
+    page.evaluate("() => { nav('p-admin'); nav('p-candidates'); nav('p-landing'); }")
+    page.wait_for_timeout(200)
+    real = [e for e in errors if "favicon" not in e and "net::" not in e
+            and "Failed to load resource" not in e]
+    assert real == [], f"สคริปต์มีข้อผิดพลาด: {real[:3]}"
+
+
+def test_no_toast_carries_a_hard_coded_thai_message():
+    """ข้อความแจ้งเตือนต้องมาจากพจนานุกรม ไม่ใช่เขียนไทยไว้ในโค้ดตรง ๆ
+
+    อ่านไฟล์ตรง ๆ ไม่ผ่านเบราว์เซอร์ เพราะต้องการดูว่า "เขียนไว้แบบไหน"
+    ไม่ใช่ "แสดงผลออกมาเป็นอะไร" — ข้อความที่ฝังไทยไว้จะไม่มีวันเปลี่ยนภาษา
+    """
+    import pathlib
+    import re
+    src = pathlib.Path(__file__).resolve().parent.parent / "index.html"
+    thai = re.compile(r"[฀-๿]")
+    bad = []
+    for n, line in enumerate(src.read_text().split("\n"), 1):
+        for m in re.finditer(r"showToast\(\s*([`'\"])((?:(?!\1).)*)\1", line):
+            if thai.search(m.group(2)):
+                bad.append(f"บรรทัด {n}: {m.group(2)[:50]}")
+    assert bad == [], "ข้อความแจ้งเตือนที่ยังฝังภาษาไทยไว้:\n" + "\n".join(bad)
