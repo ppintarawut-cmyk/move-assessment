@@ -1662,6 +1662,67 @@ const I18N = {
   m_role_rules: { th:"บันทึกบทบาทไม่สำเร็จ — ยังไม่ได้ตั้ง Firestore Rules ให้ admin_roles (ตั้งใน Firebase Console)", en:"Could not save the role — the Firestore rules for admin_roles are not set (set them in the Firebase console)" },
   m_role_fail: { th:"บันทึกบทบาทไม่สำเร็จ: ", en:"Could not save the role: " },
   m_role_ok_no_login: { th:"บันทึกบทบาทแล้ว แต่สร้างบัญชีล็อกอินไม่ได้ — เปิด Email/Password provider ใน Firebase Console แล้วเพิ่มอีเมลนี้อีกครั้ง", en:"The role was saved but the sign-in account could not be created — enable the Email/Password provider in the Firebase console, then add this email again" },
+  t_pass: { th:"ผ่าน", en:"Passed" },
+  t_fail: { th:"ไม่ผ่าน", en:"Not passed" },
+  t_exam_date: { th:"วันที่สอบ", en:"Date taken" },
+  t_points: { th:"คะแนน", en:"points" },
+  t_above_mark: { th:"ผ่านเกณฑ์", en:"above the mark" },
+  t_below_mark: { th:"ไม่ผ่านเกณฑ์", en:"below the mark" },
+  t_exp_years_n: { th:"ประสบการณ์ {n} ปี", en:"{n} years of experience" },
+  t_overall: { th:"ผลรวม", en:"Overall" },
+  t_all_passed: { th:"ผ่านทั้งหมด ✓", en:"All passed ✓" },
+  t_some_failed: { th:"ไม่ผ่านบางชุด", en:"Some not passed" },
+  t_pass_mark_n: { th:"เกณฑ์ผ่าน {n} คะแนน", en:"Pass mark {n}" },
+  t_took_about: { th:"ใช้เวลา ~{m} นาที", en:"took about {m} min" },
+  t_mark_line_one: { th:"เส้นบนแถบคือเกณฑ์ผ่าน {n} คะแนน", en:"The line on each bar is the pass mark of {n}" },
+  t_mark_line_range: { th:"เส้นบนแถบคือเกณฑ์ผ่านของแต่ละชุด ({a}–{b} คะแนน)", en:"The line on each bar is that test’s own pass mark ({a}–{b})" },
+  t_left_n_times: { th:"ออกจากหน้าสอบ {n} ครั้ง", en:"left the exam window {n} times" },
+  t_percentile_line: { th:"Top {top}% ของผู้สมัครทั้งหมด (Percentile ที่ {p})", en:"Top {top}% of all candidates (percentile {p})" },
+  t_strength: { th:"💪 จุดแข็ง", en:"💪 Strength" },
+  t_ok: { th:"📈 พอใช้", en:"📈 Fair" },
+  t_improve: { th:"⚠️ ควรพัฒนา", en:"⚠️ Needs work" },
+  t_passed_all: { th:"ผ่านการทดสอบทั้งหมด", en:"Passed every test" },
+  t_passed_n_of: { th:"ผ่าน {n} จาก {total} ชุดสอบ", en:"Passed {n} of {total} tests" },
+  t_results_of: { th:"ผลการทดสอบ — {who}", en:"Results — {who}" },
+  t_q_total: { th:"ข้อทั้งหมด", en:"Questions" },
+  t_q_right: { th:"ถูกทั้งข้อ", en:"Fully correct" },
+  t_q_skipped: { th:"ข้ามข้อ", en:"Skipped" },
+  t_right: { th:"ถูก", en:"Correct" },
+  t_partial: { th:"บางส่วน", en:"Partial" },
+  t_wrong: { th:"ผิด", en:"Wrong" },
+  t_explanation: { th:"คำอธิบาย:", en:"Explanation:" },
+  t_just_sat: { th:"สอบเมื่อกี้", en:"just sat" },
+  f_editq_s: { th:"แก้ข้อสอบ", en:"Edit questions" },
+  f_editq_l: { th:"จัดการข้อสอบ & คำแนะนำ", en:"Manage questions and instructions" },
+  f_editq_p: { th:"หน้า “จัดการข้อสอบ” และ “จัดการคำแนะนำ”", en:"The Questions and Instructions screens" },
+  f_pos_s: { th:"ตั้งค่าตำแหน่ง", en:"Positions" },
+  f_pos_l: { th:"ตั้งค่าชุดสอบตามตำแหน่ง", en:"Set which tests each position sits" },
+  f_pos_p: { th:"หน้า “ชุดสอบ/ตำแหน่ง”", en:"The Tests / positions screen" },
+  f_export_s: { th:"Export", en:"Export" },
+  f_export_l: { th:"Export ผลการทดสอบ", en:"Export results" },
+  f_export_p: { th:"ปุ่ม “Export Excel”, ดาวน์โหลด CSV / PDF", en:"The Export Excel button, and CSV / PDF downloads" },
+  f_users_s: { th:"จัดการทีม", en:"Team" },
+  f_users_l: { th:"จัดการผู้ดูแลระบบ", en:"Manage administrators" },
+  f_users_p: { th:"หน้า “จัดการทีม” — เพิ่ม / แก้ไข / ลบผู้ดูแล", en:"The Team screen — add, edit and remove administrators" },
+  f_del_s: { th:"ลบข้อมูล", en:"Delete" },
+  f_del_l: { th:"ลบข้อมูลผู้สมัคร", en:"Delete candidate data" },
+  f_del_p: { th:"ปุ่ม “ลบ” ในตารางผลการทดสอบ", en:"The Delete button in the results table" },
+  v_first_name: { th:"กรุณากรอกชื่อ", en:"Please enter your first name" },
+  v_last_name: { th:"กรุณากรอกนามสกุล", en:"Please enter your last name" },
+  v_age: { th:"อายุต้องอยู่ระหว่าง 18-70 ปี", en:"Age must be between 18 and 70" },
+  v_position: { th:"กรุณาเลือกตำแหน่งที่สมัคร", en:"Please select a position" },
+  v_email: { th:"กรุณากรอก Email ที่ถูกต้อง", en:"Please enter a valid email address" },
+  v_registering: { th:"กำลังลงทะเบียน...", en:"Registering…" },
+  t_exp_years_full: { th:"ประสบการณ์ (ปี)", en:"Experience (yrs)" },
+  t_item: { th:"รายการ", en:"Item" },
+  t_compare_cands_plain: { th:"เปรียบเทียบผู้สมัคร", en:"Candidate comparison" },
+  t_generated: { th:"สร้างเมื่อ", en:"Generated" },
+  t_prev_xlsx: { th:"พรีวิวก่อน Export Excel", en:"Preview before exporting to Excel" },
+  t_prev_pdf: { th:"พรีวิวก่อน Export PDF", en:"Preview before exporting to PDF" },
+  t_prev_xlsx_hint: { th:"ตรวจสอบข้อมูลก่อนดาวน์โหลดไฟล์ .xlsx", en:"Check the data before downloading the .xlsx file" },
+  t_prev_pdf_hint: { th:"ตรวจสอบเลย์เอาต์ก่อนดาวน์โหลดไฟล์ PDF (A4)", en:"Check the layout before downloading the A4 PDF" },
+  t_dl_xlsx: { th:"⬇ ดาวน์โหลด Excel", en:"⬇ Download Excel" },
+  t_dl_pdf: { th:"⬇ ดาวน์โหลด PDF", en:"⬇ Download PDF" },
   t_date_taken: { th:"วันเวลาที่สอบ", en:"Date taken" },
   t_perm_note: { th:"เลือกว่าผู้ดูแลแต่ละระดับใช้ฟีเจอร์ใดได้บ้าง — เปลี่ยนแล้ว<strong data-i18n=\"t_takes_effect\">มีผลทันที</strong>", en:"Choose which features each administrator level can use — changes <strong>take effect immediately</strong>" },
   t_expiry_warn: { th:'⏰ Session จะหมดอายุใน <strong id="expiry-time">28 นาที</strong> — กรุณาบันทึกงานแล้วเข้าสู่ระบบใหม่', en:'⏰ Your session expires in <strong id="expiry-time">28 minutes</strong> — please save your work and sign in again' },
@@ -2035,12 +2096,12 @@ function submitReg() {
   const phone = document.getElementById('r-phone')?.value.trim() || '';
 
   let ok = true;
-  if (!fn) { showErr('e-fn','กรุณากรอกชื่อ'); ok=false; }
-  if (!ln) { showErr('e-ln','กรุณากรอกนามสกุล'); ok=false; }
-  if (!age||age<18||age>70) { showErr('e-age','อายุต้องอยู่ระหว่าง 18-70 ปี'); ok=false; }
-  if (!posId) { document.getElementById('e-pos').textContent = LANG==='th'?'กรุณาเลือกตำแหน่งที่สมัคร':'Please select a position'; document.getElementById('e-pos').style.display='block'; document.getElementById('reg-pos')?.classList.add('err'); ok=false; }
+  if (!fn) { showErr('e-fn',t18n('v_first_name')); ok=false; }
+  if (!ln) { showErr('e-ln',t18n('v_last_name')); ok=false; }
+  if (!age||age<18||age>70) { showErr('e-age',t18n('v_age')); ok=false; }
+  if (!posId) { document.getElementById('e-pos').textContent = t18n('v_position'); document.getElementById('e-pos').style.display='block'; document.getElementById('reg-pos')?.classList.add('err'); ok=false; }
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    const ee=document.getElementById('e-email'); ee.textContent='กรุณากรอก Email ที่ถูกต้อง'; ee.style.display='block';
+    const ee=document.getElementById('e-email'); ee.textContent=t18n('v_email'); ee.style.display='block';
     document.getElementById('r-email')?.classList.add('err'); ok=false;
   }
   const pdpaEl = document.getElementById('pdpa-consent');
@@ -2052,7 +2113,7 @@ function submitReg() {
   if (!ok) return;
 
   const btn = document.getElementById('reg-btn');
-  btn.innerHTML = '<span class="spin"></span> กำลังลงทะเบียน...';
+  btn.innerHTML = '<span class="spin"></span> ' + t18n('v_registering');
   btn.disabled = true;
 
   pendingReg = {
@@ -2557,13 +2618,13 @@ function renderReview(idx) {
   const skippedCount = s.answers.slice(0, totalQ).filter(a=>a===null).length;
 
   document.getElementById('rv-testname').textContent = (LANG==='th' ? (s.test.nameTH||s.test.name) : s.test.name);
-  document.getElementById('rv-score').textContent = `${s.score}/100 — ${s.outcome==='P'?'✓ ผ่าน':'✗ ไม่ผ่าน'}`;
+  document.getElementById('rv-score').textContent = `${s.score}/100 — ${s.outcome==='P'? '✓ '+t18n('t_pass') : '✗ '+t18n('t_fail')}`;
   document.getElementById('rv-score').style.color = s.outcome==='P'?'var(--pass)':'var(--red)';
 
   document.getElementById('rv-summary').innerHTML = [
-    {l:'ข้อทั้งหมด', v:totalQ,        c:'var(--gray-900)'},
-    {l:'ถูกทั้งข้อ', v:correctCount,   c:'var(--pass)'},
-    {l:'ข้ามข้อ',    v:skippedCount,   c:'var(--amber)'},
+    {l:t18n('t_q_total'), v:totalQ,        c:'var(--gray-900)'},
+    {l:t18n('t_q_right'), v:correctCount,   c:'var(--pass)'},
+    {l:t18n('t_q_skipped'),    v:skippedCount,   c:'var(--amber)'},
   ].map(({l,v,c})=>`<div class="metric"><div class="metric-val" style="color:${c}">${v}</div><div class="metric-lbl">${l}</div></div>`).join('');
 
   document.getElementById('rv-questions').innerHTML = qs.map((q,i) => {
@@ -2579,10 +2640,10 @@ function renderReview(idx) {
     const headColor= isRight?'var(--teal-l)':isPartial?'var(--amber-l)':'var(--red-l)';
     const headBorder=isRight?'var(--teal-b)':isPartial?'#fac775':'#f7c1c1';
     const headCls  = `style="background:${headColor};border-bottom:1px solid ${headBorder}"`;
-    const scoreLabel = isRight ? `<span style="color:var(--pass);font-weight:600">✓ ถูก (${gotP}/${bestP})</span>`
-                   : isPartial ? `<span style="color:var(--amber);font-weight:600">◑ บางส่วน (${gotP}/${bestP})</span>`
-                   : skipped ? `<span style="color:var(--gray-400)">— ข้ามข้อ (0/${bestP})</span>`
-                   : `<span style="color:var(--red);font-weight:600">✗ ผิด (0/${bestP})</span>`;
+    const scoreLabel = isRight ? `<span style="color:var(--pass);font-weight:600">✓ ${t18n('t_right')} (${gotP}/${bestP})</span>`
+                   : isPartial ? `<span style="color:var(--amber);font-weight:600">◑ ${t18n('t_partial')} (${gotP}/${bestP})</span>`
+                   : skipped ? `<span style="color:var(--gray-400)">— ${t18n('t_q_skipped')} (0/${bestP})</span>`
+                   : `<span style="color:var(--red);font-weight:600">✗ ${t18n('t_wrong')} (0/${bestP})</span>`;
     const choices  = opts.map((o,j) => {
       const isBest = j===bestIdx;
       const isPicked = j===chosen;
@@ -2607,7 +2668,7 @@ function renderReview(idx) {
         ${q.passage?`<div style="background:var(--gray-50);border:1px solid var(--gray-200);border-left:3px solid var(--blue);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:12.5px;color:var(--gray-700);white-space:pre-line;line-height:1.6">${q.passage}</div>`:''}
         <p style="font-size:13px;font-weight:500;margin-bottom:12px;line-height:1.6">${(LANG==='th'&&q.qTH)?q.qTH:q.q}</p>
         ${choices}
-        ${q.exp?`<div class="explanation"><strong>💡 คำอธิบาย:</strong> ${q.exp}</div>`:''}
+        ${q.exp?`<div class="explanation"><strong>💡 ${t18n('t_explanation')}</strong> ${q.exp}</div>`:''}
       </div>
     </div>`;
   }).join('');
@@ -2632,12 +2693,12 @@ function renderResults() {
   document.getElementById('r-pct').textContent = `${avg}%`;
   document.getElementById('r-name').textContent = applicant.name;
   document.getElementById('r-pos').textContent  =
-    applicant.pos + ((applicant.exp != null && applicant.exp !== '') ? `  ·  ประสบการณ์ ${applicant.exp} ปี` : '');
+    applicant.pos + ((applicant.exp != null && applicant.exp !== '') ? '  ·  ' + t18n('t_exp_years_n').replace('{n}', applicant.exp) : '');
 
   document.getElementById('r-metrics').innerHTML = [
-    {l:'ชุดสอบ',v:done.length,c:'var(--gray-900)'},
-    {l:'ผ่าน',v:pass,c:'var(--teal)'},
-    {l:'ผลรวม',v:pass===done.length?'ผ่านทั้งหมด ✓':'ไม่ผ่านบางชุด',c:pass===done.length?'var(--teal)':'var(--red)'},
+    {l:t18n('t_test_set'),v:done.length,c:'var(--gray-900)'},
+    {l:t18n('t_pass'),v:pass,c:'var(--teal)'},
+    {l:t18n('t_overall'),v:pass===done.length?t18n('t_all_passed'):t18n('t_some_failed'),c:pass===done.length?'var(--teal)':'var(--red)'},
   ].map(({l,v,c})=>`<div class="metric"><div class="metric-val" style="color:${c};font-size:${typeof v==='string'?'13px':'22px'}">${v}</div><div class="metric-lbl">${l}</div></div>`).join('');
 
   // Bar chart rows. The pass mark is read per test instead of assumed to be 70
@@ -2651,7 +2712,7 @@ function renderResults() {
       <div class="bar-score-label">${s.test.code}</div>
       <div class="bar-score-track">
         <div class="bar-score-fill" style="width:${s.score}%;background:${c}"></div>
-        <div class="bar-score-mark" style="left:${mark}%" title="เกณฑ์ผ่าน ${passMarkOf(s)} คะแนน"></div>
+        <div class="bar-score-mark" style="left:${mark}%" title="${t18n('t_pass_mark_n').replace('{n}', passMarkOf(s))}"></div>
       </div>
       <div class="bar-score-num" style="color:${c}">${s.score}</div>
     </div>`;
@@ -2662,8 +2723,8 @@ function renderResults() {
   const marks = [...new Set(done.map(passMarkOf))];
   const barsNote = document.getElementById('r-bars-note');
   if (barsNote) barsNote.textContent = marks.length === 1
-    ? `เส้นบนแถบคือเกณฑ์ผ่าน ${marks[0]} คะแนน`
-    : `เส้นบนแถบคือเกณฑ์ผ่านของแต่ละชุด (${Math.min(...marks)}–${Math.max(...marks)} คะแนน)`;
+    ? t18n('t_mark_line_one').replace('{n}', marks[0])
+    : t18n('t_mark_line_range').replace('{a}', Math.min(...marks)).replace('{b}', Math.max(...marks));
 
   // Radar
   if (radarChart) radarChart.destroy();
@@ -2688,11 +2749,11 @@ function renderResults() {
   // Breakdown
   document.getElementById('r-breakdown').innerHTML = done.map(s=>{
     const c = s.score >= passMarkOf(s) ? 'var(--teal)' : 'var(--red)';
-    const pill=s.outcome==='P'?'<span class="badge b-pass">✓ ผ่าน</span>':'<span class="badge b-fail">✗ ไม่ผ่าน</span>';
+    const pill=s.outcome==='P'?`<span class="badge b-pass">✓ ${t18n('t_pass')}</span>`:`<span class="badge b-fail">✗ ${t18n('t_fail')}</span>`;
     // From a live session use its violations; from an admin-opened snapshot use the stored count.
     const leaves = (s.leaves != null) ? s.leaves : examLeaveCount(s.violations);
     const leaveNote = leaves > 0
-      ? ` · <span style="color:var(--red);font-weight:600">⚠️ ออกจากหน้าสอบ ${leaves} ครั้ง</span>`
+      ? ` · <span style="color:var(--red);font-weight:600">⚠️ ${t18n('t_left_n_times').replace('{n}', leaves)}</span>`
       : '';
     return `<div style="padding:14px 20px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;gap:10px">
       <span style="font-size:11px;font-weight:600;background:var(--gray-100);color:var(--gray-500);padding:2px 8px;border-radius:4px;flex-shrink:0">${s.test.code}</span>
@@ -2702,7 +2763,7 @@ function renderResults() {
           <div class="bar-score-track"><div class="bar-score-fill" style="width:${s.score}%;background:${c}"></div></div>
           <span style="font-size:12px;font-weight:600;color:${c}">${s.score}</span>
         </div>
-        <div style="font-size:11px;color:var(--gray-400);margin-top:3px">เกณฑ์ผ่าน ${passMarkOf(s)} คะแนน · ใช้เวลา ~${s.test.mins} นาที${leaveNote}</div>
+        <div style="font-size:11px;color:var(--gray-400);margin-top:3px">${t18n('t_pass_mark_n').replace('{n}', passMarkOf(s))} · ${t18n('t_took_about').replace('{m}', s.test.mins)}${leaveNote}</div>
       </div>
       ${pill}
     </div>`;
@@ -2718,7 +2779,7 @@ function renderResults() {
       const avgPct = Math.round(pcts.reduce((a,b)=>a+b,0) / pcts.length);
       pctBar.style.display = 'block';
       setTimeout(() => { pctFill.style.width = avgPct + '%'; }, 200);
-      pctLabel.textContent = `Top ${100-avgPct}% ของผู้สมัครทั้งหมด (Percentile ที่ ${avgPct})`;
+      pctLabel.textContent = t18n('t_percentile_line').replace('{top}', 100-avgPct).replace('{p}', avgPct);
     }
   }
 
@@ -2739,7 +2800,7 @@ function renderResults() {
         <div style="display:flex;flex-direction:column;gap:7px">`;
       secArr.forEach(sec => {
         const c = sec.pct>=70 ? 'var(--pass)' : sec.pct>=50 ? 'var(--amber)' : 'var(--red)';
-        const tag = sec.pct>=70 ? '💪 จุดแข็ง' : sec.pct>=50 ? '📈 พอใช้' : '⚠️ ควรพัฒนา';
+        const tag = sec.pct>=70 ? t18n('t_strength') : sec.pct>=50 ? t18n('t_ok') : t18n('t_improve');
         sbHtml += `<div style="display:flex;align-items:center;gap:8px">
           <span style="font-size:12px;color:var(--gray-700);min-width:100px;flex-shrink:0">${sec.name}</span>
           <div style="flex:1;background:var(--gray-100);border-radius:4px;height:5px;overflow:hidden">
@@ -2768,7 +2829,7 @@ function renderResults() {
     <div class="verdict ${allPass?'verdict-pass':'verdict-partial'}">
       <span style="font-size:22px">${allPass?'🎉':'📋'}</span>
       <div>
-        <p style="font-weight:600;font-size:13px;margin-bottom:3px;color:${allPass?'#085041':'var(--amber)'}">${allPass?'ผ่านการทดสอบทั้งหมด':`ผ่าน ${pass} จาก ${done.length} ชุดสอบ`}</p>
+        <p style="font-weight:600;font-size:13px;margin-bottom:3px;color:${allPass?'#085041':'var(--amber)'}">${allPass?t18n('t_passed_all'):t18n('t_passed_n_of').replace('{n}', pass).replace('{total}', done.length)}</p>
         <p style="font-size:12px;color:${allPass?'#0f6e56':'var(--amber)'}">ผลการทดสอบของท่านจะถูกส่งให้ HR พิจารณาในขั้นตอนถัดไป</p>
         <p style="font-size:11px;color:var(--gray-400);margin-top:5px">วันที่ทดสอบ: ${new Date().toLocaleDateString('th-TH',{day:'2-digit',month:'long',year:'numeric'})}</p>
       </div>
@@ -3423,12 +3484,12 @@ function renderCompare(){
   ['cmp-xlsx-btn','cmp-pdf-btn'].forEach(id => { const b = document.getElementById(id); if (b) b.style.display = canExport ? '' : 'none'; });
 
   const rowDefs = [
-    { label:'ตำแหน่ง',          get:p => p.position||'—',   best:false },
-    { label:'อายุ',             get:p => p.age||'—',        best:false },
-    { label:'ประสบการณ์ (ปี)',  get:p => p.experience||'—', best:true  },
+    { label:t18n('t_position'),          get:p => p.position||'—',   best:false },
+    { label:t18n('t_age'),             get:p => p.age||'—',        best:false },
+    { label:t18n('t_exp_years_full'),  get:p => p.experience||'—', best:true  },
     ...activeCodes.map(c => ({ label:c, get:p => p[c+'_score']!=null ? p[c+'_score'] : '—', best:true })),
-    { label:'ผ่าน/ทั้งหมด',     get:p => `${p.passed}/${p.taken}`, best:false },
-    { label:'คะแนนเฉลี่ย',      get:p => p.avg!=null ? p.avg : '—', best:true },
+    { label:t18n('t_pass_total'),     get:p => `${p.passed}/${p.taken}`, best:false },
+    { label:t18n('t_avg_score'),      get:p => p.avg!=null ? p.avg : '—', best:true },
   ];
   const bestIdx = def => {
     if (!def.best) return -1;
@@ -3450,7 +3511,7 @@ function renderCompare(){
   document.getElementById('cmp-body').innerHTML = `
     <div style="height:270px;margin-bottom:16px">${activeCodes.length ? '<canvas id="cmp-chart"></canvas>' : '<p style="text-align:center;color:var(--gray-400);font-size:13px;padding:30px">ยังไม่มีผลสอบให้เปรียบเทียบ</p>'}</div>
     <div style="overflow-x:auto"><table class="cmp-table">
-      <thead><tr><th>รายการ</th>${headCells}</tr></thead>
+      <thead><tr><th>${t18n('t_item')}</th>${headCells}</tr></thead>
       <tbody>${bodyRows}</tbody>
     </table></div>`;
 
@@ -3484,9 +3545,9 @@ function renderCompare(){
 let exportKind = 'pdf';
 function openExportPreview(kind){
   exportKind = kind;
-  document.getElementById('exp-title').textContent   = kind==='xlsx' ? 'พรีวิวก่อน Export Excel' : 'พรีวิวก่อน Export PDF';
-  document.getElementById('exp-hint').textContent    = kind==='xlsx' ? 'ตรวจสอบข้อมูลก่อนดาวน์โหลดไฟล์ .xlsx' : 'ตรวจสอบเลย์เอาต์ก่อนดาวน์โหลดไฟล์ PDF (A4)';
-  document.getElementById('exp-confirm-btn').innerHTML = kind==='xlsx' ? '⬇ ดาวน์โหลด Excel' : '⬇ ดาวน์โหลด PDF';
+  document.getElementById('exp-title').textContent   = t18n(kind==='xlsx' ? 't_prev_xlsx' : 't_prev_pdf');
+  document.getElementById('exp-hint').textContent    = t18n(kind==='xlsx' ? 't_prev_xlsx_hint' : 't_prev_pdf_hint');
+  document.getElementById('exp-confirm-btn').innerHTML = t18n(kind==='xlsx' ? 't_dl_xlsx' : 't_dl_pdf');
   document.getElementById('exp-preview').innerHTML   = buildComparePreviewHTML();
   openModal('mod-export-preview');
 }
@@ -3497,18 +3558,18 @@ function buildComparePreviewHTML(){
   const list  = compareData;
   const activeCodes = CODES.filter(c => list.some(p => p[c+'_score'] != null));
   const rows = [
-    ['ตำแหน่ง',          ...list.map(p => p.position||'—')],
-    ['อายุ',             ...list.map(p => p.age||'—')],
-    ['ประสบการณ์ (ปี)',  ...list.map(p => p.experience||'—')],
+    [t18n('t_position'),          ...list.map(p => p.position||'—')],
+    [t18n('t_age'),             ...list.map(p => p.age||'—')],
+    [t18n('t_exp_years_full'),  ...list.map(p => p.experience||'—')],
     ...activeCodes.map(c => [c, ...list.map(p => p[c+'_score']!=null ? `${p[c+'_score']} (${p[c+'_outcome']||'-'})` : '—')]),
-    ['ผ่าน/ทั้งหมด',     ...list.map(p => `${p.passed}/${p.taken}`)],
-    ['คะแนนเฉลี่ย',      ...list.map(p => p.avg!=null ? p.avg : '—')],
+    [t18n('t_pass_total'),     ...list.map(p => `${p.passed}/${p.taken}`)],
+    [t18n('t_avg_score'),      ...list.map(p => p.avg!=null ? p.avg : '—')],
   ];
-  const th  = ['รายการ', ...list.map(p => p.name||'—')].map(h => `<th style="border:1px solid #ccc;padding:6px 9px;background:#f3f4f6;text-align:left;font-size:12px;color:#111">${esc(h)}</th>`).join('');
+  const th  = [t18n('t_item'), ...list.map(p => p.name||'—')].map(h => `<th style="border:1px solid #ccc;padding:6px 9px;background:#f3f4f6;text-align:left;font-size:12px;color:#111">${esc(h)}</th>`).join('');
   const trs = rows.map(r => `<tr>${r.map((c,i) => `<td style="border:1px solid #ddd;padding:6px 9px;font-size:12px;color:#111;${i===0?'font-weight:600;color:#555':'text-align:center'}">${esc(c)}</td>`).join('')}</tr>`).join('');
   return `<div id="cmp-export-root" style="background:#fff;color:#111">
-    <div style="font-size:16px;font-weight:700;margin-bottom:2px">Move Assessment — เปรียบเทียบผู้สมัคร</div>
-    <div style="font-size:11px;color:#666;margin-bottom:12px">สร้างเมื่อ ${esc(new Date().toLocaleString('th-TH'))} · ${list.length} คน</div>
+    <div style="font-size:16px;font-weight:700;margin-bottom:2px">Move Assessment — ${t18n('t_compare_cands_plain')}</div>
+    <div style="font-size:11px;color:#666;margin-bottom:12px">${t18n('t_generated')} ${esc(new Date().toLocaleString('th-TH'))} · ${list.length}</div>
     <table style="width:100%;border-collapse:collapse"><thead><tr>${th}</tr></thead><tbody>${trs}</tbody></table>
   </div>`;
 }
@@ -3519,17 +3580,17 @@ function exportCompareXLSX(){
   const activeCodes = CODES.filter(c => list.some(p => p[c+'_score'] != null));
   const header = ['รายการ', ...list.map(p => p.name||'—')];
   const aoa = [
-    ['Move Assessment — เปรียบเทียบผู้สมัคร'],
+    ['Move Assessment — ' + t18n('t_compare_cands_plain')],
     ['สร้างเมื่อ ' + new Date().toLocaleString('th-TH')],
     [],
     header,
-    ['ตำแหน่ง',         ...list.map(p => p.position||'')],
-    ['อายุ',            ...list.map(p => p.age||'')],
-    ['ประสบการณ์ (ปี)', ...list.map(p => p.experience||'')],
+    [t18n('t_position'),         ...list.map(p => p.position||'')],
+    [t18n('t_age'),            ...list.map(p => p.age||'')],
+    [t18n('t_exp_years_full'), ...list.map(p => p.experience||'')],
     ...activeCodes.map(c => [c+' คะแนน', ...list.map(p => p[c+'_score']!=null ? p[c+'_score'] : '')]),
     ...activeCodes.map(c => [c+' ผล',    ...list.map(p => p[c+'_outcome']||'')]),
-    ['ผ่าน/ทั้งหมด',    ...list.map(p => `${p.passed}/${p.taken}`)],
-    ['คะแนนเฉลี่ย',     ...list.map(p => p.avg!=null ? p.avg : '')],
+    [t18n('t_pass_total'),    ...list.map(p => `${p.passed}/${p.taken}`)],
+    [t18n('t_avg_score'),     ...list.map(p => p.avg!=null ? p.avg : '')],
   ];
   const ws = XLSX.utils.aoa_to_sheet(aoa);
   ws['!cols'] = [{wch:18}, ...list.map(()=>({wch:16}))];
@@ -3646,9 +3707,9 @@ function showDetailByKey(encodedKey) {
   document.getElementById('mod-av').textContent=r.fn.charAt(0);
   document.getElementById('mod-av').style.cssText=`background:${colors[ci]};color:${textc[ci]};width:36px;height:36px;font-size:14px`;
   document.getElementById('mod-name').textContent=`${r.fn} ${r.ln}`;
-  document.getElementById('mod-sub').textContent=`${candKey(r)} · ${r.pos}${r.isLive?' · ✦ สอบเมื่อกี้':''}`;
+  document.getElementById('mod-sub').textContent=`${candKey(r)} · ${r.pos}${r.isLive?' · ✦ ' + t18n('t_just_sat'):''}`;
   document.getElementById('mod-body').innerHTML = rows.map(s=>{
-    const pill=s.out==='P'?'<span class="badge b-pass">✓ ผ่าน</span>':'<span class="badge b-fail">✗ ไม่ผ่าน</span>';
+    const pill=s.out==='P'?`<span class="badge b-pass">✓ ${t18n('t_pass')}</span>`:`<span class="badge b-fail">✗ ${t18n('t_fail')}</span>`;
     const c=s.out==='P'?'var(--teal)':'var(--red)';
     const passVal = (s.passing != null) ? s.passing : (((typeof TESTS!=='undefined' && TESTS.find(t=>t.code===s.test)) || {}).passing);
     return `<div style="border:1px solid var(--gray-200);border-radius:var(--radius);padding:14px;margin-bottom:10px${s.isLive?';border-color:var(--teal-b);background:var(--teal-l)':''}">
@@ -3656,14 +3717,14 @@ function showDetailByKey(encodedKey) {
         <span style="font-weight:600;font-size:13px">${esc(s.test)}</span>${pill}
       </div>
       <div class="grid3">
-        <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:2px">คะแนน</div><div style="font-weight:600;color:${c}">${s.score}/100</div></div>
+        <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:2px">${t18n('t_score')}</div><div style="font-weight:600;color:${c}">${s.score}/100</div></div>
         <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:2px">เวลาที่ใช้</div><div>${esc(s.time)}</div></div>
-        <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:2px">วันที่สอบ</div><div style="font-size:12px">${esc(s.date)}</div></div>
+        <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:2px">${t18n('t_exam_date')}</div><div style="font-size:12px">${esc(s.date)}</div></div>
       </div>
       <div style="margin-top:10px;font-size:12px;display:flex;align-items:center;gap:6px">
         <span style="color:var(--gray-400)">เกณฑ์ผ่าน:</span>
         <strong style="color:var(--gray-700)">${passVal != null ? passVal + ' คะแนน' : '—'}</strong>
-        <span style="color:${c};font-weight:600">${s.out==='P' ? '· ผ่านเกณฑ์' : '· ไม่ผ่านเกณฑ์'}</span>
+        <span style="color:${c};font-weight:600">${s.out==='P' ? '· ' + t18n('t_above_mark') : '· ' + t18n('t_below_mark')}</span>
       </div>
       <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--gray-200);font-size:12px;display:flex;align-items:center;gap:6px">
         <span style="color:var(--gray-400)">ออกจากหน้าสอบระหว่างทำ:</span> ${leaveBadgeHtml(s.leaves)}
@@ -5101,12 +5162,13 @@ const ROLE_INFO = {
 
 // ── Configurable feature map: each capability → which pages/actions it unlocks ──
 // Super Admin can turn these on/off per role in the "จัดการทีม" screen.
+// short / label / pages เก็บเป็นคีย์คำแปล ไม่ใช่ข้อความ — ตารางสิทธิ์แปลตอนวาด
 const FEATURES = [
-  { key:'canEditQ',       icon:'✏️', short:'แก้ข้อสอบ',    label:'จัดการข้อสอบ & คำแนะนำ', pages:'หน้า “จัดการข้อสอบ” และ “จัดการคำแนะนำ”' },
-  { key:'canManagePos',   icon:'🎯', short:'ตั้งค่าตำแหน่ง', label:'ตั้งค่าชุดสอบตามตำแหน่ง', pages:'หน้า “ชุดสอบ/ตำแหน่ง”' },
-  { key:'canExport',      icon:'📊', short:'Export',       label:'Export ผลการทดสอบ',      pages:'ปุ่ม “Export Excel”, ดาวน์โหลด CSV / PDF' },
-  { key:'canManageUsers', icon:'👥', short:'จัดการทีม',    label:'จัดการผู้ดูแลระบบ',       pages:'หน้า “จัดการทีม” — เพิ่ม / แก้ไข / ลบผู้ดูแล' },
-  { key:'canDelete',      icon:'🗑️', short:'ลบข้อมูล',      label:'ลบข้อมูลผู้สมัคร',        pages:'ปุ่ม “ลบ” ในตารางผลการทดสอบ' },
+  { key:'canEditQ',       icon:'✏️', short:'f_editq_s',  label:'f_editq_l',  pages:'f_editq_p' },
+  { key:'canManagePos',   icon:'🎯', short:'f_pos_s',    label:'f_pos_l',    pages:'f_pos_p' },
+  { key:'canExport',      icon:'📊', short:'f_export_s', label:'f_export_l', pages:'f_export_p' },
+  { key:'canManageUsers', icon:'👥', short:'f_users_s',  label:'f_users_l',  pages:'f_users_p' },
+  { key:'canDelete',      icon:'🗑️', short:'f_del_s',    label:'f_del_l',    pages:'f_del_p' },
 ];
 
 // Editable roles (Super Admin is always full-access and cannot be limited).
@@ -5301,8 +5363,8 @@ async function renderCollabPage() {
     const enc = encodeURIComponent(u.email || '');
     const chips = FEATURES.map(f =>
       role[f.key]
-        ? `<span class="perm-chip">${f.icon} ${f.short}</span>`
-        : `<span class="perm-chip off">${f.short}</span>`
+        ? `<span class="perm-chip">${f.icon} ${t18n(f.short)}</span>`
+        : `<span class="perm-chip off">${t18n(f.short)}</span>`
     ).join('');
     return `<div class="user-row">
       <div style="display:flex;align-items:flex-start;gap:10px;min-width:0">
@@ -5352,8 +5414,8 @@ function renderPermMatrix() {
     }).join('');
     return `<tr>
       <td>
-        <div class="pm-feat-name">${f.icon} ${f.label}</div>
-        <div class="pm-feat-pages">${f.pages}</div>
+        <div class="pm-feat-name">${f.icon} ${t18n(f.label)}</div>
+        <div class="pm-feat-pages">${t18n(f.pages)}</div>
       </td>
       ${cells}
     </tr>`;
@@ -5377,7 +5439,7 @@ function setRolePerm(role, key, checked) {
   if (typeof renderAdminNav === 'function') renderAdminNav();
   renderCollabPage();
   const f = FEATURES.find(x => x.key === key);
-  showToast(t18n(checked ? 'm_perm_on' : 'm_perm_off').replace('{what}', f ? f.label : key).replace('{role}', ROLE_INFO[role].label));
+  showToast(t18n(checked ? 'm_perm_on' : 'm_perm_off').replace('{what}', f ? t18n(f.label) : key).replace('{role}', ROLE_INFO[role].label));
 }
 
 function resetRolePerms() {
@@ -5687,7 +5749,7 @@ function showIndivPdf(encodedKey) {
   if (!rows.length) return;
   indivExportData = { key, rows };
   const name = `${rows[0].fn} ${rows[0].ln}`;
-  document.getElementById('ipdf-title').textContent = `ผลการทดสอบ — ${name}`;
+  document.getElementById('ipdf-title').textContent = t18n('t_results_of').replace('{who}', name);
   const total   = rows.length;
   const passed  = rows.filter(r=>r.out==='P').length;
   const avgScore = total ? Math.round(rows.reduce((a,r)=>a+r.score,0)/total) : 0;
@@ -5710,21 +5772,21 @@ function showIndivPdf(encodedKey) {
     </div>
     <div class="ipdf-tests">${rows.map(r => {
       const c = r.out==='P' ? 'var(--teal)' : 'var(--red)';
-      const pill = r.out==='P' ? '<span class="badge b-pass">✓ ผ่าน</span>' : '<span class="badge b-fail">✗ ไม่ผ่าน</span>';
+      const pill = r.out==='P' ? `<span class="badge b-pass">✓ ${t18n('t_pass')}</span>` : `<span class="badge b-fail">✗ ${t18n('t_fail')}</span>`;
       const passVal = (r.passing != null) ? r.passing : (((typeof TESTS!=='undefined' && TESTS.find(t=>t.code===r.test)) || {}).passing);
       return `<div style="border:1px solid var(--gray-200);border-radius:var(--radius);padding:12px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
           <span style="font-weight:600;font-size:13px">${esc(r.test)}</span>${pill}
         </div>
         <div class="grid3" style="gap:6px">
-          <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:1px">คะแนน</div><div style="font-weight:600;color:${c}">${r.score}/100</div></div>
-          <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:1px">เวลาที่ใช้</div><div style="font-size:12px">${esc(r.time)}</div></div>
-          <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:1px">วันที่สอบ</div><div style="font-size:11px">${esc(r.date)}</div></div>
+          <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:1px">${t18n('t_score')}</div><div style="font-weight:600;color:${c}">${r.score}/100</div></div>
+          <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:1px">${t18n('t_time_used')}</div><div style="font-size:12px">${esc(r.time)}</div></div>
+          <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:1px">${t18n('t_exam_date')}</div><div style="font-size:11px">${esc(r.date)}</div></div>
         </div>
         <div style="margin-top:8px;font-size:11.5px;display:flex;align-items:center;gap:6px">
           <span style="color:var(--gray-400)">เกณฑ์ผ่าน:</span>
           <strong style="color:var(--gray-700)">${passVal != null ? passVal + ' คะแนน' : '—'}</strong>
-          <span style="color:${c};font-weight:600">${r.out==='P' ? '· ผ่านเกณฑ์' : '· ไม่ผ่านเกณฑ์'}</span>
+          <span style="color:${c};font-weight:600">${r.out==='P' ? '· ' + t18n('t_above_mark') : '· ' + t18n('t_below_mark')}</span>
         </div>
         <div style="margin-top:6px;font-size:11.5px;display:flex;align-items:center;gap:6px">
           <span style="color:var(--gray-400)">ออกจากหน้าสอบระหว่างทำ:</span> ${leaveBadgeHtml(r.leaves)}
