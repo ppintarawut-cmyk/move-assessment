@@ -1714,7 +1714,7 @@ const I18N = {
   v_email: { th:"กรุณากรอก Email ที่ถูกต้อง", en:"Please enter a valid email address" },
   v_registering: { th:"กำลังลงทะเบียน...", en:"Registering…" },
   t_exp_years_full: { th:"ประสบการณ์ (ปี)", en:"Experience (yrs)" },
-  t_item: { th:"รายการ", en:"Item" },
+  t_row_item: { th:"รายการ", en:"Item" },
   t_compare_cands_plain: { th:"เปรียบเทียบผู้สมัคร", en:"Candidate comparison" },
   t_generated: { th:"สร้างเมื่อ", en:"Generated" },
   t_prev_xlsx: { th:"พรีวิวก่อน Export Excel", en:"Preview before exporting to Excel" },
@@ -1802,6 +1802,47 @@ const I18N = {
   t_pass_mark: { th:"เกณฑ์ผ่าน (0–100)", en:"Pass mark (0–100)" },
   t_graded_hint: { th:"(เช่น EQ / ภาวะผู้นำ) — ไม่ติ๊ก = ถูก/ผิด", en:"(e.g. EQ / leadership) — unticked means right or wrong" },
   t_create_cat: { th:"สร้างหมวดหมู่", en:"Create category" },
+  // ── Spreadsheet / CSV column headings ──
+  // Output labels only; the exported row objects are keyed in ASCII
+  // (see EXPORT_COLS) so switching language never changes the data shape.
+  x_datetime: { th:"วันที่/เวลา", en:"Date & time" },
+  x_cand_id: { th:"รหัสผู้สมัคร", en:"Candidate ID" },
+  x_name: { th:"ชื่อ-สกุล", en:"Full name" },
+  x_phone: { th:"โทรศัพท์", en:"Phone" },
+  x_age: { th:"อายุ", en:"Age" },
+  x_exp: { th:"ประสบการณ์(ปี)", en:"Experience (yrs)" },
+  x_exp_short: { th:"ประสบ.(ปี)", en:"Exp. (yrs)" },
+  x_position: { th:"ตำแหน่ง", en:"Position" },
+  x_attempt: { th:"ครั้งที่", en:"Attempt" },
+  x_score: { th:"คะแนน", en:"Score" },
+  x_outcome: { th:"ผล", en:"Result" },
+  x_time: { th:"เวลา", en:"Time" },
+  x_leaves: { th:"ออกจากหน้าจอ", en:"Screen exits" },
+  x_leaves_short: { th:"ออกจากจอ", en:"Exits" },
+  x_pass_total: { th:"ผ่าน/ทั้งหมด", en:"Passed/taken" },
+  x_sample: { th:"(ตัวอย่าง)", en:"(sample)" },
+  x_title: { th:"Move Assessment — ผลการสอบ", en:"Move Assessment — Results" },
+  x_generated: { th:"สร้างเมื่อ: ", en:"Generated: " },
+  x_sheet_all: { th:"ผลสอบรวม", en:"All results" },
+  x_sheet_summary: { th:"สรุปรายชุดสอบ", en:"Test summary" },
+  x_summary_title: { th:"สรุปผลรายชุดสอบ", en:"Summary by test" },
+  x_test: { th:"ชุดสอบ", en:"Test" },
+  x_n_takers: { th:"จำนวนผู้สอบ", en:"Candidates" },
+  x_passed: { th:"ผ่าน (P)", en:"Passed (P)" },
+  x_failed: { th:"ไม่ผ่าน (NP)", en:"Not passed (NP)" },
+  x_pass_pct: { th:"% ผ่าน", en:"Pass %" },
+  x_avg: { th:"คะแนนเฉลี่ย", en:"Average" },
+  x_max: { th:"สูงสุด", en:"Highest" },
+  x_min: { th:"ต่ำสุด", en:"Lowest" },
+  x_sheet_cands: { th:"ข้อมูลผู้สมัคร", en:"Candidates" },
+  x_n_attempts: { th:"จำนวนครั้งที่สอบ", en:"Attempts" },
+  x_sheet_compare: { th:"เปรียบเทียบ", en:"Comparison" },
+  t_cmp_no_results: { th:"ยังไม่มีผลสอบให้เปรียบเทียบ", en:"No results to compare yet" },
+  t_pass_mark_lbl: { th:"เกณฑ์ผ่าน:", en:"Pass mark:" },
+  t_leaves_during: { th:"ออกจากหน้าสอบระหว่างทำ:", en:"Left the exam window:" },
+  t_making_pdf: { th:"กำลังสร้าง PDF...", en:"Building the PDF…" },
+  x_results_word: { th:"ผลการสอบ", en:"Results" },
+  x_sheet_result: { th:"ผลสอบ", en:"Results" },
 };
 
 function t18n(key){ const e = I18N[key]; return e ? (e[LANG] || e.th) : key; }
@@ -3552,9 +3593,9 @@ function renderCompare(){
   }).join('');
 
   document.getElementById('cmp-body').innerHTML = `
-    <div style="height:270px;margin-bottom:16px">${activeCodes.length ? '<canvas id="cmp-chart"></canvas>' : '<p style="text-align:center;color:var(--gray-400);font-size:13px;padding:30px">ยังไม่มีผลสอบให้เปรียบเทียบ</p>'}</div>
+    <div style="height:270px;margin-bottom:16px">${activeCodes.length ? '<canvas id="cmp-chart"></canvas>' : `<p style="text-align:center;color:var(--gray-400);font-size:13px;padding:30px">${t18n('t_cmp_no_results')}</p>`}</div>
     <div style="overflow-x:auto"><table class="cmp-table">
-      <thead><tr><th>${t18n('t_item')}</th>${headCells}</tr></thead>
+      <thead><tr><th>${t18n('t_row_item')}</th>${headCells}</tr></thead>
       <tbody>${bodyRows}</tbody>
     </table></div>`;
 
@@ -3608,11 +3649,11 @@ function buildComparePreviewHTML(){
     [t18n('t_pass_total'),     ...list.map(p => `${p.passed}/${p.taken}`)],
     [t18n('t_avg_score'),      ...list.map(p => p.avg!=null ? p.avg : '—')],
   ];
-  const th  = [t18n('t_item'), ...list.map(p => p.name||'—')].map(h => `<th style="border:1px solid #ccc;padding:6px 9px;background:#f3f4f6;text-align:left;font-size:12px;color:#111">${esc(h)}</th>`).join('');
+  const th  = [t18n('t_row_item'), ...list.map(p => p.name||'—')].map(h => `<th style="border:1px solid #ccc;padding:6px 9px;background:#f3f4f6;text-align:left;font-size:12px;color:#111">${esc(h)}</th>`).join('');
   const trs = rows.map(r => `<tr>${r.map((c,i) => `<td style="border:1px solid #ddd;padding:6px 9px;font-size:12px;color:#111;${i===0?'font-weight:600;color:#555':'text-align:center'}">${esc(c)}</td>`).join('')}</tr>`).join('');
   return `<div id="cmp-export-root" style="background:#fff;color:#111">
     <div style="font-size:16px;font-weight:700;margin-bottom:2px">Move Assessment — ${t18n('t_compare_cands_plain')}</div>
-    <div style="font-size:11px;color:#666;margin-bottom:12px">${t18n('t_generated')} ${esc(new Date().toLocaleString('th-TH'))} · ${list.length}</div>
+    <div style="font-size:11px;color:#666;margin-bottom:12px">${t18n('t_generated')} ${esc(new Date().toLocaleString(LANG === 'th' ? 'th-TH' : 'en-GB'))} · ${list.length}</div>
     <table style="width:100%;border-collapse:collapse"><thead><tr>${th}</tr></thead><tbody>${trs}</tbody></table>
   </div>`;
 }
@@ -3621,17 +3662,17 @@ function exportCompareXLSX(){
   if (!window.XLSX){ showToast(t18n('m_no_xlsx')); return; }
   const XLSX = window.XLSX, CODES = allTestCodes(), list = compareData;
   const activeCodes = CODES.filter(c => list.some(p => p[c+'_score'] != null));
-  const header = ['รายการ', ...list.map(p => p.name||'—')];
+  const header = [t18n('t_row_item'), ...list.map(p => p.name||'—')];
   const aoa = [
     ['Move Assessment — ' + t18n('t_compare_cands_plain')],
-    ['สร้างเมื่อ ' + new Date().toLocaleString('th-TH')],
+    [t18n('x_generated') + new Date().toLocaleString(LANG === 'th' ? 'th-TH' : 'en-GB')],
     [],
     header,
     [t18n('t_position'),         ...list.map(p => p.position||'')],
     [t18n('t_age'),            ...list.map(p => p.age||'')],
     [t18n('t_exp_years_full'), ...list.map(p => p.experience||'')],
-    ...activeCodes.map(c => [c+' คะแนน', ...list.map(p => p[c+'_score']!=null ? p[c+'_score'] : '')]),
-    ...activeCodes.map(c => [c+' ผล',    ...list.map(p => p[c+'_outcome']||'')]),
+    ...activeCodes.map(c => [c+' '+t18n('x_score'),   ...list.map(p => p[c+'_score']!=null ? p[c+'_score'] : '')]),
+    ...activeCodes.map(c => [c+' '+t18n('x_outcome'), ...list.map(p => p[c+'_outcome']||'')]),
     [t18n('t_pass_total'),    ...list.map(p => `${p.passed}/${p.taken}`)],
     [t18n('t_avg_score'),     ...list.map(p => p.avg!=null ? p.avg : '')],
   ];
@@ -3639,7 +3680,7 @@ function exportCompareXLSX(){
   ws['!cols'] = [{wch:18}, ...list.map(()=>({wch:16}))];
   ws['!merges'] = [{s:{r:0,c:0},e:{r:0,c:list.length}}, {s:{r:1,c:0},e:{r:1,c:list.length}}];
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'เปรียบเทียบ');
+  XLSX.utils.book_append_sheet(wb, ws, t18n('x_sheet_compare'));
   XLSX.writeFile(wb, 'MoveAssessment_Compare_' + new Date().toISOString().slice(0,10) + '.xlsx');
   closeModal('mod-export-preview');
   showToast(t18n('m_xlsx_ok'));
@@ -4334,31 +4375,58 @@ function exportAdminPDF(btn) {
 }
 
 // ── shared data builder ──────────────────────────────────────────────
+// Column order for the flat exports (CSV and sheet 1). The `key` is a stable
+// ASCII identifier used inside the row objects; `label` is only ever read at
+// output time, so a language switch relabels the file without reshaping it.
+// `short` is the narrower wording sheet 1 uses for its per-test columns.
+function exportColumns() {
+  const CODES = allTestCodes();
+  const cols = [
+    { key:'datetime',   label:t18n('x_datetime') },
+    { key:'cand_id',    label:t18n('x_cand_id') },
+    { key:'name',       label:t18n('x_name') },
+    { key:'email',      label:'Email' },
+    { key:'phone',      label:t18n('x_phone') },
+    { key:'age',        label:t18n('x_age') },
+    { key:'experience', label:t18n('x_exp'), short:t18n('x_exp_short') },
+    { key:'position',   label:t18n('x_position') },
+    { key:'attempt',    label:t18n('x_attempt') },
+  ];
+  CODES.forEach(c => {
+    cols.push({ key:c+'_score',   label:c+' '+t18n('x_score') });
+    cols.push({ key:c+'_outcome', label:c+' '+t18n('x_outcome') });
+    cols.push({ key:c+'_time',    label:c+' '+t18n('x_time') });
+    cols.push({ key:c+'_leaves',  label:c+' '+t18n('x_leaves'), short:c+' '+t18n('x_leaves_short') });
+  });
+  cols.push({ key:'pass_total', label:t18n('x_pass_total') });
+  return cols;
+}
+
 function buildExportData() {
   const CODES = allTestCodes();
   const stored = (() => { try { return JSON.parse(localStorage.getItem('hma_exam_records') || '[]'); } catch(e){ return []; } })();
 
   const fromStored = stored.map(r => {
     const obj = {
-      'วันที่/เวลา':    r.datetime     || '',
-      'รหัสผู้สมัคร':    candKey(r)     || '',
-      'ชื่อ-สกุล':     r.name         || '',
-      'Email':           r.email        || '',
-      'โทรศัพท์':       r.phone        || '',
-      'อายุ':           r.age          || '',
-      'ประสบการณ์(ปี)': r.experience   || '',
-      'ตำแหน่ง':        r.position     || '',
-      'ครั้งที่':       r.attempt      || 1,
+      datetime:   r.datetime   || '',
+      cand_id:    candKey(r)   || '',
+      name:       r.name       || '',
+      email:      r.email      || '',
+      phone:      r.phone      || '',
+      age:        r.age        || '',
+      experience: r.experience || '',
+      position:   r.position   || '',
+      attempt:    r.attempt    || 1,
     };
     CODES.forEach(c => {
-      obj[c + '_คะแนน'] = r[c + '_score']   ?? '';
-      obj[c + '_ผล']    = r[c + '_outcome'] ?? '';
-      obj[c + '_เวลา']  = r[c + '_time']    ?? '';
-      obj[c + '_ออกจากหน้าจอ'] = r[c + '_leaves'] ?? '';
+      obj[c + '_score']   = r[c + '_score']   ?? '';
+      obj[c + '_outcome'] = r[c + '_outcome'] ?? '';
+      obj[c + '_time']    = r[c + '_time']    ?? '';
+      obj[c + '_leaves']  = r[c + '_leaves']  ?? '';
     });
     const taken  = CODES.filter(c => r[c + '_score'] != null).length;
     const passed = CODES.filter(c => r[c + '_outcome'] === 'P').length;
-    obj['ผ่าน/ทั้งหมด'] = taken ? passed + '/' + taken : '';
+    obj.pass_total = taken ? passed + '/' + taken : '';
     return obj;
   });
 
@@ -4370,18 +4438,18 @@ function buildExportData() {
   });
   const fromDemo = Object.values(byNid).map(p => {
     const obj = {
-      'วันที่/เวลา':'(ตัวอย่าง)','รหัสผู้สมัคร':p.key,'ชื่อ-สกุล':p.name,
-      'Email':'','โทรศัพท์':'','อายุ':'','ประสบการณ์(ปี)':'','ตำแหน่ง':p.pos,'ครั้งที่':1,
+      datetime:t18n('x_sample'), cand_id:p.key, name:p.name,
+      email:'', phone:'', age:'', experience:'', position:p.pos, attempt:1,
     };
     CODES.forEach(c => {
-      obj[c+'_คะแนน'] = p.tests[c]?.score ?? '';
-      obj[c+'_ผล']    = p.tests[c]?.out   ?? '';
-      obj[c+'_เวลา']  = '';
-      obj[c+'_ออกจากหน้าจอ'] = '';
+      obj[c+'_score']   = p.tests[c]?.score ?? '';
+      obj[c+'_outcome'] = p.tests[c]?.out   ?? '';
+      obj[c+'_time']    = '';
+      obj[c+'_leaves']  = '';
     });
     const taken  = CODES.filter(c => p.tests[c]).length;
     const passed = CODES.filter(c => p.tests[c]?.out === 'P').length;
-    obj['ผ่าน/ทั้งหมด'] = taken ? passed + '/' + taken : '';
+    obj.pass_total = taken ? passed + '/' + taken : '';
     return obj;
   });
 
@@ -4392,11 +4460,11 @@ function buildExportData() {
 function exportToCSV() {
   const data = buildExportData();
   if (!data.length) { showToast(t18n('m_no_data')); return; }
-  const headers = Object.keys(data[0]);
-  const csv = [headers, ...data.map(r => headers.map(h => r[h]))].map(row =>
+  const cols = exportColumns();
+  const csv = [cols.map(c => c.label), ...data.map(r => cols.map(c => r[c.key]))].map(row =>
     row.map(csvCell).join(',')
   ).join('\n');
-  const blob = new Blob(['\ufeff' + csv], {type: 'text/csv;charset=utf-8'});
+  const blob = new Blob(['﻿' + csv], {type: 'text/csv;charset=utf-8'});
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href = url; a.download = 'MoveAssessment_Results_' + new Date().toISOString().slice(0,10) + '.csv';
@@ -4408,23 +4476,15 @@ function exportToXLSX() {
   const XLSX  = window.XLSX;
   const data  = buildExportData();
   const CODES = allTestCodes();
+  const cols  = exportColumns();
   const wb    = XLSX.utils.book_new();
 
-  // ── SHEET 1: ผลสอบรวม ─────────────────────────────────────────────
-  const s1Headers = [
-    'วันที่/เวลา','รหัสผู้สมัคร','ชื่อ-สกุล','Email','โทรศัพท์','อายุ','ประสบ.(ปี)','ตำแหน่ง','ครั้งที่',
-    ...CODES.flatMap(c => [c+' คะแนน', c+' ผล', c+' เวลา', c+' ออกจากจอ']),
-    'ผ่าน/ทั้งหมด',
-  ];
-  const s1Rows = data.map(r => [
-    r['วันที่/เวลา'], r['รหัสผู้สมัคร'], r['ชื่อ-สกุล'], r['Email'], r['โทรศัพท์'],
-    r['อายุ'], r['ประสบการณ์(ปี)'], r['ตำแหน่ง'], r['ครั้งที่'],
-    ...CODES.flatMap(c => [r[c+'_คะแนน'], r[c+'_ผล'], r[c+'_เวลา'], r[c+'_ออกจากหน้าจอ']]),
-    r['ผ่าน/ทั้งหมด'],
-  ]);
+  // ── SHEET 1: every result, one row per sitting ─────────────────────
+  const s1Headers = cols.map(c => c.short || c.label);
+  const s1Rows = data.map(r => cols.map(c => r[c.key]));
   const ws1 = XLSX.utils.aoa_to_sheet([
-    ['Move Assessment — ผลการสอบ', '', '', '', ''],
-    ['สร้างเมื่อ: ' + new Date().toLocaleString('th-TH'), '', '', '', ''],
+    [t18n('x_title'), '', '', '', ''],
+    [t18n('x_generated') + new Date().toLocaleString(LANG === 'th' ? 'th-TH' : 'en-GB'), '', '', '', ''],
     [],
     s1Headers,
     ...s1Rows,
@@ -4432,18 +4492,19 @@ function exportToXLSX() {
   ws1['!cols'] = [{wch:18},{wch:14},{wch:20},{wch:24},{wch:13},{wch:6},{wch:10},{wch:18},{wch:7},
     ...CODES.flatMap(()=>[{wch:10},{wch:6},{wch:9},{wch:10}]),{wch:12}];
   ws1['!merges'] = [{s:{r:0,c:0},e:{r:0,c:5}},{s:{r:1,c:0},e:{r:1,c:5}}];
-  XLSX.utils.book_append_sheet(wb, ws1, 'ผลสอบรวม');
+  XLSX.utils.book_append_sheet(wb, ws1, t18n('x_sheet_all'));
 
-  // ── SHEET 2: สรุปรายชุดสอบ ────────────────────────────────────────
+  // ── SHEET 2: one row per test, aggregated ─────────────────────────
   const s2 = [
-    ['สรุปผลรายชุดสอบ','','','','','','',''],
+    [t18n('x_summary_title'),'','','','','','',''],
     [],
-    ['ชุดสอบ','จำนวนผู้สอบ','ผ่าน (P)','ไม่ผ่าน (NP)','% ผ่าน','คะแนนเฉลี่ย','สูงสุด','ต่ำสุด'],
+    [t18n('x_test'),t18n('x_n_takers'),t18n('x_passed'),t18n('x_failed'),
+     t18n('x_pass_pct'),t18n('x_avg'),t18n('x_max'),t18n('x_min')],
   ];
   CODES.forEach(code => {
-    const r     = data.filter(x => x[code+'_คะแนน'] !== '');
-    const pass  = r.filter(x => x[code+'_ผล'] === 'P').length;
-    const nums  = r.map(x => Number(x[code+'_คะแนน'])).filter(n => !isNaN(n) && n !== '');
+    const r     = data.filter(x => x[code+'_score'] !== '');
+    const pass  = r.filter(x => x[code+'_outcome'] === 'P').length;
+    const nums  = r.map(x => Number(x[code+'_score'])).filter(n => !isNaN(n) && n !== '');
     s2.push([
       code, r.length, pass, r.length - pass,
       r.length ? (Math.round(pass/r.length*100) + '%') : '-',
@@ -4455,28 +4516,29 @@ function exportToXLSX() {
   const ws2 = XLSX.utils.aoa_to_sheet(s2);
   ws2['!cols'] = [{wch:12},{wch:12},{wch:10},{wch:14},{wch:8},{wch:12},{wch:8},{wch:8}];
   ws2['!merges'] = [{s:{r:0,c:0},e:{r:0,c:4}}];
-  XLSX.utils.book_append_sheet(wb, ws2, 'สรุปรายชุดสอบ');
+  XLSX.utils.book_append_sheet(wb, ws2, t18n('x_sheet_summary'));
 
-  // ── SHEET 3: ข้อมูลผู้สมัคร ──────────────────────────────────────
+  // ── SHEET 3: one row per candidate, latest sitting ────────────────
   const byNid = {};
   data.forEach(r => {
-    const k = r['รหัสผู้สมัคร'];
+    const k = r.cand_id;
     if (!k) return;
-    if (!byNid[k] || r['ครั้งที่'] > byNid[k]['ครั้งที่']) byNid[k] = r;
+    if (!byNid[k] || r.attempt > byNid[k].attempt) byNid[k] = r;
   });
   const s3 = [
-    ['ข้อมูลผู้สมัคร','','','','','','',''],
+    [t18n('x_sheet_cands'),'','','','','','',''],
     [],
-    ['รหัสผู้สมัคร','ชื่อ-สกุล','Email','โทรศัพท์','อายุ','ประสบการณ์(ปี)','ตำแหน่ง','จำนวนครั้งที่สอบ'],
+    [t18n('x_cand_id'),t18n('x_name'),'Email',t18n('x_phone'),
+     t18n('x_age'),t18n('x_exp'),t18n('x_position'),t18n('x_n_attempts')],
     ...Object.values(byNid).map(r => {
-      const cnt = data.filter(x => x['รหัสผู้สมัคร'] === r['รหัสผู้สมัคร']).length;
-      return [r['รหัสผู้สมัคร'],r['ชื่อ-สกุล'],r['Email'],r['โทรศัพท์'],r['อายุ'],r['ประสบการณ์(ปี)'],r['ตำแหน่ง'],cnt];
+      const cnt = data.filter(x => x.cand_id === r.cand_id).length;
+      return [r.cand_id,r.name,r.email,r.phone,r.age,r.experience,r.position,cnt];
     }),
   ];
   const ws3 = XLSX.utils.aoa_to_sheet(s3);
   ws3['!cols'] = [{wch:14},{wch:20},{wch:24},{wch:13},{wch:6},{wch:14},{wch:20},{wch:16}];
   ws3['!merges'] = [{s:{r:0,c:0},e:{r:0,c:4}}];
-  XLSX.utils.book_append_sheet(wb, ws3, 'ข้อมูลผู้สมัคร');
+  XLSX.utils.book_append_sheet(wb, ws3, t18n('x_sheet_cands'));
 
   XLSX.writeFile(wb, 'MoveAssessment_Results_' + new Date().toISOString().slice(0,10) + '.xlsx');
 }
@@ -5809,9 +5871,9 @@ function showIndivPdf(encodedKey) {
       </div>
     </div>
     <div class="grid3" style="margin-bottom:16px;max-width:560px">
-      <div class="metric"><div class="metric-val">${total}</div><div class="metric-lbl">ชุดสอบ</div></div>
-      <div class="metric"><div class="metric-val" style="color:var(--teal)">${passed}</div><div class="metric-lbl">ผ่าน</div></div>
-      <div class="metric"><div class="metric-val" style="color:#185fa5">${avgScore}</div><div class="metric-lbl">เฉลี่ย</div></div>
+      <div class="metric"><div class="metric-val">${total}</div><div class="metric-lbl">${t18n('x_test')}</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--teal)">${passed}</div><div class="metric-lbl">${t18n('t_pass')}</div></div>
+      <div class="metric"><div class="metric-val" style="color:#185fa5">${avgScore}</div><div class="metric-lbl">${t18n('t_avg')}</div></div>
     </div>
     <div class="ipdf-tests">${rows.map(r => {
       const c = r.out==='P' ? 'var(--teal)' : 'var(--red)';
@@ -5827,16 +5889,16 @@ function showIndivPdf(encodedKey) {
           <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:1px">${t18n('t_exam_date')}</div><div style="font-size:11px">${esc(r.date)}</div></div>
         </div>
         <div style="margin-top:8px;font-size:11.5px;display:flex;align-items:center;gap:6px">
-          <span style="color:var(--gray-400)">เกณฑ์ผ่าน:</span>
-          <strong style="color:var(--gray-700)">${passVal != null ? passVal + ' คะแนน' : '—'}</strong>
+          <span style="color:var(--gray-400)">${t18n('t_pass_mark_lbl')}</span>
+          <strong style="color:var(--gray-700)">${passVal != null ? passVal + ' ' + t18n('x_score') : '—'}</strong>
           <span style="color:${c};font-weight:600">${r.out==='P' ? '· ' + t18n('t_above_mark') : '· ' + t18n('t_below_mark')}</span>
         </div>
         <div style="margin-top:6px;font-size:11.5px;display:flex;align-items:center;gap:6px">
-          <span style="color:var(--gray-400)">ออกจากหน้าสอบระหว่างทำ:</span> ${leaveBadgeHtml(r.leaves)}
+          <span style="color:var(--gray-400)">${t18n('t_leaves_during')}</span> ${leaveBadgeHtml(r.leaves)}
         </div>
       </div>`;
     }).join('')}</div>
-    <p style="font-size:11px;color:var(--gray-400);margin-top:8px;text-align:right">สร้างเมื่อ: ${new Date().toLocaleString('th-TH')}</p>
+    <p style="font-size:11px;color:var(--gray-400);margin-top:8px;text-align:right">${t18n('x_generated')}${new Date().toLocaleString(LANG === 'th' ? 'th-TH' : 'en-GB')}</p>
   `;
   openModal('mod-indiv-pdf');
 }
@@ -5858,20 +5920,24 @@ function downloadIndivCSV() {
   if (window.XLSX) {
     const wb  = window.XLSX.utils.book_new();
     const aoa = [
-      [person + ' — ผลการสอบ','','','','','','',''],
-      ['รหัสผู้สมัคร: ' + candKey(rows[0]),'','','','','','',''],
+      [person + ' — ' + t18n('x_results_word'),'','','','','','',''],
+      [t18n('x_cand_id') + ': ' + candKey(rows[0]),'','','','','','',''],
       [],
-      ['ชุดสอบ','วัน/เวลา','เวลาที่ใช้','คะแนน','เกณฑ์ผ่าน','ผล','ออกจากหน้าจอ','ชื่อ-สกุล','รหัสผู้สมัคร','ตำแหน่ง'],
+      [t18n('x_test'),t18n('x_datetime'),t18n('t_time_used'),t18n('x_score'),
+       t18n('t_pass_mark'),t18n('x_outcome'),t18n('x_leaves'),
+       t18n('x_name'),t18n('x_cand_id'),t18n('x_position')],
       ...rows.map(r=>[r.test, r.date, r.time, r.score, indivPassing(r), r.out, (r.leaves==null?'':r.leaves), person, candKey(r), r.pos]),
     ];
     const ws = window.XLSX.utils.aoa_to_sheet(aoa);
     ws['!cols'] = [{wch:10},{wch:18},{wch:12},{wch:8},{wch:10},{wch:6},{wch:12},{wch:20},{wch:14},{wch:18}];
     ws['!merges'] = [{s:{r:0,c:0},e:{r:0,c:4}},{s:{r:1,c:0},e:{r:1,c:4}}];
-    window.XLSX.utils.book_append_sheet(wb, ws, 'ผลสอบ');
+    window.XLSX.utils.book_append_sheet(wb, ws, t18n('x_sheet_result'));
     window.XLSX.writeFile(wb, 'MoveAssessment_' + fname + '_' + date + '.xlsx');
     showToast(t18n('m_export_xlsx_of').replace('{who}', person));
   } else {
-    const headers = ['ชุดสอบ','วัน/เวลา','เวลาที่ใช้','คะแนน','เกณฑ์ผ่าน','ผล','ออกจากหน้าจอ','ชื่อ','รหัสผู้สมัคร','ตำแหน่ง'];
+    const headers = [t18n('x_test'),t18n('x_datetime'),t18n('t_time_used'),t18n('x_score'),
+      t18n('t_pass_mark'),t18n('x_outcome'),t18n('x_leaves'),
+      t18n('x_name'),t18n('x_cand_id'),t18n('x_position')];
     const csvRows = rows.map(r=>[r.test, r.date, r.time, r.score, indivPassing(r), r.out, (r.leaves==null?'':r.leaves), person, candKey(r), r.pos]);
     const csv = [headers,...csvRows].map(row=>row.map(csvCell).join(',')).join('\n');
     const blob = new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
@@ -5893,7 +5959,7 @@ async function exportIndivPDF(btn) {
   const el      = document.getElementById('ipdf-content');
   const jsPDFCtor = window.jspdf && window.jspdf.jsPDF;
   const orig = btn.innerHTML;
-  btn.innerHTML = '<span class="spin"></span> กำลังสร้าง PDF...'; btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> ' + t18n('t_making_pdf'); btn.disabled = true;
   try {
     if (jsPDFCtor && typeof window.html2canvas === 'function' && el) {
       const canvas = await window.html2canvas(el, {
