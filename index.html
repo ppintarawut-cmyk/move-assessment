@@ -656,30 +656,30 @@ textarea.q-inp:focus{border-color:var(--teal)}
      LANDING
 ══════════════════════════════════════════════ -->
 <!-- ── Language toggle FAB ── -->
-<button class="dm-fab lang-fab" id="lang-fab" onclick="toggleLang()" aria-label="สลับภาษา ไทย / English" title="ภาษา / Language">
+<button class="dm-fab lang-fab" id="lang-fab" onclick="toggleLang()" data-i18n-title="a_lang_switch" aria-label="สลับภาษา ไทย / English" title="ภาษา / Language">
   <span class="dm-fab-icon" id="lang-label">EN</span>
   <span data-i18n="t_lang" class="dm-fab-label">ภาษา</span>
 </button>
 
 <!-- ── Dark mode FAB ── -->
-<button class="dm-fab" id="dm-fab" onclick="toggleDark()" aria-label="สลับ Dark / Light mode" title="Dark Mode">
+<button class="dm-fab" id="dm-fab" onclick="toggleDark()" data-i18n-title="a_dark_switch" aria-label="สลับ Dark / Light mode" title="Dark Mode">
   <span class="dm-fab-icon" id="dark-icon">🌙</span>
   <span class="dm-fab-label" id="dark-label">Dark</span>
 </button>
 
 <!-- ── Floating home button ── -->
 <div id="home-fab" class="home-fab" style="display:none">
-  <button class="fab-btn" style="background:var(--teal);color:#fff" onclick="goHome()" title="กลับหน้าแรก">🏠</button>
+  <button class="fab-btn" style="background:var(--teal);color:#fff" onclick="goHome()" data-i18n-title="a_home" aria-label="กลับหน้าแรก" title="กลับหน้าแรก">🏠</button>
 </div>
 
 <!-- ── Fullscreen FAB ── -->
 <div id="fs-fab" class="fab" style="display:none">
-  <button class="fab-btn fab-fs" onclick="toggleFullscreen()" id="fs-btn" title="เต็มจอ">⛶</button>
+  <button class="fab-btn fab-fs" onclick="toggleFullscreen()" id="fs-btn" data-i18n-title="a_fullscreen" aria-label="เต็มจอ" title="เต็มจอ">⛶</button>
 </div>
 
 <!-- ── Cheat detection banner ── -->
 <div class="cheat-banner" id="cheat-banner">
-  ⚠️ ตรวจพบการออกจากหน้าสอบ! ระบบบันทึกการกระทำทุกครั้ง
+  <span data-i18n="t_cheat_banner">⚠️ ตรวจพบการออกจากหน้าสอบ! ระบบบันทึกการกระทำทุกครั้ง</span>
   <span class="cheat-count" id="cheat-count">ครั้งที่ 1</span>
   <button data-i18n="t_ack" onclick="dismissCheat()" style="margin-left:12px;background:rgba(255,255,255,.2);border:none;color:#fff;padding:2px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-family:inherit">รับทราบ</button>
 </div>
@@ -734,12 +734,12 @@ textarea.q-inp:focus{border-color:var(--teal)}
       <div class="grid2">
         <div class="field">
           <label><span data-i18n="f_fn">ชื่อ</span> <span style="color:var(--red)">*</span></label>
-          <input id="r-fn" type="text" placeholder="สมชาย">
+          <input id="r-fn" type="text" data-i18n-ph="ph_fn" placeholder="สมชาย">
           <div class="err-msg" id="e-fn" style="display:none"></div>
         </div>
         <div class="field">
           <label><span data-i18n="f_ln">นามสกุล</span> <span style="color:var(--red)">*</span></label>
-          <input id="r-ln" type="text" placeholder="ใจดี">
+          <input id="r-ln" type="text" data-i18n-ph="ph_ln" placeholder="ใจดี">
           <div class="err-msg" id="e-ln" style="display:none"></div>
         </div>
       </div>
@@ -784,7 +784,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
             เพื่อวัตถุประสงค์ในการคัดเลือกบุคลากร ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล (PDPA) พ.ศ. 2562 โดยเก็บไว้ไม่เกิน 2 ปี
           </span>
         </label>
-        <div class="err-msg" id="e-pdpa" style="display:none;margin-top:6px">กรุณายอมรับเงื่อนไขการเก็บข้อมูล</div>
+        <div class="err-msg" id="e-pdpa" data-i18n="e_pdpa" style="display:none;margin-top:6px">กรุณายอมรับเงื่อนไขการเก็บข้อมูล</div>
       </div>
       <button class="btn btn-primary btn-full" id="reg-btn" data-i18n="reg_btn" onclick="submitReg()" style="margin-top:4px">ยืนยันและเริ่มทดสอบ →</button>
     </div>
@@ -796,7 +796,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
 ══════════════════════════════════════════════ -->
 <div id="p-dash" class="page">
   <div class="topbar">
-    <div><div class="brand">Move Assessment</div><div class="topbar-title" id="d-name">แดชบอร์ด</div></div>
+    <div><div class="brand">Move Assessment</div><div class="topbar-title" id="d-name" data-i18n="t_dashboard">แดชบอร์ด</div></div>
     <span style="font-size:12px;color:var(--gray-400)" id="d-prog-lbl"></span>
   </div>
   <div class="main">
@@ -844,7 +844,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
       <div class="thankyou-badge" id="ty-badge">✓</div>
       <h2 data-i18n="t_thanks" id="ty-title" style="font-size:21px;font-weight:800;color:var(--gray-900);margin-bottom:10px">ขอบคุณที่ทำแบบทดสอบ</h2>
       <p id="ty-note" style="font-size:14px;color:var(--gray-700);max-width:420px;line-height:1.6">คุณทำแบบทดสอบครบทุกชุดเรียบร้อยแล้ว ผลการทดสอบได้ถูกส่งให้ทีม HR ของ Hino Motors Asia เพื่อพิจารณาในขั้นตอนถัดไป</p>
-      <button class="btn btn-primary" id="ty-btn" style="margin-top:26px;min-width:160px" onclick="goHome()">เสร็จสิ้น</button>
+      <button class="btn btn-primary" id="ty-btn" data-i18n="ty_done" style="margin-top:26px;min-width:160px" onclick="goHome()">เสร็จสิ้น</button>
     </div>
   </div>
 </div>
@@ -855,7 +855,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
 <div id="p-test" class="page">
   <div class="topbar">
     <div>
-      <div class="brand" id="t-testname">ชุดสอบ</div>
+      <div class="brand" id="t-testname" data-i18n="x_test">ชุดสอบ</div>
       <div style="font-size:12px;color:var(--gray-400)" id="t-progress">ข้อ 1 / 10</div>
     </div>
     <div style="display:flex;align-items:center;gap:8px">
@@ -885,11 +885,11 @@ textarea.q-inp:focus{border-color:var(--teal)}
       <div class="qnav" id="t-qnav"></div>
       <div style="display:flex;gap:16px;margin-top:12px;padding-top:12px;border-top:1px solid var(--gray-100)">
         <span style="font-size:11px;color:var(--gray-400);display:flex;align-items:center;gap:5px">
-          <span style="width:14px;height:14px;border-radius:3px;background:var(--teal-l);border:1px solid var(--teal-b);display:inline-block"></span>ตอบแล้ว</span>
+          <span style="width:14px;height:14px;border-radius:3px;background:var(--teal-l);border:1px solid var(--teal-b);display:inline-block"></span><span data-i18n="t_answered_lbl">ตอบแล้ว</span></span>
         <span style="font-size:11px;color:var(--gray-400);display:flex;align-items:center;gap:5px">
-          <span style="width:14px;height:14px;border-radius:3px;background:var(--gray-100);border:1px solid var(--gray-200);display:inline-block"></span>ยังไม่ตอบ</span>
+          <span style="width:14px;height:14px;border-radius:3px;background:var(--gray-100);border:1px solid var(--gray-200);display:inline-block"></span><span data-i18n="t_unanswered_lbl">ยังไม่ตอบ</span></span>
         <span style="font-size:11px;color:var(--gray-400);display:flex;align-items:center;gap:5px">
-          <span style="width:14px;height:14px;border-radius:3px;background:var(--teal);display:inline-block"></span>กำลังดูอยู่</span>
+          <span style="width:14px;height:14px;border-radius:3px;background:var(--teal);display:inline-block"></span><span data-i18n="t_viewing_lbl">กำลังดูอยู่</span></span>
       </div>
     </div>
   </div>
@@ -950,7 +950,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
     <div class="onepage-right">
       <div class="card" id="r-bars-card" style="margin-bottom:12px">
         <p data-i18n="t_per_test" style="font-size:13px;font-weight:600;margin-bottom:4px">คะแนนรายชุดสอบ</p>
-        <p id="r-bars-note" style="font-size:11px;color:var(--gray-400);margin-bottom:14px">เส้นบนแถบคือเกณฑ์ผ่านของแต่ละชุด</p>
+        <p id="r-bars-note" data-i18n="t_bars_note" style="font-size:11px;color:var(--gray-400);margin-bottom:14px">เส้นบนแถบคือเกณฑ์ผ่านของแต่ละชุด</p>
         <div id="r-bars"></div>
       </div>
       <div class="card" id="r-breakdown-card" style="padding:0;overflow:hidden;margin-bottom:12px">
@@ -977,7 +977,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
 <div id="p-review" class="page">
   <div class="topbar">
     <div>
-      <div class="brand" id="rv-testname">เฉลยข้อสอบ</div>
+      <div class="brand" id="rv-testname" data-i18n="t_answer_key">เฉลยข้อสอบ</div>
       <div style="font-size:13px;font-weight:600" id="rv-score"></div>
     </div>
     <button data-i18n="t_back_dash" class="btn btn-primary btn-sm" onclick="nav('p-dash')">กลับแดชบอร์ด</button>
@@ -1018,7 +1018,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
             <button onclick="togglePw()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray-400);font-size:15px">👁</button>
           </div>
         </div>
-        <button class="btn btn-primary btn-full" id="login-btn" onclick="submitLogin()">เข้าสู่ระบบ</button>
+        <button class="btn btn-primary btn-full" id="login-btn" data-i18n="lg_signin" onclick="submitLogin()">เข้าสู่ระบบ</button>
       </div>
       <p data-i18n="t_hr_only" style="text-align:center;font-size:11px;color:var(--gray-400);margin-top:10px">เฉพาะเจ้าหน้าที่ HR / Admin</p>
     </div>
@@ -1037,7 +1037,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
         <img src="hino-logo.png" class="hino-mark sm" alt="Hino" style="background:#fff;border-radius:7px;padding:2px;height:32px" onerror="logoFallback(this)">
         <div class="hino-co"><span class="co-name" style="color:#fff">Move Assessment</span><span class="co-sub" style="color:rgba(255,255,255,.85)">by Hino Motors Asia</span></div>
       </div>
-      <button class="adm-close" onclick="toggleAdminSidebar(false)" aria-label="ปิดเมนู">✕</button>
+      <button class="adm-close" onclick="toggleAdminSidebar(false)" data-i18n-title="a_close_menu" aria-label="ปิดเมนู">✕</button>
     </div>
     <!-- Main tools list (rendered by renderAdminNav) -->
     <div data-i18n="t_manage" class="adm-sidebar-sub" id="adm-nav-subhead">การจัดการ</div>
@@ -1047,7 +1047,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
   </aside>
   <div class="topbar">
     <div style="display:flex;align-items:center;gap:12px">
-      <button class="adm-hamb" onclick="toggleAdminSidebar()" aria-label="เปิดเมนูเครื่องมือ" title="เครื่องมือผู้ดูแล">☰</button>
+      <button class="adm-hamb" onclick="toggleAdminSidebar()" data-i18n-title="a_open_menu" aria-label="เปิดเมนูเครื่องมือ" title="เครื่องมือผู้ดูแล">☰</button>
       <div><div class="topbar-title" style="font-size:17px;font-weight:700;color:var(--gray-900)">Admin Portal</div></div>
     </div>
     <div style="display:flex;align-items:center;gap:8px">
@@ -1146,15 +1146,15 @@ textarea.q-inp:focus{border-color:var(--teal)}
   <div class="main-wide">
     <div class="card" style="padding:14px">
       <div class="cand-toolbar">
-        <input type="text" class="grow" id="cand-search" placeholder="🔍 ค้นหาชื่อ / ตำแหน่ง / อีเมล..." oninput="onCandSearch()">
-        <select id="cand-sort" onchange="onCandControls()" title="เรียงตาม">
+        <input type="text" class="grow" id="cand-search" data-i18n-ph="ph_cand_search" placeholder="🔍 ค้นหาชื่อ / ตำแหน่ง / อีเมล..." oninput="onCandSearch()">
+        <select id="cand-sort" onchange="onCandControls()" data-i18n-title="a_sort_by" title="เรียงตาม">
           <option data-i18n="t_sort_date" value="date">🕒 วันเวลาที่สอบ</option>
           <option data-i18n="t_sort_name" value="name">🔤 ชื่อ</option>
           <option data-i18n="t_sort_pos" value="position">💼 ตำแหน่ง</option>
           <option data-i18n="t_sort_avg" value="avg">📊 คะแนนเฉลี่ย</option>
         </select>
-        <button class="btn btn-secondary btn-sm" id="cand-dir" onclick="toggleCandDir()" title="สลับทิศทาง">↓ มาก→น้อย</button>
-        <select id="cand-pagesize" onchange="onCandControls()" title="ต่อหน้า">
+        <button class="btn btn-secondary btn-sm" id="cand-dir" onclick="toggleCandDir()" data-i18n-title="a_flip_dir" title="สลับทิศทาง">↓ มาก→น้อย</button>
+        <select id="cand-pagesize" onchange="onCandControls()" data-i18n-title="a_per_page" title="ต่อหน้า">
           <option data-i18n="t_per10" value="10">10 / หน้า</option>
           <option data-i18n="t_per25" value="25">25 / หน้า</option>
           <option data-i18n="t_per50" value="50">50 / หน้า</option>
@@ -1172,7 +1172,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
       <div style="overflow-x:auto">
         <table style="min-width:820px">
           <thead><tr>
-            <th style="width:34px;text-align:center"><input type="checkbox" class="cand-check" id="cand-selall" onclick="toggleCandSelectAll(this)" title="เลือกทั้งหน้า"></th>
+            <th style="width:34px;text-align:center"><input type="checkbox" class="cand-check" id="cand-selall" onclick="toggleCandSelectAll(this)" data-i18n-title="a_select_page" title="เลือกทั้งหน้า"></th>
             <th class="sortable" onclick="setCandSort('name')"><span data-i18n="t_candidate">ผู้สมัคร</span> <span class="sort-ind" id="si-name"></span></th>
             <th class="sortable" onclick="setCandSort('position')"><span data-i18n="t_position">ตำแหน่ง</span> <span class="sort-ind" id="si-position"></span></th>
             <th data-i18n="t_age" style="text-align:center">อายุ</th>
@@ -1843,6 +1843,64 @@ const I18N = {
   t_making_pdf: { th:"กำลังสร้าง PDF...", en:"Building the PDF…" },
   x_results_word: { th:"ผลการสอบ", en:"Results" },
   x_sheet_result: { th:"ผลสอบ", en:"Results" },
+  // ── Tooltips and screen-reader labels (data-i18n-title) ──
+  a_lang_switch: { th:"ภาษา / Language", en:"ภาษา / Language" },
+  a_dark_switch: { th:"สลับโหมดมืด / สว่าง", en:"Dark / light mode" },
+  a_home: { th:"กลับหน้าแรก", en:"Back to the start" },
+  a_fullscreen: { th:"เต็มจอ", en:"Full screen" },
+  a_exit_fullscreen: { th:"ออกจากเต็มจอ", en:"Leave full screen" },
+  a_close_menu: { th:"ปิดเมนู", en:"Close the menu" },
+  a_open_menu: { th:"เครื่องมือผู้ดูแล", en:"Admin tools" },
+  a_sort_by: { th:"เรียงตาม", en:"Sort by" },
+  a_flip_dir: { th:"สลับทิศทาง", en:"Flip the direction" },
+  a_per_page: { th:"ต่อหน้า", en:"Per page" },
+  a_select_page: { th:"เลือกทั้งหน้า", en:"Select the whole page" },
+  a_add_cat: { th:"เพิ่มหมวดหมู่ข้อสอบใหม่", en:"Add a new test category" },
+  a_del_cat: { th:"ลบหมวดหมู่นี้", en:"Delete this category" },
+  a_mark_correct: { th:"ทำเครื่องหมายว่าเป็นคำตอบที่ถูก", en:"Mark as the correct answer" },
+  a_del_opt: { th:"ลบ", en:"Delete" },
+  a_in_progress: { th:"กำลังทำอยู่", en:"In progress" },
+  // ── Placeholders ──
+  ph_fn: { th:"สมชาย", en:"Alex" },
+  ph_ln: { th:"ใจดี", en:"Taylor" },
+  ph_cand_search: { th:"🔍 ค้นหาชื่อ / ตำแหน่ง / อีเมล...", en:"🔍 Search name, position or email…" },
+  ph_instr_title: { th:"เช่น คำชี้แจงการสอบ IQ", en:"e.g. Instructions — Cognitive Ability" },
+  ph_instr_body: { th:"พิมพ์คำแนะนำ คำชี้แจง หรือกติกาการสอบ...", en:"Type the instructions, guidance or rules for this test..." },
+  ph_passage: { th:"เว้นว่างไว้ถ้าไม่ต้องการบทความ", en:"Leave empty if this question needs no passage" },
+  // ── Static screen text that had no key yet ──
+  t_cheat_banner: { th:"⚠️ ตรวจพบการออกจากหน้าสอบ! ระบบบันทึกการกระทำทุกครั้ง",
+                    en:"⚠️ You left the exam window. Every time this happens it is recorded." },
+  e_pdpa: { th:"กรุณายอมรับเงื่อนไขการเก็บข้อมูล", en:"Please accept the data-protection terms" },
+  t_dashboard: { th:"แดชบอร์ด", en:"Dashboard" },
+  ty_done: { th:"เสร็จสิ้น", en:"Done" },
+  t_answer_key: { th:"เฉลยข้อสอบ", en:"Answer key" },
+  lg_signin: { th:"เข้าสู่ระบบ", en:"Sign in" },
+  t_before_start: { th:"ก่อนเริ่มสอบ", en:"Before you begin" },
+  t_loading_instr: { th:"กำลังโหลดข้อแนะนำ...", en:"Loading the instructions…" },
+  t_test_results: { th:"ผลการทดสอบ", en:"Test results" },
+  t_answered_lbl: { th:"ตอบแล้ว", en:"Answered" },
+  t_unanswered_lbl: { th:"ยังไม่ตอบ", en:"Not answered" },
+  t_viewing_lbl: { th:"กำลังดูอยู่", en:"Viewing now" },
+  t_bars_note: { th:"เส้นบนแถบคือเกณฑ์ผ่านของแต่ละชุด", en:"The line on each bar is that test's pass mark" },
+  t_unanswered_warn: { th:"⚠️ ยังมี {n} ข้อที่ยังไม่ได้ตอบ — ข้อที่ไม่ตอบจะได้ 0 คะแนน",
+                       en:"⚠️ {n} questions are still unanswered — anything left blank scores 0" },
+  t_all_answered: { th:"✓ ตอบครบทุกข้อแล้ว ({n}/{n})", en:"✓ Every question is answered ({n}/{n})" },
+  t_probe_head: { th:"💡 แนะนำคำถามสัมภาษณ์เชิงลึก", en:"💡 Worth probing at interview" },
+  t_probe_body: { th:"ถามเจาะเรื่อง:", en:"Ask about:" },
+  t_sent_to_hr: { th:"ผลการทดสอบของท่านจะถูกส่งให้ HR พิจารณาในขั้นตอนถัดไป",
+                  en:"Your results go to the HR team for the next stage" },
+  t_date_taken: { th:"วันที่ทดสอบ:", en:"Taken on:" },
+  t_mins_secs: { th:"{m} นาที {s} วิ", en:"{m} min {s} s" },
+  t_mins_only: { th:"{m} นาที", en:"{m} min" },
+  t_attempt_n: { th:"ครั้งที่ {n}", en:"Attempt {n}" },
+  t_no_record: { th:"ไม่มีข้อมูล", en:"no record" },
+  t_n_times: { th:"{n} ครั้ง", en:"{n} times" },
+  t_never_left: { th:"ไม่ออกจากหน้าสอบ", en:"never left the exam window" },
+  c_leave_exam: { th:"ออกจากการสอบ? ความคืบหน้าจะถูกบันทึกไว้",
+                  en:"Leave the exam? Your progress is saved." },
+  t_cheat_copy: { th:"พยายาม Copy/Cut/Paste ข้อความ", en:"Tried to copy, cut or paste text" },
+  t_cheat_tab: { th:"สลับ Tab หรือออกจากหน้าต่าง", en:"Switched tab or left the window" },
+  t_cheat_blur: { th:"คลิกออกนอกหน้าต่างเบราว์เซอร์", en:"Clicked outside the browser window" },
 };
 
 function t18n(key){ const e = I18N[key]; return e ? (e[LANG] || e.th) : key; }
@@ -1985,11 +2043,24 @@ function applyLang(){
     const k = el.getAttribute('data-i18n-ph');
     if (I18N[k]) el.setAttribute('placeholder', I18N[k][LANG] || I18N[k].th);
   });
+  // Tooltips and screen-reader labels: an icon-only button says nothing
+  // without them, so they have to follow the toggle as well.
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const k = el.getAttribute('data-i18n-title');
+    if (!I18N[k]) return;
+    const v = I18N[k][LANG] || I18N[k].th;
+    el.setAttribute('title', v);
+    if (el.hasAttribute('aria-label')) el.setAttribute('aria-label', v);
+  });
   // toggle button label (shows the language you'd switch TO)
   const lt = document.getElementById('lang-label');
   if (lt) lt.textContent = LANG==='th' ? 'EN' : 'ไทย';
   // refresh the position-type dropdown labels if present
   if (typeof populatePositionTypes === 'function') populatePositionTypes();
+  // Modals whose heading depends on what the user clicked: re-run the
+  // opener rather than letting data-i18n stamp one fixed wording over it.
+  if (document.getElementById('mod-export-preview')?.classList.contains('open'))
+    openExportPreview(exportKind);
   // re-render whichever dynamic screen is active
   const active = document.querySelector('.page.active');
   const id = active ? active.id : '';
@@ -2580,10 +2651,10 @@ function openConfirm() {
   const unanswered = qs.length - answered;
   const warn = document.getElementById('confirm-warn');
   if (unanswered>0) {
-    warn.textContent = `⚠️ ยังมี ${unanswered} ข้อที่ยังไม่ได้ตอบ — ข้อที่ไม่ตอบจะได้ 0 คะแนน`;
+    warn.textContent = t18n('t_unanswered_warn').replace('{n}', unanswered);
     warn.style.display='block';
   } else {
-    warn.textContent = `✓ ตอบครบทุกข้อแล้ว (${qs.length}/${qs.length})`;
+    warn.textContent = t18n('t_all_answered').replace('{n}', qs.length);
     warn.className='alert alert-info'; warn.style.display='block';
   }
   openModal('mod-confirm');
@@ -2745,7 +2816,7 @@ function renderReview(idx) {
     }).join('');
     return `<div class="review-q" style="border:1px solid ${isRight?'var(--teal-b)':'#f7c1c1'}">
       <div class="review-q-head" ${headCls}>
-        <span style="background:${isRight?'var(--teal)':'var(--red)'};color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px">ข้อ ${i+1}</span>
+        <span style="background:${isRight?'var(--teal)':'var(--red)'};color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px">${t18n('t_item')} ${i+1}</span>
         ${scoreLabel}
       </div>
       <div class="review-q-body">
@@ -2897,8 +2968,8 @@ function renderResults() {
       sbHtml += '</div>';
       if (weak.length) {
         sbHtml += `<div style="margin-top:8px;padding:8px 10px;background:var(--amber-l);border-radius:var(--radius)">
-          <p style="font-size:11px;font-weight:600;color:var(--amber)">💡 แนะนำคำถามสัมภาษณ์เชิงลึก</p>
-          <p style="font-size:11px;color:var(--gray-700);margin-top:2px">ถามเจาะเรื่อง: <strong>${weak.map(w=>w.name).join(', ')}</strong> ในรอบสัมภาษณ์ถัดไป</p>
+          <p style="font-size:11px;font-weight:600;color:var(--amber)">${t18n('t_probe_head')}</p>
+          <p style="font-size:11px;color:var(--gray-700);margin-top:2px">${t18n('t_probe_body')} <strong>${weak.map(w=>w.name).join(', ')}</strong></p>
         </div>`;
       }
       sbHtml += '</div>';
@@ -2914,15 +2985,15 @@ function renderResults() {
       <span style="font-size:22px">${allPass?'🎉':'📋'}</span>
       <div>
         <p style="font-weight:600;font-size:13px;margin-bottom:3px;color:${allPass?'#085041':'var(--amber)'}">${allPass?t18n('t_passed_all'):t18n('t_passed_n_of').replace('{n}', pass).replace('{total}', done.length)}</p>
-        <p style="font-size:12px;color:${allPass?'#0f6e56':'var(--amber)'}">ผลการทดสอบของท่านจะถูกส่งให้ HR พิจารณาในขั้นตอนถัดไป</p>
-        <p style="font-size:11px;color:var(--gray-400);margin-top:5px">วันที่ทดสอบ: ${new Date().toLocaleDateString('th-TH',{day:'2-digit',month:'long',year:'numeric'})}</p>
+        <p style="font-size:12px;color:${allPass?'#0f6e56':'var(--amber)'}">${t18n('t_sent_to_hr')}</p>
+        <p style="font-size:11px;color:var(--gray-400);margin-top:5px">${t18n('t_date_taken')} ${new Date().toLocaleDateString(LANG === 'th' ? 'th-TH' : 'en-GB',{day:'2-digit',month:'long',year:'numeric'})}</p>
       </div>
     </div>`;
 }
 
 function fakePDF(btn) {
   const orig = btn.innerHTML;
-  btn.innerHTML='<span class="spin"></span> กำลังสร้าง PDF...'; btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span> ' + t18n('t_making_pdf'); btn.disabled=true;
   setTimeout(()=>{
     btn.innerHTML=orig; btn.disabled=false;
     alert('✅ ในระบบจริง: PDF จะถูกสร้างด้วย jsPDF + html2canvas และดาวน์โหลดอัตโนมัติ\nชื่อไฟล์: MoveAssessment_TestResult_'+applicant?.name?.replace(/\s/g,'_')+'_'+new Date().toISOString().slice(0,10)+'.pdf');
@@ -2987,8 +3058,8 @@ function getLiveRows() {
       test: s.test.code,
       date: now,
       time: s.remainSecs != null
-        ? (() => { const used = s.test.mins*60 - s.remainSecs; const m=Math.floor(used/60),sec=used%60; return `${m} นาที ${sec} วิ`; })()
-        : `~${s.test.mins} นาที`,
+        ? (() => { const used = s.test.mins*60 - s.remainSecs; const m=Math.floor(used/60),sec=used%60; return t18n('t_mins_secs').replace('{m}', m).replace('{s}', sec); })()
+        : '~' + t18n('t_mins_only').replace('{m}', s.test.mins),
       score: s.score,
       out:   s.outcome,
       pos:   applicant.pos,
@@ -3279,7 +3350,7 @@ function renderCandidates() {
     const scores = taken.map(c => Number(p[c+'_score'])).filter(n => !isNaN(n));
     const avg   = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : null;
     const liveTag = p.isLive
-      ? '<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--teal);margin-right:5px;vertical-align:middle" title="กำลังทำอยู่"></span>'
+      ? '<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--teal);margin-right:5px;vertical-align:middle" title="' + t18n('a_in_progress') + '"></span>'
       : '';
 
     // Test pills
@@ -3735,7 +3806,7 @@ function filterAdmin() {
     const attempts = attemptMap[candKey(r)] || 0;
     const attemptTag = attempts > 1
       ? `<span style="font-size:10px;background:var(--amber-l);color:var(--amber);padding:1px 6px;border-radius:8px;margin-left:4px">${t18n('t_attempt_n').replace('{n}', attempts)}</span>`
-      : attempts===1 ? `<span style="font-size:10px;background:var(--gray-100);color:var(--gray-500);padding:1px 6px;border-radius:8px;margin-left:4px">ครั้งที่ 1</span>` : '';
+      : attempts===1 ? `<span style="font-size:10px;background:var(--gray-100);color:var(--gray-500);padding:1px 6px;border-radius:8px;margin-left:4px">${t18n('t_attempt_n').replace('{n}', 1)}</span>` : '';
     const delBtn = canDelete
       ? `<button class="btn btn-sm js-del-btn" style="background:var(--red-l);color:var(--red);font-size:11px;padding:3px 8px" data-row-key="${rowKeyEnc}">🗑</button>`
       : '';
@@ -3802,16 +3873,16 @@ function showDetailByKey(encodedKey) {
       </div>
       <div class="grid3">
         <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:2px">${t18n('t_score')}</div><div style="font-weight:600;color:${c}">${s.score}/100</div></div>
-        <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:2px">เวลาที่ใช้</div><div>${esc(s.time)}</div></div>
+        <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:2px">${t18n('t_time_used')}</div><div>${esc(s.time)}</div></div>
         <div><div style="font-size:11px;color:var(--gray-400);margin-bottom:2px">${t18n('t_exam_date')}</div><div style="font-size:12px">${esc(s.date)}</div></div>
       </div>
       <div style="margin-top:10px;font-size:12px;display:flex;align-items:center;gap:6px">
-        <span style="color:var(--gray-400)">เกณฑ์ผ่าน:</span>
-        <strong style="color:var(--gray-700)">${passVal != null ? passVal + ' คะแนน' : '—'}</strong>
+        <span style="color:var(--gray-400)">${t18n('t_pass_mark_lbl')}</span>
+        <strong style="color:var(--gray-700)">${passVal != null ? passVal + ' ' + t18n('x_score') : '—'}</strong>
         <span style="color:${c};font-weight:600">${s.out==='P' ? '· ' + t18n('t_above_mark') : '· ' + t18n('t_below_mark')}</span>
       </div>
       <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--gray-200);font-size:12px;display:flex;align-items:center;gap:6px">
-        <span style="color:var(--gray-400)">ออกจากหน้าสอบระหว่างทำ:</span> ${leaveBadgeHtml(s.leaves)}
+        <span style="color:var(--gray-400)">${t18n('t_leaves_during')}</span> ${leaveBadgeHtml(s.leaves)}
       </div>
     </div>`;
   }).join('');
@@ -3869,13 +3940,13 @@ document.querySelector('#p-register .alert-info').style.display='flex';
 ══════════════════════════════════════════════ -->
 <div id="p-intro" class="page">
   <div class="topbar">
-    <div><div class="brand" id="intro-brand">Move Assessment</div><div class="topbar-title" id="intro-title">ก่อนเริ่มสอบ</div></div>
+    <div><div class="brand" id="intro-brand">Move Assessment</div><div class="topbar-title" id="intro-title" data-i18n="t_before_start">ก่อนเริ่มสอบ</div></div>
     <button class="btn btn-secondary btn-sm" data-i18n="intro_back" onclick="cancelIntro()">← ย้อนกลับ</button>
   </div>
   <div class="main" style="max-width:600px">
     <div class="card" style="margin-bottom:12px" id="intro-card">
       <div id="intro-img-wrap"></div>
-      <div class="instruction-body" id="intro-body">กำลังโหลดข้อแนะนำ...</div>
+      <div class="instruction-body" id="intro-body" data-i18n="t_loading_instr">กำลังโหลดข้อแนะนำ...</div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
       <button class="btn btn-secondary" data-i18n="intro_back" onclick="cancelIntro()">← ย้อนกลับ</button>
@@ -3904,11 +3975,11 @@ document.querySelector('#p-register .alert-info').style.display='flex';
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px" id="instr-tabs"></div>
       <div class="field">
         <label data-i18n="t_intro_title">ชื่อหัวข้อ / Title</label>
-        <input type="text" id="instr-title" placeholder="เช่น คำชี้แจงการสอบ IQ">
+        <input type="text" id="instr-title" data-i18n-ph="ph_instr_title" placeholder="เช่น คำชี้แจงการสอบ IQ">
       </div>
       <div class="field">
         <label data-i18n="t_intro_body">ข้อแนะนำ / ข้อความ (รองรับ Markdown เบื้องต้น)</label>
-        <textarea id="instr-body" class="q-inp" style="min-height:160px" placeholder="พิมพ์คำแนะนำ คำชี้แจง หรือกติกาการสอบ..."></textarea>
+        <textarea id="instr-body" class="q-inp" data-i18n-ph="ph_instr_body" style="min-height:160px" placeholder="พิมพ์คำแนะนำ คำชี้แจง หรือกติกาการสอบ..."></textarea>
       </div>
       <div class="field">
         <label data-i18n="t_intro_image">🖼 รูปภาพประกอบ (ถ้ามี)</label>
@@ -4011,7 +4082,7 @@ document.querySelector('#p-register .alert-info').style.display='flex';
 <!-- Individual PDF modal -->
 <div class="overlay" id="mod-indiv-pdf">
   <div class="modal modal-results">
-    <div class="modal-head"><span style="font-weight:600" id="ipdf-title">ผลการทดสอบ</span><button onclick="closeModal('mod-indiv-pdf')" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--gray-400)">✕</button></div>
+    <div class="modal-head"><span style="font-weight:600" id="ipdf-title" data-i18n="t_test_results">ผลการทดสอบ</span><button onclick="closeModal('mod-indiv-pdf')" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--gray-400)">✕</button></div>
     <div class="modal-body" id="ipdf-content"></div>
     <div class="modal-foot">
       <button data-i18n="t_close" class="btn btn-secondary" onclick="closeModal('mod-indiv-pdf')">ปิด</button>
@@ -4067,7 +4138,7 @@ function updateFABs(pageId) {
 
 function goHome() {
   if (document.getElementById('p-test').classList.contains('active')) {
-    if (!confirm('ออกจากการสอบ? ความคืบหน้าจะถูกบันทึกไว้')) return;
+    if (!confirm(t18n('c_leave_exam'))) return;
     clearInterval(timerInterval);
   }
   stopFocusGuard();
@@ -4086,12 +4157,12 @@ function toggleFullscreen() {
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen().then(() => {
       btn.textContent = '⊠';
-      btn.title = 'ออกจากเต็มจอ';
+      btn.title = t18n('a_exit_fullscreen');
     }).catch(() => showToast(t18n('m_no_fullscreen')));
   } else {
     document.exitFullscreen().then(() => {
       btn.textContent = '⛶';
-      btn.title = 'เต็มจอ';
+      btn.title = t18n('a_fullscreen');
     });
   }
 }
@@ -4136,7 +4207,7 @@ function startFocusGuard() {
 function onCopyBlock(e) {
   if (!focusGuardActive) return;
   e.preventDefault();
-  triggerCheat('พยายาม Copy/Cut/Paste ข้อความ', 'copy');
+  triggerCheat(t18n('t_cheat_copy'), 'copy');
 }
 function onContextBlock(e) {
   if (!focusGuardActive) return;
@@ -4167,10 +4238,10 @@ function markLeave(reason) {
 }
 function onVisibilityChange() {
   if (!focusGuardActive) return;
-  if (document.hidden) markLeave('สลับ Tab หรือออกจากหน้าต่าง');
+  if (document.hidden) markLeave(t18n('t_cheat_tab'));
   else outsideExam = false;
 }
-function onWindowBlur()  { markLeave('คลิกออกนอกหน้าต่างเบราว์เซอร์'); }
+function onWindowBlur()  { markLeave(t18n('t_cheat_blur')); }
 function onWindowFocus() { outsideExam = false; }
 
 // How many times the candidate left the exam window/tab during a session
@@ -4181,10 +4252,10 @@ function examLeaveCount(violations) {
 // Shared inline badge for the "left the exam page" count in candidate reports.
 // null → the record predates this feature (unknown); 0 → clean; >0 → flagged.
 function leaveBadgeHtml(leaves) {
-  if (leaves == null) return '<span style="color:var(--gray-400)">— ไม่มีข้อมูล</span>';
+  if (leaves == null) return '<span style="color:var(--gray-400)">— ' + t18n('t_no_record') + '</span>';
   return leaves > 0
-    ? `<span style="color:var(--red);font-weight:600">⚠️ ${leaves} ครั้ง</span>`
-    : `<span style="color:var(--teal)">✓ ไม่ออกจากหน้าสอบ</span>`;
+    ? `<span style="color:var(--red);font-weight:600">⚠️ ${t18n('t_n_times').replace('{n}', leaves)}</span>`
+    : `<span style="color:var(--teal)">✓ ${t18n('t_never_left')}</span>`;
 }
 
 function triggerCheat(reason, type='other') {
@@ -6180,7 +6251,7 @@ function initBranding(){
 function makeLogosHome(){
   document.querySelectorAll('.hino-brand').forEach(el => {
     el.style.cursor = 'pointer';
-    el.title = 'กลับหน้าแรก';
+    el.title = t18n('a_home');
     el.onclick = () => goHome();
   });
 }
