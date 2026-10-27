@@ -841,10 +841,10 @@ textarea.q-inp:focus{border-color:var(--teal)}
   </div>
   <div class="main">
     <div class="thankyou-wrap">
-      <div class="thankyou-badge">✓</div>
-      <h2 style="font-size:21px;font-weight:800;color:var(--gray-900);margin-bottom:10px">ขอบคุณที่ทำแบบทดสอบ</h2>
-      <p style="font-size:14px;color:var(--gray-700);max-width:420px;line-height:1.6">คุณทำแบบทดสอบครบทุกชุดเรียบร้อยแล้ว ผลการทดสอบได้ถูกส่งให้ทีม HR ของ Hino Motors Asia เพื่อพิจารณาในขั้นตอนถัดไป</p>
-      <button class="btn btn-primary" style="margin-top:26px;min-width:160px" onclick="goHome()">เสร็จสิ้น</button>
+      <div class="thankyou-badge" id="ty-badge">✓</div>
+      <h2 id="ty-title" style="font-size:21px;font-weight:800;color:var(--gray-900);margin-bottom:10px">ขอบคุณที่ทำแบบทดสอบ</h2>
+      <p id="ty-note" style="font-size:14px;color:var(--gray-700);max-width:420px;line-height:1.6">คุณทำแบบทดสอบครบทุกชุดเรียบร้อยแล้ว ผลการทดสอบได้ถูกส่งให้ทีม HR ของ Hino Motors Asia เพื่อพิจารณาในขั้นตอนถัดไป</p>
+      <button class="btn btn-primary" id="ty-btn" style="margin-top:26px;min-width:160px" onclick="goHome()">เสร็จสิ้น</button>
     </div>
   </div>
 </div>
@@ -1746,6 +1746,7 @@ function nav(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
+  if (id === 'p-thankyou') renderThankYou();
   if (id === 'p-dash')    renderDash();
   if (id === 'p-results') renderResults();
   if (id === 'p-admin')   renderAdmin();
@@ -1863,6 +1864,9 @@ function startRegisteredSession(){
     return { test:t, status:'not_started', score:null, outcome:null, answers:new Array(n).fill(null) };
   });
   pendingReg = null;
+  // Fire and forget: HR should be able to see this candidate from now on, but
+  // the exam must not wait on it.
+  if (typeof registerSitting === 'function') registerSitting();
   nav('p-dash');
 }
 
@@ -1917,7 +1921,44 @@ function renderDash() {
 // ══════════════════════════════════════════
 // TESTROOM
 // ══════════════════════════════════════════
-function startTest(idx) {
+// Is the thing that will mark this exam actually answering?
+//
+// Without this a candidate could answer for an hour and only find out at submit
+// that nothing could be recorded. The endpoint has had a liveness route all
+// along; nobody was asking it.
+//
+// Only starting a test is gated. Resuming one is not: that clock is already
+// running, so turning the candidate away costs them the time either way, and
+// the answers they have already given are safer being finished and queued than
+// abandoned.
+//
+// Only a success is remembered. A candidate who was turned away and waits can
+// try again, and the check runs again rather than holding the first answer
+// against them for the rest of the session.
+let _scoringIsUp = null;
+
+async function scoringEndpointReachable() {
+  if (!serverScoringEnabled()) return true;      // local scoring needs nothing
+  if (_scoringIsUp === true) return true;
+  const base = String(window.SCORING_ENDPOINT).replace(/\/+$/, '');
+  try {
+    const res = await fetch(base + '/health', { cache: 'no-store' });
+    _scoringIsUp = res.ok;
+  } catch(e) {
+    _scoringIsUp = false;
+  }
+  return _scoringIsUp;
+}
+
+async function readyToSit() {
+  if (await scoringEndpointReachable()) return true;
+  showToast('⚠️ ระบบตรวจคะแนนยังติดต่อไม่ได้ — กรุณาลองใหม่อีกครั้งในอีกสักครู่ ' +
+            'ถ้ายังไม่ได้ กรุณาแจ้งฝ่ายทรัพยากรบุคคลก่อนเริ่มทำข้อสอบ', 7000);
+  return false;
+}
+
+async function startTest(idx) {
+  if (!(await readyToSit())) return;
   sessions[idx].status = 'in_progress';
   curSess = idx;
   curQ = 0;
@@ -6119,6 +6160,131 @@ async function flushAnswerQueue() {
   try { localStorage.setItem(ANSWER_QUEUE_KEY, JSON.stringify(remain)); } catch(e) {}
   if (q.length && !remain.length && typeof showToast === 'function')
     showToast('☁️ ส่งคำตอบที่ค้างขึ้นระบบสำเร็จแล้ว');
+  // The thank-you page states whether anything is still waiting, so it has to
+  // be redrawn whenever that changes — including a flush the candidate did not
+  // ask for, on a page that is already open.
+  if (typeof renderThankYou === 'function') renderThankYou();
+}
+
+// ── The thank-you page has to be true ────────────────────────────────────
+//
+// It used to say the results had been sent to HR no matter what. A candidate
+// whose answers were still sitting in a queue was told they were done, and
+// closed the tab — which is the moment the exam was lost, because the queue
+// only drains when that page is reopened on that device.
+function pendingAnswerCount() {
+  try { return (JSON.parse(localStorage.getItem(ANSWER_QUEUE_KEY) || '[]') || []).length; }
+  catch(e) { return 0; }
+}
+
+function renderThankYou() {
+  const badge = document.getElementById('ty-badge');
+  const title = document.getElementById('ty-title');
+  const note  = document.getElementById('ty-note');
+  const btn   = document.getElementById('ty-btn');
+  if (!badge || !title || !note || !btn) return;
+  const stuck = pendingAnswerCount();
+
+  if (!stuck) {
+    badge.textContent = '✓';
+    badge.style.background = '';
+    title.textContent = 'ขอบคุณที่ทำแบบทดสอบ';
+    note.textContent  = 'คุณทำแบบทดสอบครบทุกชุดเรียบร้อยแล้ว ' +
+      'ผลการทดสอบได้ถูกส่งให้ทีม HR ของ Hino Motors Asia เพื่อพิจารณา';
+    btn.textContent   = 'เสร็จสิ้น';
+    btn.onclick       = () => goHome();
+    return;
+  }
+
+  badge.textContent = '⏳';
+  badge.style.background = 'var(--amber-l)';
+  title.textContent = 'ยังส่งคำตอบไม่สำเร็จ';
+  note.textContent  = `คำตอบ ${stuck} ชุดยังส่งขึ้นระบบไม่ได้ กรุณาอย่าเพิ่งปิดหน้านี้ ` +
+    'และตรวจสอบการเชื่อมต่ออินเทอร์เน็ต แล้วกดปุ่มด้านล่างอีกครั้ง ' +
+    'ถ้ายังไม่สำเร็จ กรุณาแจ้งฝ่ายทรัพยากรบุคคล — คำตอบของท่านยังอยู่ในเครื่องนี้ ยังไม่หายไปไหน';
+  btn.textContent   = '↻ ส่งคำตอบอีกครั้ง';
+  btn.onclick       = async () => {
+    btn.disabled = true;
+    try { await flushAnswerQueue(); } catch(e) {}
+    btn.disabled = false;
+    renderThankYou();
+  };
+}
+
+// ── Telling the endpoint someone has started ──────────────────────────────
+//
+// With scoring on the server this page writes nothing locally, so a sitting
+// existed only once a test had been graded. A candidate whose answers could not
+// be sent left no trace at all, and HR had no way to tell them from someone who
+// never came — the failure was invisible to the only people who could act on it.
+//
+// Registering carries no answers and no score. It is queued and retried like
+// the answers are, and it never blocks the candidate: not being able to file
+// the paperwork is no reason to stop someone sitting the exam.
+const REG_QUEUE_KEY = 'hma_registration_queue';
+
+function buildRegistration() {
+  return {
+    candidate: {
+      key:   applicantKey(applicant),
+      name:  applicant.name || '',
+      email: applicant.email || '',
+      phone: applicant.phone || '',
+      age:   String(applicant.age ?? ''),
+      exp:   String(applicant.exp ?? ''),
+      pos:   applicant.pos || '',
+    },
+    sitting: sittingId(),
+    attempt: attemptNumberForDisplay(),
+    meta:    { datetime: new Date().toLocaleString('th-TH') },
+  };
+}
+
+async function postRegistration(reg) {
+  const base = String(window.SCORING_ENDPOINT).replace(/\/+$/, '');
+  const res = await fetch(base + '/register', {
+    method:  'POST',
+    headers: { 'content-type': 'application/json' },
+    body:    JSON.stringify(reg),
+  });
+  if (res.ok) return { ok: true };
+  // As with the answers: only a server-side or network problem improves on a
+  // retry. A 4xx means this registration is malformed and always will be.
+  return { ok: false, retry: res.status >= 500 };
+}
+
+function queueRegistration(reg) {
+  try {
+    const q = JSON.parse(localStorage.getItem(REG_QUEUE_KEY) || '[]');
+    q.push({ reg, at: Date.now() });
+    localStorage.setItem(REG_QUEUE_KEY, JSON.stringify(q));
+  } catch(e) { console.warn('could not queue the registration:', e); }
+}
+
+async function registerSitting() {
+  if (!serverScoringEnabled() || !applicant) return;
+  let reg;
+  try { reg = buildRegistration(); }
+  catch(e) { console.warn('could not build the registration:', e); return; }
+  let outcome;
+  try { outcome = await postRegistration(reg); }
+  catch(e) { outcome = { ok: false, retry: true }; }
+  if (!outcome.ok && outcome.retry) queueRegistration(reg);
+}
+
+async function flushRegistrationQueue() {
+  if (!serverScoringEnabled()) return;
+  let q;
+  try { q = JSON.parse(localStorage.getItem(REG_QUEUE_KEY) || '[]'); } catch(e) { return; }
+  if (!Array.isArray(q) || !q.length) return;
+  const remain = [];
+  for (const item of q) {
+    let outcome;
+    try { outcome = await postRegistration(item.reg); }
+    catch(e) { outcome = { ok: false, retry: true }; }
+    if (!outcome.ok && outcome.retry) remain.push(item);
+  }
+  try { localStorage.setItem(REG_QUEUE_KEY, JSON.stringify(remain)); } catch(e) {}
 }
 
 // Candidate side: push the finished attempt to Firestore (create-only).
@@ -6546,6 +6712,7 @@ cloudLoadQuestionBank().then(() => {
   seedPersonalityQuestionsIfEmpty();
   cloudFlushPending();
   flushAnswerQueue();   // retry any answers that could not be sent earlier
+  flushRegistrationQueue();   // and any registrations that did not get through
 });
 
 // Initial FAB state
