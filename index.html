@@ -342,7 +342,7 @@ tr:last-child td{border-bottom:none}
 .avatar{width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
 
 /* ── Modal ── */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;align-items:center;justify-content:center;padding:16px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:80;align-items:center;justify-content:center;padding:16px}
 .overlay.open{display:flex}
 .modal{background:var(--white);border-radius:var(--radius-lg);width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,.2);overflow:hidden}
 .modal-head{padding:16px 20px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between}
@@ -2603,7 +2603,13 @@ function getLiveRows() {
     hour:'2-digit', minute:'2-digit'
   });
   return sessions
-    .filter(s => s.status === 'completed')
+    // A finished test the endpoint has not graded yet has no score this page
+    // knows. It used to be shown as a row anyway, which put "null/100" in front
+    // of HR — a result that was never produced reading as one that was. The
+    // real row arrives from the endpoint; until then the candidate shows in the
+    // list with no results, which is what "no results yet" is supposed to look
+    // like.
+    .filter(s => s.status === 'completed' && s.score != null)
     .map((s, i) => ({
       id:   'live_' + i,
       fn, ln,
@@ -2852,7 +2858,8 @@ function renderCandidates() {
       isLive:      true,
     };
     sessions.forEach(s => {
-      if (s.status === 'completed') {
+      // Same reason as getLiveRows(): no score yet is not a score of null.
+      if (s.status === 'completed' && s.score != null) {
         profile[s.test.code + '_score']   = s.score;
         profile[s.test.code + '_outcome'] = s.outcome;
       }
@@ -5871,7 +5878,9 @@ function adminOpenScoreDash(nid){
   const aliases = resolveCandidateAliases(nid);
   const snaps = getResultSnapshots().filter(x => aliasesIntersect(candKeyAliases(x), aliases));
   if (!snaps.length){
-    showToast('❌ ยังไม่มีข้อมูลแดชบอร์ดคะแนนของผู้สมัครนี้');
+    // "ไม่มีข้อมูล" อย่างเดียวทำให้ดูเหมือนปุ่มเสีย ทั้งที่สาเหตุคือผลยังมาไม่ถึง
+    showToast('📊 ยังเปิดแดชบอร์ดคะแนนไม่ได้ — ผลสอบของผู้สมัครรายนี้ยังมาไม่ถึงระบบ ' +
+              'ถ้าเพิ่งสอบเสร็จ รอสักครู่แล้วกดรีเฟรช', 6000);
     return;
   }
   const snap = snaps[snaps.length - 1];

@@ -881,3 +881,123 @@ def test_the_thank_you_page_updates_itself_once_the_queue_clears(open_exam):
     page.evaluate("() => flushAnswerQueue()")
     page.wait_for_function("() => document.getElementById('ty-title').textContent.includes('ขอบคุณ')")
     assert "ส่งให้ทีม HR" in page.inner_text("#ty-note")
+
+
+# ── ผลที่ยังไม่ได้ตรวจ ไม่ใช่ผลสอบ ──────────────────────────────
+#
+# เมื่อตรวจคะแนนที่เซิร์ฟเวอร์ หน้าเว็บไม่รู้คะแนน เซสชันที่ทำเสร็จแล้วแต่ผลยังไม่กลับมา
+# เคยถูกแสดงเป็นแถวผลสอบ ทำให้ HR เห็น "null/100" — ผลที่ไม่เคยมี กลับอ่านเหมือนมี
+
+
+def _finish_without_a_score(page):
+    """ทำข้อสอบจนจบโดยที่เซิร์ฟเวอร์ยังไม่ได้ส่งคะแนนกลับมา"""
+    shown = _setup(page)
+    page.evaluate("() => { window.__nextResponse = { ok:false, status:503, body:{} }; }")
+    _answer(page, [0] * len(shown))
+    page.wait_for_function("() => sessions[0].status === 'completed'")
+
+
+def test_a_finished_test_with_no_score_yet_is_not_shown_as_a_result(open_exam):
+    page = open_exam()
+    _finish_without_a_score(page)
+    rows = page.evaluate("() => getAllRows().map(r => ({ test: r.test, score: r.score }))")
+    assert all(r["score"] is not None for r in rows), f"มีแถวที่คะแนนว่างหลุดมา: {rows}"
+
+
+def test_the_candidate_still_appears_in_the_hr_list_without_a_score(open_exam):
+    # ไม่แสดงเป็นผลสอบ ไม่ได้แปลว่าให้หายไปทั้งคน — นั่นคือปัญหาที่เรากำลังแก้
+    page = open_exam()
+    _finish_without_a_score(page)
+    profile = page.evaluate("""() => {
+        const key = applicantKey(applicant);
+        const live = { candidate_key: key };
+        // เรียกผ่านทางเดียวกับที่หน้าผู้ดูแลใช้
+        renderCandidates();
+        const rows = [...document.querySelectorAll('#a-cand-tbody tr')].map(r => r.textContent);
+        return rows.filter(t => t.includes('cand@example.com')).length;
+    }""")
+    assert profile >= 1, "ผู้สมัครหายไปจากรายชื่อฝั่ง HR"
+
+
+def test_a_scored_test_still_shows_as_a_result(open_exam):
+    # กันไม่ให้ตัวกรองข้างบนกวาดผลจริงทิ้งไปด้วย
+    page = open_exam()
+    shown = _setup(page)
+    page.evaluate("() => { window.SCORING_ENDPOINT = ''; }")   # ตรวจคะแนนในเครื่องเหมือนเดิม
+    _answer(page, [0] * len(shown))
+    page.wait_for_function("() => sessions[0].status === 'completed'")
+    rows = page.evaluate("() => getAllRows().filter(r => r.test === 'TESTSET')")
+    assert len(rows) == 1 and rows[0]["score"] is not None
+
+
+# ── หน้าต่างต้องอยู่เหนือแถบเมนูของผู้ดูแล ───────────────────────
+
+
+def test_a_modal_sits_above_the_admin_sidebar(open_exam):
+    # แถบเมนูเป็น z-index 71 ส่วนหน้าต่างเคยเป็น 50 เปิดผลสอบขณะเมนูเปิดอยู่
+    # แล้วเมนูจะทับหน้าต่างไว้
+    page = open_exam()
+    page.set_viewport_size({"width": 1440, "height": 900})
+    on_top = page.evaluate("""() => {
+        // แถบเมนูอยู่ในหน้าผู้ดูแล ถ้าไม่เปิดหน้านั้นก่อน มันจะกว้างเป็นศูนย์
+        // แล้วเทสต์จะผ่านโดยไม่ได้วัดอะไรเลย
+        nav('p-admin');
+        toggleAdminSidebar(true);
+        openModal('mod-indiv-pdf');
+        const sb = document.getElementById('adm-sidebar').getBoundingClientRect();
+        if (sb.width < 100) return 'แถบเมนูไม่ได้เปิดจริง';
+        const el = document.elementFromPoint(sb.x + sb.width / 2, sb.y + sb.height / 2);
+        return el && el.closest('#adm-sidebar') ? 'เมนู' : 'หน้าต่าง';
+    }""")
+    assert on_top == "หน้าต่าง", f"แถบเมนูยังทับหน้าต่างอยู่ ({on_top})"
+
+
+def test_the_score_dashboard_says_why_it_cannot_open_yet(open_exam):
+    # "ไม่มีข้อมูล" เฉย ๆ ทำให้ดูเหมือนปุ่มเสีย
+    page = open_exam()
+    _setup(page)
+    page.evaluate("() => adminOpenScoreDash('nobody@example.com')")
+    msg = page.inner_text("#toast")
+    assert "ยังมาไม่ถึง" in msg and "รอสักครู่" in msg
+
+
+
+def test_the_hr_row_shows_no_score_badge_while_the_result_is_still_coming(open_exam):
+    # โปรไฟล์ผู้สมัครเคยหยิบ s.score มาใส่ทั้งที่ยังเป็นค่าว่าง ทำให้แถวขึ้น "null"
+    page = open_exam()
+    _finish_without_a_score(page)
+    row = page.evaluate("""() => {
+        nav('p-admin');
+        renderCandidates();
+        const tr = [...document.querySelectorAll('#a-cand-tbody tr')]
+            .find(r => r.textContent.includes('cand@example.com'));
+        return tr ? tr.textContent : null;
+    }""")
+    assert row is not None, "ผู้สมัครหายไปจากรายชื่อ"
+    assert "null" not in row and "undefined" not in row, f"แถวโชว์คะแนนที่ยังไม่มี: {row}"
+
+
+def test_a_result_already_recorded_is_not_wiped_by_the_sitting_in_flight(open_exam):
+    """ผลที่ตรวจแล้วต้องไม่ถูกเซสชันที่ยังไม่ได้คะแนนทับหายไป
+
+    renderCandidates() รวมโปรไฟล์ที่เก็บไว้กับเซสชันปัจจุบันด้วยการ spread ทับกัน
+    ถ้าเซสชันปัจจุบันใส่คะแนนเป็นค่าว่างลงไป คะแนนจริงที่เคยตรวจแล้วจะถูกทับหาย
+    — HR จะเห็นผู้สมัครที่เคยมีผล กลายเป็นไม่มีผล
+    """
+    page = open_exam(exam_records=[{
+        "datetime": "3/8/2569 10:00:00", "_ts": 1785000000000,
+        "candidate_key": "cand@example.com", "name": "ผู้สมัคร ทดสอบ",
+        "email": "cand@example.com", "phone": "", "age": "", "experience": "",
+        "position": "Engineer", "attempt": 1, "attempt_label": "ครั้งที่ 1",
+        "_complete": True, "TESTSET_score": 88, "TESTSET_outcome": "P",
+    }])
+    _finish_without_a_score(page)
+    row = page.evaluate("""() => {
+        nav('p-admin');
+        renderCandidates();
+        const tr = [...document.querySelectorAll('#a-cand-tbody tr')]
+            .find(r => r.textContent.includes('cand@example.com'));
+        return tr ? tr.textContent.replace(/\s+/g, ' ') : null;
+    }""")
+    assert row is not None, "ผู้สมัครหายไปจากรายชื่อ"
+    assert "TESTSET 88" in row, f"คะแนนที่ตรวจแล้วถูกทับหายไป: {row}"
