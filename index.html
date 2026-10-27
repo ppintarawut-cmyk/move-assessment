@@ -658,7 +658,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
 <!-- ── Language toggle FAB ── -->
 <button class="dm-fab lang-fab" id="lang-fab" onclick="toggleLang()" aria-label="สลับภาษา ไทย / English" title="ภาษา / Language">
   <span class="dm-fab-icon" id="lang-label">EN</span>
-  <span class="dm-fab-label">ภาษา</span>
+  <span data-i18n="t_lang" class="dm-fab-label">ภาษา</span>
 </button>
 
 <!-- ── Dark mode FAB ── -->
@@ -681,7 +681,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
 <div class="cheat-banner" id="cheat-banner">
   ⚠️ ตรวจพบการออกจากหน้าสอบ! ระบบบันทึกการกระทำทุกครั้ง
   <span class="cheat-count" id="cheat-count">ครั้งที่ 1</span>
-  <button onclick="dismissCheat()" style="margin-left:12px;background:rgba(255,255,255,.2);border:none;color:#fff;padding:2px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-family:inherit">รับทราบ</button>
+  <button data-i18n="t_ack" onclick="dismissCheat()" style="margin-left:12px;background:rgba(255,255,255,.2);border:none;color:#fff;padding:2px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-family:inherit">รับทราบ</button>
 </div>
 
 <div id="p-landing" class="page active">
@@ -770,7 +770,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
       </div>
       <div class="alert alert-info" style="display:flex;gap:8px;align-items:flex-start">
         <span>🔒</span>
-        <span data-i18n-html="pdpa_info">ข้อมูลของท่านเก็บรักษาตาม <a href="privacy.html" target="_blank" style="color:var(--teal);text-decoration:underline">นโยบายความเป็นส่วนตัว</a> และใช้เพื่อประกอบการพิจารณาสมัครงานเท่านั้น</span>
+        <span data-i18n-html="pdpa_info">ข้อมูลของท่านเก็บรักษาตาม <a data-i18n="t_privacy" href="privacy.html" target="_blank" style="color:var(--teal);text-decoration:underline">นโยบายความเป็นส่วนตัว</a> และใช้เพื่อประกอบการพิจารณาสมัครงานเท่านั้น</span>
       </div>
       <!-- PDPA Consent -->
       <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:12px 14px;margin-bottom:10px">
@@ -803,12 +803,12 @@ textarea.q-inp:focus{border-color:var(--teal)}
     <!-- Resume banner — shown only when a test is started but not yet finished -->
     <div class="resume-banner" id="resume-banner" style="display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--teal-l);border:1px solid var(--teal-b);border-radius:var(--radius-lg);padding:12px 16px;margin-bottom:18px">
       <div style="min-width:0">
-        <p style="font-weight:600;font-size:13px;color:#085041">🔄 มีแบบทดสอบที่ค้างอยู่</p>
+        <p data-i18n="t_resume_head" style="font-weight:600;font-size:13px;color:#085041">🔄 มีแบบทดสอบที่ค้างอยู่</p>
         <p style="font-size:12px;color:#0f6e56;margin-top:2px"><strong id="resume-name"></strong> — <span id="resume-detail"></span></p>
       </div>
       <div style="display:flex;gap:8px;flex-shrink:0">
-        <button class="btn btn-sm" style="background:var(--white);color:var(--teal);border:1px solid var(--teal-b)" onclick="resumeSession()">ทำต่อ →</button>
-        <button class="btn btn-sm" style="background:none;color:var(--gray-400);border:1px solid var(--gray-200)" onclick="discardResume()">ละทิ้ง</button>
+        <button data-i18n="t_resume_go" class="btn btn-sm" style="background:var(--white);color:var(--teal);border:1px solid var(--teal-b)" onclick="resumeSession()">ทำต่อ →</button>
+        <button data-i18n="t_resume_drop" class="btn btn-sm" style="background:none;color:var(--gray-400);border:1px solid var(--gray-200)" onclick="discardResume()">ละทิ้ง</button>
       </div>
     </div>
     <div class="grid4" id="d-metrics" style="margin-bottom:16px"></div>
@@ -821,8 +821,8 @@ textarea.q-inp:focus{border-color:var(--teal)}
     <div id="d-result-btn" style="text-align:center;margin-top:16px;display:none">
       <div class="card" style="background:var(--grad-hino-soft);border:1px solid var(--teal-b)">
         <div style="font-size:30px;margin-bottom:6px">✅</div>
-        <p style="font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:4px">ทำแบบทดสอบครบทุกชุดแล้ว</p>
-        <p style="font-size:12px;color:var(--gray-500)">ผลการทดสอบถูกส่งให้ทีม HR เพื่อพิจารณาในขั้นตอนถัดไป</p>
+        <p data-i18n="t_all_done" style="font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:4px">ทำแบบทดสอบครบทุกชุดแล้ว</p>
+        <p data-i18n="t_sent_hr" style="font-size:12px;color:var(--gray-500)">ผลการทดสอบถูกส่งให้ทีม HR เพื่อพิจารณาในขั้นตอนถัดไป</p>
       </div>
     </div>
   </div>
@@ -837,12 +837,12 @@ textarea.q-inp:focus{border-color:var(--teal)}
       <img src="hino-logo.png" class="hino-mark" alt="Hino" onerror="logoFallback(this)">
       <div class="hino-co"><span class="co-name">Move Assessment</span><span class="co-sub">by Hino Motors Asia</span></div>
     </div>
-    <button class="btn btn-secondary btn-sm" onclick="goHome()">ออก</button>
+    <button data-i18n="t_exit" class="btn btn-secondary btn-sm" onclick="goHome()">ออก</button>
   </div>
   <div class="main">
     <div class="thankyou-wrap">
       <div class="thankyou-badge" id="ty-badge">✓</div>
-      <h2 id="ty-title" style="font-size:21px;font-weight:800;color:var(--gray-900);margin-bottom:10px">ขอบคุณที่ทำแบบทดสอบ</h2>
+      <h2 data-i18n="t_thanks" id="ty-title" style="font-size:21px;font-weight:800;color:var(--gray-900);margin-bottom:10px">ขอบคุณที่ทำแบบทดสอบ</h2>
       <p id="ty-note" style="font-size:14px;color:var(--gray-700);max-width:420px;line-height:1.6">คุณทำแบบทดสอบครบทุกชุดเรียบร้อยแล้ว ผลการทดสอบได้ถูกส่งให้ทีม HR ของ Hino Motors Asia เพื่อพิจารณาในขั้นตอนถัดไป</p>
       <button class="btn btn-primary" id="ty-btn" style="margin-top:26px;min-width:160px" onclick="goHome()">เสร็จสิ้น</button>
     </div>
@@ -860,7 +860,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
     </div>
     <div style="display:flex;align-items:center;gap:8px">
       <div class="timer timer-normal" id="t-timer">00:00</div>
-      <button class="btn btn-primary btn-sm" onclick="openConfirm()">ส่งข้อสอบ</button>
+      <button data-i18n="t_submit_test" class="btn btn-primary btn-sm" onclick="openConfirm()">ส่งข้อสอบ</button>
     </div>
   </div>
   <div style="height:3px;background:var(--gray-100)"><div id="t-prog-bar" class="prog-fill" style="width:0%;background:var(--teal)"></div></div>
@@ -872,9 +872,9 @@ textarea.q-inp:focus{border-color:var(--teal)}
     <!-- Navigation -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <button class="btn btn-secondary btn-sm" id="btn-prev" data-i18n="t_prev" onclick="moveQ(-1)">← ก่อนหน้า</button>
-      <span class="kbd-hint" style="font-size:11px;color:var(--gray-400)">← → เลื่อน · A B C D ตอบ</span>
+      <span data-i18n="t_kbd_hint" class="kbd-hint" style="font-size:11px;color:var(--gray-400)">← → เลื่อน · A B C D ตอบ</span>
       <button class="btn btn-secondary btn-sm" id="btn-next" data-i18n="t_next" onclick="moveQ(1)">ถัดไป →</button>
-      <button class="btn btn-primary btn-sm" id="btn-submit-last" style="display:none" onclick="openConfirm()">✓ ส่งคำตอบ</button>
+      <button data-i18n="t_submit_answers" class="btn btn-primary btn-sm" id="btn-submit-last" style="display:none" onclick="openConfirm()">✓ ส่งคำตอบ</button>
     </div>
 
     <!-- Q navigator -->
@@ -902,11 +902,11 @@ textarea.q-inp:focus{border-color:var(--teal)}
   <div class="topbar">
     <div class="hino-brand">
       <img src="hino-logo.png" class="hino-mark" alt="Hino" onerror="logoFallback(this)">
-      <div class="hino-co"><span class="co-name">Move Assessment</span><span class="co-sub">แดชบอร์ดคะแนนผู้สมัคร</span></div>
+      <div class="hino-co"><span class="co-name">Move Assessment</span><span data-i18n="t_score_dash" class="co-sub">แดชบอร์ดคะแนนผู้สมัคร</span></div>
     </div>
     <div style="display:flex;align-items:center;gap:8px">
       <button class="btn btn-primary btn-sm" id="r-pdf-btn" style="display:none" onclick="exportResultsPDF(this)">📄 Export to PDF (A4)</button>
-      <button class="btn btn-secondary btn-sm" onclick="backFromResults()">← กลับ</button>
+      <button data-i18n="t_back" class="btn btn-secondary btn-sm" onclick="backFromResults()">← กลับ</button>
     </div>
   </div>
   <div class="main onepage">
@@ -921,7 +921,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
             </svg>
             <div class="ring-inner">
               <span style="font-size:22px;font-weight:700" id="r-pct">0%</span>
-              <span style="font-size:10px;color:var(--gray-400)">เฉลี่ย</span>
+              <span data-i18n="t_avg" style="font-size:10px;color:var(--gray-400)">เฉลี่ย</span>
             </div>
           </div>
           <div style="flex:1;min-width:160px">
@@ -929,7 +929,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
             <p style="font-size:12px;color:var(--gray-400);margin-bottom:8px" id="r-pos"></p>
             <!-- Percentile bar (hidden until data available) -->
             <div id="r-percentile-bar" style="margin-bottom:12px;display:none">
-              <p style="font-size:11px;color:var(--gray-400);margin-bottom:4px">Percentile เทียบกับผู้สมัครทั้งหมด</p>
+              <p data-i18n="t_percentile" style="font-size:11px;color:var(--gray-400);margin-bottom:4px">Percentile เทียบกับผู้สมัครทั้งหมด</p>
               <div style="background:var(--gray-200);border-radius:4px;height:6px;overflow:hidden">
                 <div id="r-pct-fill" style="height:6px;border-radius:4px;background:var(--teal);width:0%;transition:width .6s ease"></div>
               </div>
@@ -940,8 +940,8 @@ textarea.q-inp:focus{border-color:var(--teal)}
         <div class="grid3" id="r-metrics" style="margin-top:14px"></div>
       </div>
       <div class="card" id="r-radar-card" style="margin-bottom:12px">
-        <p style="font-size:13px;font-weight:600;margin-bottom:4px">แผนภาพทักษะโดยรวม</p>
-        <p style="font-size:11px;color:var(--gray-400);margin-bottom:10px">คะแนนเต็ม 100 แต่ละด้าน</p>
+        <p data-i18n="t_radar" style="font-size:13px;font-weight:600;margin-bottom:4px">แผนภาพทักษะโดยรวม</p>
+        <p data-i18n="t_radar_sub" style="font-size:11px;color:var(--gray-400);margin-bottom:10px">คะแนนเต็ม 100 แต่ละด้าน</p>
         <canvas id="r-radar" height="200"></canvas>
       </div>
     </div>
@@ -949,13 +949,13 @@ textarea.q-inp:focus{border-color:var(--teal)}
     <!-- ขวา: รายละเอียดที่ยาวได้เรื่อย ๆ ตามจำนวนชุดสอบ -->
     <div class="onepage-right">
       <div class="card" id="r-bars-card" style="margin-bottom:12px">
-        <p style="font-size:13px;font-weight:600;margin-bottom:4px">คะแนนรายชุดสอบ</p>
+        <p data-i18n="t_per_test" style="font-size:13px;font-weight:600;margin-bottom:4px">คะแนนรายชุดสอบ</p>
         <p id="r-bars-note" style="font-size:11px;color:var(--gray-400);margin-bottom:14px">เส้นบนแถบคือเกณฑ์ผ่านของแต่ละชุด</p>
         <div id="r-bars"></div>
       </div>
       <div class="card" id="r-breakdown-card" style="padding:0;overflow:hidden;margin-bottom:12px">
         <div style="padding:14px 20px;border-bottom:1px solid var(--gray-100)">
-          <p style="font-size:13px;font-weight:600">รายละเอียดผลแต่ละชุดสอบ</p>
+          <p data-i18n="t_per_test_detail" style="font-size:13px;font-weight:600">รายละเอียดผลแต่ละชุดสอบ</p>
         </div>
         <div id="r-breakdown"></div>
       </div>
@@ -965,8 +965,8 @@ textarea.q-inp:focus{border-color:var(--teal)}
       <!-- Skill Breakdown Card -->
       <div class="card" style="margin-bottom:12px;padding:0;overflow:hidden" id="r-skill-card">
         <div style="padding:12px 18px;border-bottom:1px solid var(--gray-200);background:var(--gray-50)">
-          <p style="font-size:13px;font-weight:600">📊 วิเคราะห์จุดแข็ง-จุดอ่อน</p>
-          <p style="font-size:11px;color:var(--gray-400)">ใช้สำหรับ Hiring Manager ในการตั้งคำถามสัมภาษณ์เชิงลึก</p>
+          <p data-i18n="t_sw" style="font-size:13px;font-weight:600">📊 วิเคราะห์จุดแข็ง-จุดอ่อน</p>
+          <p data-i18n="t_sw_sub" style="font-size:11px;color:var(--gray-400)">ใช้สำหรับ Hiring Manager ในการตั้งคำถามสัมภาษณ์เชิงลึก</p>
         </div>
         <div id="r-skill-breakdown" style="padding:14px 18px"></div>
       </div>
@@ -980,7 +980,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
       <div class="brand" id="rv-testname">เฉลยข้อสอบ</div>
       <div style="font-size:13px;font-weight:600" id="rv-score"></div>
     </div>
-    <button class="btn btn-primary btn-sm" onclick="nav('p-dash')">กลับแดชบอร์ด</button>
+    <button data-i18n="t_back_dash" class="btn btn-primary btn-sm" onclick="nav('p-dash')">กลับแดชบอร์ด</button>
   </div>
   <div class="main">
     <div class="card" style="margin-bottom:14px">
@@ -999,15 +999,15 @@ textarea.q-inp:focus{border-color:var(--teal)}
       <img src="hino-logo.png" class="hino-mark" alt="Hino" onerror="logoFallback(this)">
       <div class="hino-co"><span class="co-name">Move Assessment</span><span class="co-sub">by Hino Motors Asia</span></div>
     </div>
-    <button class="btn btn-secondary btn-sm" onclick="nav('p-landing')">← กลับหน้าแรก</button>
+    <button data-i18n="t_back_home" class="btn btn-secondary btn-sm" onclick="nav('p-landing')">← กลับหน้าแรก</button>
   </div>
   <div style="display:flex;align-items:center;justify-content:center;padding:48px 20px">
     <div style="width:100%;max-width:360px">
       <div style="text-align:center;margin-bottom:20px">
         <h1 style="font-size:22px;font-weight:700;margin-bottom:4px">HR Admin Portal</h1>
-        <p style="font-size:13px;color:var(--gray-400)">เข้าสู่ระบบเพื่อดูผลการทดสอบ</p>
+        <p data-i18n="t_login_sub" style="font-size:13px;color:var(--gray-400)">เข้าสู่ระบบเพื่อดูผลการทดสอบ</p>
       </div>
-      <div id="login-expired" class="alert alert-warn">⏰ Session หมดอายุแล้ว กรุณาเข้าสู่ระบบใหม่</div>
+      <div data-i18n="t_session_over" id="login-expired" class="alert alert-warn">⏰ Session หมดอายุแล้ว กรุณาเข้าสู่ระบบใหม่</div>
       <div class="card">
         <div id="login-err" class="alert alert-err"></div>
         <div class="field"><label>Email</label><input id="l-user" type="email" placeholder="you@email.com" autofocus></div>
@@ -1020,7 +1020,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
         </div>
         <button class="btn btn-primary btn-full" id="login-btn" onclick="submitLogin()">เข้าสู่ระบบ</button>
       </div>
-      <p style="text-align:center;font-size:11px;color:var(--gray-400);margin-top:10px">เฉพาะเจ้าหน้าที่ HR / Admin</p>
+      <p data-i18n="t_hr_only" style="text-align:center;font-size:11px;color:var(--gray-400);margin-top:10px">เฉพาะเจ้าหน้าที่ HR / Admin</p>
     </div>
   </div>
 </div>
@@ -1040,10 +1040,10 @@ textarea.q-inp:focus{border-color:var(--teal)}
       <button class="adm-close" onclick="toggleAdminSidebar(false)" aria-label="ปิดเมนู">✕</button>
     </div>
     <!-- Main tools list (rendered by renderAdminNav) -->
-    <div class="adm-sidebar-sub" id="adm-nav-subhead">การจัดการ</div>
+    <div data-i18n="t_manage" class="adm-sidebar-sub" id="adm-nav-subhead">การจัดการ</div>
     <div id="adm-nav-list"></div>
     <div class="adm-nav-divider"></div>
-    <button class="adm-navitem danger" onclick="toggleAdminSidebar(false);adminLogout()"><span class="ico" id="logout-ico">🚪</span><span class="nav-label">ออกจากระบบ</span></button>
+    <button class="adm-navitem danger" onclick="toggleAdminSidebar(false);adminLogout()"><span class="ico" id="logout-ico">🚪</span><span data-i18n="t_signout" class="nav-label">ออกจากระบบ</span></button>
   </aside>
   <div class="topbar">
     <div style="display:flex;align-items:center;gap:12px">
@@ -1053,22 +1053,22 @@ textarea.q-inp:focus{border-color:var(--teal)}
     <div style="display:flex;align-items:center;gap:8px">
       <span id="cloud-status" style="display:none;align-items:center;font-size:11px;font-weight:600;gap:4px;padding:3px 9px;border-radius:20px;background:var(--gray-100);white-space:nowrap"></span>
       <span style="font-size:12px;color:var(--gray-400)" id="a-greet">สวัสดี <strong>Admin</strong></span>
-      <button class="btn btn-secondary btn-sm" onclick="adminLogout()">ออกจากระบบ</button>
+      <button data-i18n="t_signout" class="btn btn-secondary btn-sm" onclick="adminLogout()">ออกจากระบบ</button>
     </div>
   </div>
   <div class="expiry-banner" id="expiry-banner">
-    <span>⏰ Session จะหมดอายุใน <strong id="expiry-time">28 นาที</strong> — กรุณาบันทึกงานแล้วเข้าสู่ระบบใหม่</span>
-    <button style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--amber);text-decoration:underline;font-family:inherit" onclick="adminLogout()">ออกเดี๋ยวนี้</button>
+    <span data-i18n-html="t_expiry_warn">⏰ Session จะหมดอายุใน <strong id="expiry-time">28 นาที</strong> — กรุณาบันทึกงานแล้วเข้าสู่ระบบใหม่</span>
+    <button data-i18n="t_signout_now" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--amber);text-decoration:underline;font-family:inherit" onclick="adminLogout()">ออกเดี๋ยวนี้</button>
   </div>
   <div class="main-wide">
     <div class="grid4" id="a-metrics" style="margin-bottom:16px"></div>
     <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
       <div class="card" style="min-width:180px;padding:16px">
-        <p style="font-size:11px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Pass Rate รายชุดสอบ</p>
+        <p data-i18n="t_passrate" style="font-size:11px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Pass Rate รายชุดสอบ</p>
         <div id="a-passrate"></div>
       </div>
       <div class="card" style="flex:1;min-width:180px;padding:16px">
-        <p style="font-size:11px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">ภาพรวม Sessions</p>
+        <p data-i18n="t_sessions" style="font-size:11px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">ภาพรวม Sessions</p>
         <div class="grid2" id="a-session-sum"></div>
       </div>
     </div>
@@ -1076,26 +1076,26 @@ textarea.q-inp:focus{border-color:var(--teal)}
     <div class="card" style="margin-bottom:16px;padding:0;overflow:hidden" id="a-candidates-card">
       <div style="padding:14px 18px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between">
         <div>
-          <p style="font-size:13px;font-weight:600;margin-bottom:2px">ข้อมูลผู้สมัคร</p>
+          <p data-i18n="t_cand_info" style="font-size:13px;font-weight:600;margin-bottom:2px">ข้อมูลผู้สมัคร</p>
           <p style="font-size:11px;color:var(--gray-400)" id="a-cand-count">—</p>
         </div>
         <div style="display:flex;gap:6px">
-          <button class="btn btn-primary btn-sm" onclick="nav('p-candidates')">⚖️ เปรียบเทียบ / จัดการ →</button>
+          <button data-i18n="t_compare_manage" class="btn btn-primary btn-sm" onclick="nav('p-candidates')">⚖️ เปรียบเทียบ / จัดการ →</button>
           <button class="btn btn-secondary btn-sm" onclick="toggleCandidates()" id="a-cand-toggle">ซ่อน ▲</button>
         </div>
       </div>
       <div id="a-candidates-body" style="overflow-x:auto">
         <table style="min-width:860px">
           <thead><tr>
-            <th>ผู้สมัคร</th>
+            <th data-i18n="t_candidate">ผู้สมัคร</th>
             <th>Email</th>
-            <th>โทรศัพท์</th>
-            <th>อายุ</th>
-            <th>ประสบ.(ปี)</th>
-            <th>ตำแหน่ง</th>
-            <th>ชุดที่สอบแล้ว</th>
-            <th>ผ่าน/ทั้งหมด</th>
-            <th>คะแนนเฉลี่ย</th>
+            <th data-i18n="t_phone">โทรศัพท์</th>
+            <th data-i18n="t_age">อายุ</th>
+            <th data-i18n="t_exp_years">ประสบ.(ปี)</th>
+            <th data-i18n="t_position">ตำแหน่ง</th>
+            <th data-i18n="t_tests_taken">ชุดที่สอบแล้ว</th>
+            <th data-i18n="t_pass_total">ผ่าน/ทั้งหมด</th>
+            <th data-i18n="t_avg_score">คะแนนเฉลี่ย</th>
           </tr></thead>
           <tbody id="a-cand-tbody"></tbody>
         </table>
@@ -1107,16 +1107,16 @@ textarea.q-inp:focus{border-color:var(--teal)}
       <div class="filter-row">
         <input type="text" placeholder="🔍 ค้นหาชื่อผู้สมัคร..." id="f-name" oninput="filterAdmin()">
         <select id="f-test" onchange="filterAdmin()">
-          <option value="">ชุดสอบทั้งหมด</option>
+          <option data-i18n="t_all_tests" value="">ชุดสอบทั้งหมด</option>
           <option>IQ</option><option>EQ</option><option>ENGLISH</option>
           <option>AQ</option><option>LEADER</option><option>EXCEL</option><option>PM</option>
         </select>
         <select id="f-out" onchange="filterAdmin()">
-          <option value="">ผลทั้งหมด</option>
-          <option value="P">P — ผ่าน</option>
-          <option value="NP">NP — ไม่ผ่าน</option>
+          <option data-i18n="t_all_results" value="">ผลทั้งหมด</option>
+          <option data-i18n="t_opt_pass" value="P">P — ผ่าน</option>
+          <option data-i18n="t_opt_fail" value="NP">NP — ไม่ผ่าน</option>
         </select>
-        <button class="btn btn-secondary btn-sm" onclick="resetFilter()">ล้างตัวกรอง</button>
+        <button data-i18n="t_clear_filter" class="btn btn-secondary btn-sm" onclick="resetFilter()">ล้างตัวกรอง</button>
       </div>
       <p style="font-size:12px;color:var(--gray-400)" id="f-count">พบ 0 รายการ</p>
     </div>
@@ -1124,7 +1124,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
       <div class="tbl-wrap">
         <table>
           <thead><tr>
-            <th>ผู้สมัคร</th><th>ชุดสอบ</th><th>วัน/เวลา</th><th>เวลาที่ใช้</th><th>คะแนน</th><th>ผล</th><th></th>
+            <th data-i18n="t_candidate">ผู้สมัคร</th><th data-i18n="t_test_set">ชุดสอบ</th><th data-i18n="t_datetime">วัน/เวลา</th><th data-i18n="t_time_used">เวลาที่ใช้</th><th data-i18n="t_score">คะแนน</th><th data-i18n="t_result">ผล</th><th></th>
           </tr></thead>
           <tbody id="a-tbody"></tbody>
         </table>
@@ -1138,9 +1138,9 @@ textarea.q-inp:focus{border-color:var(--teal)}
 ══════════════════════════════════════════════ -->
 <div id="p-candidates" class="page">
   <div class="topbar">
-    <div><div class="brand">Move Assessment Admin</div><div class="topbar-title">ผู้สมัคร</div></div>
+    <div><div class="brand">Move Assessment Admin</div><div data-i18n="t_candidate" class="topbar-title">ผู้สมัคร</div></div>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-secondary btn-sm" onclick="nav('p-admin')">← กลับ</button>
+      <button data-i18n="t_back" class="btn btn-secondary btn-sm" onclick="nav('p-admin')">← กลับ</button>
     </div>
   </div>
   <div class="main-wide">
@@ -1148,24 +1148,24 @@ textarea.q-inp:focus{border-color:var(--teal)}
       <div class="cand-toolbar">
         <input type="text" class="grow" id="cand-search" placeholder="🔍 ค้นหาชื่อ / ตำแหน่ง / อีเมล..." oninput="onCandSearch()">
         <select id="cand-sort" onchange="onCandControls()" title="เรียงตาม">
-          <option value="date">🕒 วันเวลาที่สอบ</option>
-          <option value="name">🔤 ชื่อ</option>
-          <option value="position">💼 ตำแหน่ง</option>
-          <option value="avg">📊 คะแนนเฉลี่ย</option>
+          <option data-i18n="t_sort_date" value="date">🕒 วันเวลาที่สอบ</option>
+          <option data-i18n="t_sort_name" value="name">🔤 ชื่อ</option>
+          <option data-i18n="t_sort_pos" value="position">💼 ตำแหน่ง</option>
+          <option data-i18n="t_sort_avg" value="avg">📊 คะแนนเฉลี่ย</option>
         </select>
         <button class="btn btn-secondary btn-sm" id="cand-dir" onclick="toggleCandDir()" title="สลับทิศทาง">↓ มาก→น้อย</button>
         <select id="cand-pagesize" onchange="onCandControls()" title="ต่อหน้า">
-          <option value="10">10 / หน้า</option>
-          <option value="25">25 / หน้า</option>
-          <option value="50">50 / หน้า</option>
+          <option data-i18n="t_per10" value="10">10 / หน้า</option>
+          <option data-i18n="t_per25" value="25">25 / หน้า</option>
+          <option data-i18n="t_per50" value="50">50 / หน้า</option>
         </select>
       </div>
       <!-- selection / bulk-action bar -->
       <div class="sel-bar" id="cand-selbar" style="display:none">
         <span class="sel-count" id="cand-selcount">เลือกแล้ว 0 คน</span>
-        <button class="btn btn-primary btn-sm" onclick="openCompare()">⚖️ เปรียบเทียบ</button>
-        <button class="btn btn-sm" id="cand-delbtn" style="background:var(--red-l);color:var(--red)" onclick="bulkDeleteCandidates()">🗑 ลบที่เลือก</button>
-        <button class="btn btn-secondary btn-sm" onclick="clearCandSelection()">ล้างการเลือก</button>
+        <button data-i18n="t_compare" class="btn btn-primary btn-sm" onclick="openCompare()">⚖️ เปรียบเทียบ</button>
+        <button data-i18n="t_delete_sel" class="btn btn-sm" id="cand-delbtn" style="background:var(--red-l);color:var(--red)" onclick="bulkDeleteCandidates()">🗑 ลบที่เลือก</button>
+        <button data-i18n="t_clear_sel" class="btn btn-secondary btn-sm" onclick="clearCandSelection()">ล้างการเลือก</button>
       </div>
     </div>
     <div class="card" style="padding:0;overflow:hidden;margin-top:12px">
@@ -1173,13 +1173,13 @@ textarea.q-inp:focus{border-color:var(--teal)}
         <table style="min-width:820px">
           <thead><tr>
             <th style="width:34px;text-align:center"><input type="checkbox" class="cand-check" id="cand-selall" onclick="toggleCandSelectAll(this)" title="เลือกทั้งหน้า"></th>
-            <th class="sortable" onclick="setCandSort('name')">ผู้สมัคร <span class="sort-ind" id="si-name"></span></th>
-            <th class="sortable" onclick="setCandSort('position')">ตำแหน่ง <span class="sort-ind" id="si-position"></span></th>
-            <th style="text-align:center">อายุ</th>
-            <th style="text-align:center">ประสบ.(ปี)</th>
-            <th class="sortable" onclick="setCandSort('date')">วันเวลาที่สอบ <span class="sort-ind" id="si-date"></span></th>
-            <th>ผลสอบ</th>
-            <th class="sortable" style="text-align:center" onclick="setCandSort('avg')">เฉลี่ย <span class="sort-ind" id="si-avg"></span></th>
+            <th class="sortable" onclick="setCandSort('name')"><span data-i18n="t_candidate">ผู้สมัคร</span> <span class="sort-ind" id="si-name"></span></th>
+            <th class="sortable" onclick="setCandSort('position')"><span data-i18n="t_position">ตำแหน่ง</span> <span class="sort-ind" id="si-position"></span></th>
+            <th data-i18n="t_age" style="text-align:center">อายุ</th>
+            <th data-i18n="t_exp_years" style="text-align:center">ประสบ.(ปี)</th>
+            <th class="sortable" onclick="setCandSort('date')"><span data-i18n="t_date_taken">วันเวลาที่สอบ</span> <span class="sort-ind" id="si-date"></span></th>
+            <th data-i18n="t_results">ผลสอบ</th>
+            <th class="sortable" style="text-align:center" onclick="setCandSort('avg')"><span data-i18n="t_avg">เฉลี่ย</span> <span class="sort-ind" id="si-avg"></span></th>
             <th></th>
           </tr></thead>
           <tbody id="cand-tbody"></tbody>
@@ -1197,12 +1197,12 @@ textarea.q-inp:focus{border-color:var(--teal)}
 <div class="overlay" id="mod-compare">
   <div class="modal modal-xl">
     <div class="modal-head">
-      <span style="font-weight:600">⚖️ เปรียบเทียบผู้สมัคร</span>
+      <span data-i18n="t_compare_cands" style="font-weight:600">⚖️ เปรียบเทียบผู้สมัคร</span>
       <button onclick="closeModal('mod-compare')" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--gray-400)">✕</button>
     </div>
     <div class="modal-body" id="cmp-body" style="max-height:70vh"></div>
     <div class="modal-foot">
-      <button class="btn btn-secondary" onclick="closeModal('mod-compare')">ปิด</button>
+      <button data-i18n="t_close" class="btn btn-secondary" onclick="closeModal('mod-compare')">ปิด</button>
       <button class="btn btn-secondary" id="cmp-xlsx-btn" onclick="openExportPreview('xlsx')">📊 Export Excel</button>
       <button class="btn btn-primary" id="cmp-pdf-btn" onclick="openExportPreview('pdf')">📄 Export PDF</button>
     </div>
@@ -1221,7 +1221,7 @@ textarea.q-inp:focus{border-color:var(--teal)}
       <div id="exp-preview" style="background:#fff;color:#111;padding:18px;border-radius:8px;border:1px solid var(--gray-200)"></div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-secondary" onclick="closeModal('mod-export-preview')">ยกเลิก</button>
+      <button data-i18n="t_cancel" class="btn btn-secondary" onclick="closeModal('mod-export-preview')">ยกเลิก</button>
       <button class="btn btn-primary" id="exp-confirm-btn" onclick="confirmExport()">⬇ ดาวน์โหลด</button>
     </div>
   </div>
@@ -1231,13 +1231,13 @@ textarea.q-inp:focus{border-color:var(--teal)}
 <!-- Confirm submit -->
 <div class="overlay" id="mod-confirm">
   <div class="modal">
-    <div class="modal-head"><span style="font-weight:600">ยืนยันการส่งข้อสอบ?</span></div>
+    <div class="modal-head"><span data-i18n="t_confirm_submit" style="font-weight:600">ยืนยันการส่งข้อสอบ?</span></div>
     <div class="modal-body">
       <div id="confirm-warn" class="alert alert-warn" style="margin-bottom:0"></div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-secondary" onclick="closeModal('mod-confirm')">ยังไม่ส่ง</button>
-      <button class="btn btn-primary" id="confirm-btn" onclick="doSubmit()">ส่งข้อสอบ</button>
+      <button data-i18n="t_not_yet" class="btn btn-secondary" onclick="closeModal('mod-confirm')">ยังไม่ส่ง</button>
+      <button data-i18n="t_submit_test" class="btn btn-primary" id="confirm-btn" onclick="doSubmit()">ส่งข้อสอบ</button>
     </div>
   </div>
 </div>
@@ -1474,6 +1474,117 @@ const I18N = {
   confirm_submit:{ th:'ส่งคำตอบ',           en:'Submit answers' },
   // ── Toggle ──
   lang_label:    { th:'EN', en:'ไทย' },   // shows the language you can switch TO
+  t_lang: { th:"ภาษา", en:"Language" },
+  t_ack: { th:"รับทราบ", en:"Got it" },
+  t_privacy: { th:"นโยบายความเป็นส่วนตัว", en:"Privacy notice" },
+  t_resume_head: { th:"🔄 มีแบบทดสอบที่ค้างอยู่", en:"🔄 You have a test in progress" },
+  t_resume_go: { th:"ทำต่อ →", en:"Continue →" },
+  t_resume_drop: { th:"ละทิ้ง", en:"Discard" },
+  t_all_done: { th:"ทำแบบทดสอบครบทุกชุดแล้ว", en:"All tests completed" },
+  t_sent_hr: { th:"ผลการทดสอบถูกส่งให้ทีม HR เพื่อพิจารณาในขั้นตอนถัดไป", en:"Your results have been sent to the HR team for the next step" },
+  t_exit: { th:"ออก", en:"Exit" },
+  t_thanks: { th:"ขอบคุณที่ทำแบบทดสอบ", en:"Thank you for completing the assessment" },
+  t_submit_test: { th:"ส่งข้อสอบ", en:"Submit test" },
+  t_kbd_hint: { th:"← → เลื่อน · A B C D ตอบ", en:"← → to move · A B C D to answer" },
+  t_submit_answers: { th:"✓ ส่งคำตอบ", en:"✓ Submit answers" },
+  t_score_dash: { th:"แดชบอร์ดคะแนนผู้สมัคร", en:"Candidate score dashboard" },
+  t_back: { th:"← กลับ", en:"← Back" },
+  t_avg: { th:"เฉลี่ย", en:"Average" },
+  t_percentile: { th:"Percentile เทียบกับผู้สมัครทั้งหมด", en:"Percentile against all candidates" },
+  t_radar: { th:"แผนภาพทักษะโดยรวม", en:"Overall skills chart" },
+  t_radar_sub: { th:"คะแนนเต็ม 100 แต่ละด้าน", en:"100 points per area" },
+  t_per_test: { th:"คะแนนรายชุดสอบ", en:"Score by test" },
+  t_per_test_detail: { th:"รายละเอียดผลแต่ละชุดสอบ", en:"Result detail by test" },
+  t_sw: { th:"📊 วิเคราะห์จุดแข็ง-จุดอ่อน", en:"📊 Strengths and weaknesses" },
+  t_sw_sub: { th:"ใช้สำหรับ Hiring Manager ในการตั้งคำถามสัมภาษณ์เชิงลึก", en:"For hiring managers preparing in-depth interview questions" },
+  t_back_dash: { th:"กลับแดชบอร์ด", en:"Back to dashboard" },
+  t_back_home: { th:"← กลับหน้าแรก", en:"← Back to start" },
+  t_login_sub: { th:"เข้าสู่ระบบเพื่อดูผลการทดสอบ", en:"Sign in to view assessment results" },
+  t_session_over: { th:"⏰ Session หมดอายุแล้ว กรุณาเข้าสู่ระบบใหม่", en:"⏰ Your session has expired — please sign in again" },
+  t_hr_only: { th:"เฉพาะเจ้าหน้าที่ HR / Admin", en:"HR and administrators only" },
+  t_manage: { th:"การจัดการ", en:"Manage" },
+  t_signout: { th:"ออกจากระบบ", en:"Sign out" },
+  t_signout_now: { th:"ออกเดี๋ยวนี้", en:"Sign out now" },
+  t_passrate: { th:"Pass Rate รายชุดสอบ", en:"Pass rate by test" },
+  t_sessions: { th:"ภาพรวม Sessions", en:"Sessions overview" },
+  t_cand_info: { th:"ข้อมูลผู้สมัคร", en:"Candidate details" },
+  t_compare_manage: { th:"⚖️ เปรียบเทียบ / จัดการ →", en:"⚖️ Compare / manage →" },
+  t_candidate: { th:"ผู้สมัคร", en:"Candidate" },
+  t_phone: { th:"โทรศัพท์", en:"Phone" },
+  t_age: { th:"อายุ", en:"Age" },
+  t_exp_years: { th:"ประสบ.(ปี)", en:"Exp. (yrs)" },
+  t_position: { th:"ตำแหน่ง", en:"Position" },
+  t_tests_taken: { th:"ชุดที่สอบแล้ว", en:"Tests taken" },
+  t_pass_total: { th:"ผ่าน/ทั้งหมด", en:"Passed / total" },
+  t_avg_score: { th:"คะแนนเฉลี่ย", en:"Average score" },
+  t_all_tests: { th:"ชุดสอบทั้งหมด", en:"All tests" },
+  t_all_results: { th:"ผลทั้งหมด", en:"All results" },
+  t_opt_pass: { th:"P — ผ่าน", en:"P — Passed" },
+  t_opt_fail: { th:"NP — ไม่ผ่าน", en:"NP — Not passed" },
+  t_clear_filter: { th:"ล้างตัวกรอง", en:"Clear filters" },
+  t_datetime: { th:"วัน/เวลา", en:"Date / time" },
+  t_time_used: { th:"เวลาที่ใช้", en:"Time used" },
+  t_score: { th:"คะแนน", en:"Score" },
+  t_result: { th:"ผล", en:"Result" },
+  t_sort_date: { th:"🕒 วันเวลาที่สอบ", en:"🕒 Date taken" },
+  t_sort_name: { th:"🔤 ชื่อ", en:"🔤 Name" },
+  t_sort_pos: { th:"💼 ตำแหน่ง", en:"💼 Position" },
+  t_sort_avg: { th:"📊 คะแนนเฉลี่ย", en:"📊 Average score" },
+  t_per10: { th:"10 / หน้า", en:"10 / page" },
+  t_per25: { th:"25 / หน้า", en:"25 / page" },
+  t_per50: { th:"50 / หน้า", en:"50 / page" },
+  t_compare: { th:"⚖️ เปรียบเทียบ", en:"⚖️ Compare" },
+  t_delete_sel: { th:"🗑 ลบที่เลือก", en:"🗑 Delete selected" },
+  t_clear_sel: { th:"ล้างการเลือก", en:"Clear selection" },
+  t_results: { th:"ผลสอบ", en:"Results" },
+  t_compare_cands: { th:"⚖️ เปรียบเทียบผู้สมัคร", en:"⚖️ Compare candidates" },
+  t_close: { th:"ปิด", en:"Close" },
+  t_cancel: { th:"ยกเลิก", en:"Cancel" },
+  t_confirm_submit: { th:"ยืนยันการส่งข้อสอบ?", en:"Submit this test?" },
+  t_not_yet: { th:"ยังไม่ส่ง", en:"Not yet" },
+  t_q_editor: { th:"จัดการข้อสอบ", en:"Question editor" },
+  t_save_icon: { th:"💾 บันทึก", en:"💾 Save" },
+  t_back_admin: { th:"← กลับ Admin", en:"← Back to admin" },
+  t_viewer_only: { th:"คุณดูสิทธิ์ได้อย่างเดียว — เฉพาะ <strong>Super Admin</strong> เท่านั้นที่ปรับสิทธิ์ได้", en:"You have view-only access — only <strong>Super Admin</strong> can change these" },
+  t_pos_note: { th:"กำหนดว่าผู้สมัครแต่ละ <strong data-i18n=\"t_position\">ตำแหน่ง</strong> จะต้องทำชุดข้อสอบใดบ้าง — ผู้สมัครจะเลือกตำแหน่งนี้ตอนลงทะเบียน แล้วระบบจับคู่ชุดข้อสอบให้อัตโนมัติ ค่าที่บันทึกมีผลกับผู้สมัครที่ลงทะเบียนใหม่ทันที", en:"Choose which tests a candidate in each <strong data-i18n=\"t_position\">Position</strong> has to sit" },
+  t_code_label: { th:"รหัสชุดสอบ <small data-i18n=\"t_code_hint\" style=\"color:var(--gray-400)\">(อังกฤษ/ตัวเลข ไม่เว้นวรรค)</small>", en:"Test code <small style=\"color:var(--gray-400)\">(letters and digits, no spaces)</small>" },
+  t_graded_label: { th:"ให้คะแนนแบบไล่ระดับ 0–2 ต่อข้อ <small data-i18n=\"t_graded_hint\" style=\"color:var(--gray-400)\">(เช่น EQ / ภาวะผู้นำ) — ไม่ติ๊ก = ถูก/ผิด</small>", en:"Score each question on a 0–2 scale <small style=\"color:var(--gray-400)\">(e.g. EQ / leadership) — unticked means right or wrong</small>" },
+  t_date_taken: { th:"วันเวลาที่สอบ", en:"Date taken" },
+  t_perm_note: { th:"เลือกว่าผู้ดูแลแต่ละระดับใช้ฟีเจอร์ใดได้บ้าง — เปลี่ยนแล้ว<strong data-i18n=\"t_takes_effect\">มีผลทันที</strong>", en:"Choose which features each administrator level can use — changes <strong>take effect immediately</strong>" },
+  t_expiry_warn: { th:'⏰ Session จะหมดอายุใน <strong id="expiry-time">28 นาที</strong> — กรุณาบันทึกงานแล้วเข้าสู่ระบบใหม่', en:'⏰ Your session expires in <strong id="expiry-time">28 minutes</strong> — please save your work and sign in again' },
+  t_test_set: { th:"ชุดสอบ", en:"Test" },
+  t_test_label: { th:"ชุดสอบ:", en:"Test:" },
+  t_add_q: { th:"＋ เพิ่มข้อสอบ", en:"＋ Add question" },
+  t_edit_intro: { th:"แก้ไขข้อแนะนำก่อนสอบ", en:"Edit pre-test instructions" },
+  t_pick_test_intro: { th:"เลือกชุดสอบที่ต้องการแก้ไขข้อแนะนำ", en:"Choose the test whose instructions you want to edit" },
+  t_intro_title: { th:"ชื่อหัวข้อ / Title", en:"Heading / title" },
+  t_intro_body: { th:"ข้อแนะนำ / ข้อความ (รองรับ Markdown เบื้องต้น)", en:"Instructions / text (basic Markdown supported)" },
+  t_intro_image: { th:"🖼 รูปภาพประกอบ (ถ้ามี)", en:"🖼 Illustration (optional)" },
+  t_preview: { th:"ตัวอย่าง Preview", en:"Preview" },
+  t_manage_admins: { th:"จัดการผู้ดูแลระบบ", en:"Manage administrators" },
+  t_add_admin: { th:"＋ เพิ่มผู้ดูแล", en:"＋ Add administrator" },
+  t_perms: { th:"🔐 สิทธิ์การเข้าถึงฟีเจอร์", en:"🔐 Feature permissions" },
+  t_takes_effect: { th:"มีผลทันที", en:"takes effect immediately" },
+  t_reset_default: { th:"↺ คืนค่าเริ่มต้น", en:"↺ Reset to default" },
+  t_admin_accounts: { th:"บัญชีผู้ดูแลระบบ", en:"Administrator accounts" },
+  t_tests_by_pos: { th:"ชุดข้อสอบตามตำแหน่ง", en:"Tests by position" },
+  t_add_pos: { th:"＋ เพิ่มตำแหน่ง", en:"＋ Add position" },
+  t_display_name: { th:"ชื่อแสดง", en:"Display name" },
+  t_used_to_login: { th:"(ใช้ล็อกอิน)", en:"(used to sign in)" },
+  t_min6: { th:"(อย่างน้อย 6 ตัวอักษร)", en:"(at least 6 characters)" },
+  t_role_level: { th:"ระดับสิทธิ์", en:"Role" },
+  t_admin_note: { th:"🔒 บัญชีถูกสร้างบน Firebase Auth และเก็บบทบาทบน cloud — ล็อกอินได้ทุกเครื่อง · รหัสผ่านเปลี่ยน/รีเซ็ตได้ที่ Firebase Console", en:"🔒 Accounts are created in Firebase Auth with their role stored in the cloud — they work on any device. Passwords are changed or reset in the Firebase console." },
+  t_save: { th:"บันทึก", en:"Save" },
+  t_btn_dash: { th:"📊 แดชบอร์ดคะแนน", en:"📊 Score dashboard" },
+  t_btn_pdf: { th:"📄 ดาวน์โหลด PDF", en:"📄 Download PDF" },
+  t_add_cat: { th:"➕ เพิ่มหมวดหมู่ข้อสอบ", en:"➕ Add a test category" },
+  t_cat_th: { th:"ชื่อหมวดหมู่ (ภาษาไทย)", en:"Category name (Thai)" },
+  t_cat_en: { th:"ชื่อ (English) — สำหรับรายงาน/PDF", en:"Name (English) — for reports and PDFs" },
+  t_code_hint: { th:"(อังกฤษ/ตัวเลข ไม่เว้นวรรค)", en:"(letters and digits, no spaces)" },
+  t_minutes: { th:"เวลา (นาที)", en:"Time (minutes)" },
+  t_pass_mark: { th:"เกณฑ์ผ่าน (0–100)", en:"Pass mark (0–100)" },
+  t_graded_hint: { th:"(เช่น EQ / ภาวะผู้นำ) — ไม่ติ๊ก = ถูก/ผิด", en:"(e.g. EQ / leadership) — unticked means right or wrong" },
+  t_create_cat: { th:"สร้างหมวดหมู่", en:"Create category" },
 };
 
 function t18n(key){ const e = I18N[key]; return e ? (e[LANG] || e.th) : key; }
@@ -3466,18 +3577,18 @@ document.querySelector('#p-register .alert-info').style.display='flex';
 ══════════════════════════════════════════════ -->
 <div id="p-question-editor" class="page">
   <div class="topbar">
-    <div><div class="brand">Move Assessment Admin</div><div class="topbar-title">จัดการข้อสอบ</div></div>
+    <div><div class="brand">Move Assessment Admin</div><div data-i18n="t_q_editor" class="topbar-title">จัดการข้อสอบ</div></div>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-primary btn-sm" onclick="saveQuestions()">💾 บันทึก</button>
-      <button class="btn btn-secondary btn-sm" onclick="nav('p-admin')">← กลับ Admin</button>
+      <button data-i18n="t_save_icon" class="btn btn-primary btn-sm" onclick="saveQuestions()">💾 บันทึก</button>
+      <button data-i18n="t_back_admin" class="btn btn-secondary btn-sm" onclick="nav('p-admin')">← กลับ Admin</button>
     </div>
   </div>
   <div class="main-wide">
     <!-- Test set selector -->
     <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
-      <label style="font-size:13px;font-weight:500">ชุดสอบ:</label>
+      <label data-i18n="t_test_label" style="font-size:13px;font-weight:500">ชุดสอบ:</label>
       <div style="display:flex;gap:6px;flex-wrap:wrap" id="qe-tabs"></div>
-      <button class="btn btn-secondary btn-sm" onclick="addQuestion()" style="margin-left:auto">＋ เพิ่มข้อสอบ</button>
+      <button data-i18n="t_add_q" class="btn btn-secondary btn-sm" onclick="addQuestion()" style="margin-left:auto">＋ เพิ่มข้อสอบ</button>
     </div>
     <div id="qe-meta" style="margin-bottom:16px"></div>
     <div id="qe-list"></div>
@@ -3512,31 +3623,31 @@ document.querySelector('#p-register .alert-info').style.display='flex';
 ══════════════════════════════════════════════ -->
 <div id="p-instruction-editor" class="page">
   <div class="topbar">
-    <div><div class="brand">Move Assessment Admin</div><div class="topbar-title">แก้ไขข้อแนะนำก่อนสอบ</div></div>
+    <div><div class="brand">Move Assessment Admin</div><div data-i18n="t_edit_intro" class="topbar-title">แก้ไขข้อแนะนำก่อนสอบ</div></div>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-primary btn-sm" onclick="saveInstruction()">💾 บันทึก</button>
-      <button class="btn btn-secondary btn-sm" onclick="nav('p-admin')">← กลับ</button>
+      <button data-i18n="t_save_icon" class="btn btn-primary btn-sm" onclick="saveInstruction()">💾 บันทึก</button>
+      <button data-i18n="t_back" class="btn btn-secondary btn-sm" onclick="nav('p-admin')">← กลับ</button>
     </div>
   </div>
   <div class="main" style="max-width:700px">
     <div class="card" style="margin-bottom:12px">
-      <p style="font-size:13px;font-weight:500;margin-bottom:12px">เลือกชุดสอบที่ต้องการแก้ไขข้อแนะนำ</p>
+      <p data-i18n="t_pick_test_intro" style="font-size:13px;font-weight:500;margin-bottom:12px">เลือกชุดสอบที่ต้องการแก้ไขข้อแนะนำ</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px" id="instr-tabs"></div>
       <div class="field">
-        <label>ชื่อหัวข้อ / Title</label>
+        <label data-i18n="t_intro_title">ชื่อหัวข้อ / Title</label>
         <input type="text" id="instr-title" placeholder="เช่น คำชี้แจงการสอบ IQ">
       </div>
       <div class="field">
-        <label>ข้อแนะนำ / ข้อความ (รองรับ Markdown เบื้องต้น)</label>
+        <label data-i18n="t_intro_body">ข้อแนะนำ / ข้อความ (รองรับ Markdown เบื้องต้น)</label>
         <textarea id="instr-body" class="q-inp" style="min-height:160px" placeholder="พิมพ์คำแนะนำ คำชี้แจง หรือกติกาการสอบ..."></textarea>
       </div>
       <div class="field">
-        <label>🖼 รูปภาพประกอบ (ถ้ามี)</label>
+        <label data-i18n="t_intro_image">🖼 รูปภาพประกอบ (ถ้ามี)</label>
         <input type="file" accept="image/*" onchange="instrSetImage(this)" style="font-size:13px">
         <div id="instr-img-preview" style="margin-top:8px"></div>
       </div>
       <div style="background:var(--gray-50);border-radius:var(--radius-lg);padding:14px;margin-top:4px">
-        <p style="font-size:12px;font-weight:500;color:var(--gray-500);margin-bottom:8px">ตัวอย่าง Preview</p>
+        <p data-i18n="t_preview" style="font-size:12px;font-weight:500;color:var(--gray-500);margin-bottom:8px">ตัวอย่าง Preview</p>
         <div id="instr-preview-body" class="instruction-body" style="font-size:13px"></div>
       </div>
     </div>
@@ -3548,10 +3659,10 @@ document.querySelector('#p-register .alert-info').style.display='flex';
 ══════════════════════════════════════════════ -->
 <div id="p-collab" class="page">
   <div class="topbar">
-    <div><div class="brand">Move Assessment Admin</div><div class="topbar-title">จัดการผู้ดูแลระบบ</div></div>
+    <div><div class="brand">Move Assessment Admin</div><div data-i18n="t_manage_admins" class="topbar-title">จัดการผู้ดูแลระบบ</div></div>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-primary btn-sm" onclick="openAddUser()">＋ เพิ่มผู้ดูแล</button>
-      <button class="btn btn-secondary btn-sm" onclick="nav('p-admin')">← กลับ</button>
+      <button data-i18n="t_add_admin" class="btn btn-primary btn-sm" onclick="openAddUser()">＋ เพิ่มผู้ดูแล</button>
+      <button data-i18n="t_back" class="btn btn-secondary btn-sm" onclick="nav('p-admin')">← กลับ</button>
     </div>
   </div>
   <div class="main" style="max-width:860px">
@@ -3559,20 +3670,20 @@ document.querySelector('#p-register .alert-info').style.display='flex';
     <div class="card" style="margin-bottom:14px;padding:18px 20px">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px">
         <div>
-          <div style="font-size:15px;font-weight:700;color:var(--gray-900);display:flex;align-items:center;gap:7px">🔐 สิทธิ์การเข้าถึงฟีเจอร์</div>
-          <div style="font-size:12px;color:var(--gray-400);margin-top:3px;line-height:1.5">เลือกว่าผู้ดูแลแต่ละระดับใช้ฟีเจอร์ใดได้บ้าง — เปลี่ยนแล้ว<strong>มีผลทันที</strong></div>
+          <div data-i18n="t_perms" style="font-size:15px;font-weight:700;color:var(--gray-900);display:flex;align-items:center;gap:7px">🔐 สิทธิ์การเข้าถึงฟีเจอร์</div>
+          <div data-i18n-html="t_perm_note" style="font-size:12px;color:var(--gray-400);margin-top:3px;line-height:1.5">เลือกว่าผู้ดูแลแต่ละระดับใช้ฟีเจอร์ใดได้บ้าง — เปลี่ยนแล้ว<strong data-i18n="t_takes_effect">มีผลทันที</strong></div>
         </div>
-        <button class="btn btn-secondary btn-sm" onclick="resetRolePerms()" id="perm-reset-btn">↺ คืนค่าเริ่มต้น</button>
+        <button data-i18n="t_reset_default" class="btn btn-secondary btn-sm" onclick="resetRolePerms()" id="perm-reset-btn">↺ คืนค่าเริ่มต้น</button>
       </div>
       <div id="perm-readonly-note" class="alert alert-info" style="display:none;align-items:center;gap:8px;margin-top:12px;font-size:12.5px">
-        <span>👁</span><span>คุณดูสิทธิ์ได้อย่างเดียว — เฉพาะ <strong>Super Admin</strong> เท่านั้นที่ปรับสิทธิ์ได้</span>
+        <span>👁</span><span data-i18n-html="t_viewer_only">คุณดูสิทธิ์ได้อย่างเดียว — เฉพาะ <strong>Super Admin</strong> เท่านั้นที่ปรับสิทธิ์ได้</span>
       </div>
       <div style="overflow-x:auto;margin-top:14px">
         <div id="perm-matrix"></div>
       </div>
     </div>
     <!-- User list -->
-    <div style="font-size:12px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.05em;margin:0 4px 8px">บัญชีผู้ดูแลระบบ</div>
+    <div data-i18n="t_admin_accounts" style="font-size:12px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.05em;margin:0 4px 8px">บัญชีผู้ดูแลระบบ</div>
     <div class="card" style="padding:4px 20px" id="collab-list"></div>
   </div>
 </div>
@@ -3582,21 +3693,21 @@ document.querySelector('#p-register .alert-info').style.display='flex';
 ══════════════════════════════════════════════ -->
 <div id="p-position-editor" class="page">
   <div class="topbar">
-    <div><div class="brand">Move Assessment Admin</div><div class="topbar-title">ชุดข้อสอบตามตำแหน่ง</div></div>
+    <div><div class="brand">Move Assessment Admin</div><div data-i18n="t_tests_by_pos" class="topbar-title">ชุดข้อสอบตามตำแหน่ง</div></div>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-secondary btn-sm" onclick="peAddGroup()">＋ เพิ่มตำแหน่ง</button>
-      <button class="btn btn-primary btn-sm" onclick="savePositionEditor(this)">💾 บันทึก</button>
-      <button class="btn btn-secondary btn-sm" onclick="nav('p-admin')">← กลับ</button>
+      <button data-i18n="t_add_pos" class="btn btn-secondary btn-sm" onclick="peAddGroup()">＋ เพิ่มตำแหน่ง</button>
+      <button data-i18n="t_save_icon" class="btn btn-primary btn-sm" onclick="savePositionEditor(this)">💾 บันทึก</button>
+      <button data-i18n="t_back" class="btn btn-secondary btn-sm" onclick="nav('p-admin')">← กลับ</button>
     </div>
   </div>
   <div class="main" style="max-width:760px">
     <div class="alert alert-info" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:14px">
       <span>🎯</span>
-      <span style="font-size:12.5px;line-height:1.6">กำหนดว่าผู้สมัครแต่ละ <strong>ตำแหน่ง</strong> จะต้องทำชุดข้อสอบใดบ้าง — ผู้สมัครจะเลือกตำแหน่งนี้ตอนลงทะเบียน แล้วระบบจับคู่ชุดข้อสอบให้อัตโนมัติ ค่าที่บันทึกมีผลกับผู้สมัครที่ลงทะเบียนใหม่ทันที</span>
+      <span data-i18n-html="t_pos_note" style="font-size:12.5px;line-height:1.6">กำหนดว่าผู้สมัครแต่ละ <strong data-i18n="t_position">ตำแหน่ง</strong> จะต้องทำชุดข้อสอบใดบ้าง — ผู้สมัครจะเลือกตำแหน่งนี้ตอนลงทะเบียน แล้วระบบจับคู่ชุดข้อสอบให้อัตโนมัติ ค่าที่บันทึกมีผลกับผู้สมัครที่ลงทะเบียนใหม่ทันที</span>
     </div>
     <div id="pe-body"></div>
     <div style="display:flex;gap:8px;margin-top:14px">
-      <button class="btn btn-secondary btn-sm" onclick="resetPositionPresets()">↺ คืนค่าเริ่มต้น</button>
+      <button data-i18n="t_reset_default" class="btn btn-secondary btn-sm" onclick="resetPositionPresets()">↺ คืนค่าเริ่มต้น</button>
     </div>
   </div>
 </div>
@@ -3606,11 +3717,11 @@ document.querySelector('#p-register .alert-info').style.display='flex';
   <div class="modal">
     <div class="modal-head"><span style="font-weight:600" id="mod-adduser-title">เพิ่มผู้ดูแลระบบ</span><button onclick="closeModal('mod-adduser')" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--gray-400)">✕</button></div>
     <div class="modal-body">
-      <div class="field"><label>ชื่อแสดง</label><input type="text" id="nu-name" placeholder="เช่น สมชาย ใจดี"></div>
-      <div class="field"><label>Email <span style="font-weight:400;color:var(--gray-400);font-size:11px">(ใช้ล็อกอิน)</span></label><input type="email" id="nu-email" placeholder="somchai@company.com"></div>
-      <div class="field" id="nu-pass-field"><label>Password <span style="font-weight:400;color:var(--gray-400);font-size:11px">(อย่างน้อย 6 ตัวอักษร)</span></label><input type="password" id="nu-pass" placeholder="••••••••"></div>
+      <div class="field"><label data-i18n="t_display_name">ชื่อแสดง</label><input type="text" id="nu-name" placeholder="เช่น สมชาย ใจดี"></div>
+      <div class="field"><label>Email <span data-i18n="t_used_to_login" style="font-weight:400;color:var(--gray-400);font-size:11px">(ใช้ล็อกอิน)</span></label><input type="email" id="nu-email" placeholder="somchai@company.com"></div>
+      <div class="field" id="nu-pass-field"><label>Password <span data-i18n="t_min6" style="font-weight:400;color:var(--gray-400);font-size:11px">(อย่างน้อย 6 ตัวอักษร)</span></label><input type="password" id="nu-pass" placeholder="••••••••"></div>
       <div class="field">
-        <label>ระดับสิทธิ์</label>
+        <label data-i18n="t_role_level">ระดับสิทธิ์</label>
         <select id="nu-role">
           <option value="superadmin">👑 Super Admin</option>
           <option value="admin">🔧 Admin</option>
@@ -3618,12 +3729,12 @@ document.querySelector('#p-register .alert-info').style.display='flex';
           <option value="viewer">👁 Viewer</option>
         </select>
       </div>
-      <div class="hint" style="margin-top:2px;font-size:11.5px;line-height:1.5">🔒 บัญชีถูกสร้างบน Firebase Auth และเก็บบทบาทบน cloud — ล็อกอินได้ทุกเครื่อง · รหัสผ่านเปลี่ยน/รีเซ็ตได้ที่ Firebase Console</div>
+      <div data-i18n="t_admin_note" class="hint" style="margin-top:2px;font-size:11.5px;line-height:1.5">🔒 บัญชีถูกสร้างบน Firebase Auth และเก็บบทบาทบน cloud — ล็อกอินได้ทุกเครื่อง · รหัสผ่านเปลี่ยน/รีเซ็ตได้ที่ Firebase Console</div>
       <input type="hidden" id="nu-edit-email" value="">
     </div>
     <div class="modal-foot">
-      <button class="btn btn-secondary" onclick="closeModal('mod-adduser')">ยกเลิก</button>
-      <button class="btn btn-primary" onclick="saveUser()">บันทึก</button>
+      <button data-i18n="t_cancel" class="btn btn-secondary" onclick="closeModal('mod-adduser')">ยกเลิก</button>
+      <button data-i18n="t_save" class="btn btn-primary" onclick="saveUser()">บันทึก</button>
     </div>
   </div>
 </div>
@@ -3634,10 +3745,10 @@ document.querySelector('#p-register .alert-info').style.display='flex';
     <div class="modal-head"><span style="font-weight:600" id="ipdf-title">ผลการทดสอบ</span><button onclick="closeModal('mod-indiv-pdf')" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--gray-400)">✕</button></div>
     <div class="modal-body" id="ipdf-content"></div>
     <div class="modal-foot">
-      <button class="btn btn-secondary" onclick="closeModal('mod-indiv-pdf')">ปิด</button>
+      <button data-i18n="t_close" class="btn btn-secondary" onclick="closeModal('mod-indiv-pdf')">ปิด</button>
       <button class="btn btn-secondary" onclick="downloadIndivCSV()" id="ipdf-dl-btn">⬇ Excel</button>
-      <button class="btn btn-secondary" onclick="adminOpenScoreDash(candKey(indivExportData.rows[0]))" id="ipdf-dash-btn">📊 แดชบอร์ดคะแนน</button>
-      <button class="btn btn-primary" onclick="exportIndivPDF(this)" id="ipdf-pdf-btn">📄 ดาวน์โหลด PDF</button>
+      <button data-i18n="t_btn_dash" class="btn btn-secondary" onclick="adminOpenScoreDash(candKey(indivExportData.rows[0]))" id="ipdf-dash-btn">📊 แดชบอร์ดคะแนน</button>
+      <button data-i18n="t_btn_pdf" class="btn btn-primary" onclick="exportIndivPDF(this)" id="ipdf-pdf-btn">📄 ดาวน์โหลด PDF</button>
     </div>
   </div>
 </div>
@@ -3645,26 +3756,26 @@ document.querySelector('#p-register .alert-info').style.display='flex';
 <!-- Add test category modal -->
 <div class="overlay" id="mod-add-category">
   <div class="modal">
-    <div class="modal-head"><span style="font-weight:600">➕ เพิ่มหมวดหมู่ข้อสอบ</span><button onclick="closeModal('mod-add-category')" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--gray-400)">✕</button></div>
+    <div class="modal-head"><span data-i18n="t_add_cat" style="font-weight:600">➕ เพิ่มหมวดหมู่ข้อสอบ</span><button onclick="closeModal('mod-add-category')" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--gray-400)">✕</button></div>
     <div class="modal-body">
       <div id="nc-err" class="alert alert-err" style="display:none"></div>
-      <div class="field"><label>ชื่อหมวดหมู่ (ภาษาไทย)</label><input id="nc-nameTH" type="text" placeholder="เช่น บุคลิกภาพ"></div>
-      <div class="field"><label>ชื่อ (English) — สำหรับรายงาน/PDF</label><input id="nc-name" type="text" placeholder="e.g. Personality"></div>
-      <div class="field"><label>รหัสชุดสอบ <small style="color:var(--gray-400)">(อังกฤษ/ตัวเลข ไม่เว้นวรรค)</small></label><input id="nc-code" type="text" placeholder="เช่น PERSONALITY" style="text-transform:uppercase"></div>
+      <div class="field"><label data-i18n="t_cat_th">ชื่อหมวดหมู่ (ภาษาไทย)</label><input id="nc-nameTH" type="text" placeholder="เช่น บุคลิกภาพ"></div>
+      <div class="field"><label data-i18n="t_cat_en">ชื่อ (English) — สำหรับรายงาน/PDF</label><input id="nc-name" type="text" placeholder="e.g. Personality"></div>
+      <div class="field"><label>รหัสชุดสอบ data-i18n-html="t_code_label" <small data-i18n="t_code_hint" style="color:var(--gray-400)">(อังกฤษ/ตัวเลข ไม่เว้นวรรค)</small></label><input id="nc-code" type="text" placeholder="เช่น PERSONALITY" style="text-transform:uppercase"></div>
       <div style="display:flex;gap:10px">
-        <div class="field" style="flex:1"><label>เวลา (นาที)</label><input id="nc-mins" type="number" min="1" value="15"></div>
-        <div class="field" style="flex:1"><label>เกณฑ์ผ่าน (0–100)</label><input id="nc-passing" type="number" min="0" max="100" value="70"></div>
+        <div class="field" style="flex:1"><label data-i18n="t_minutes">เวลา (นาที)</label><input id="nc-mins" type="number" min="1" value="15"></div>
+        <div class="field" style="flex:1"><label data-i18n="t_pass_mark">เกณฑ์ผ่าน (0–100)</label><input id="nc-passing" type="number" min="0" max="100" value="70"></div>
       </div>
       <div class="field">
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
           <input id="nc-graded" type="checkbox" style="width:16px;height:16px;accent-color:var(--teal)">
-          <span>ให้คะแนนแบบไล่ระดับ 0–2 ต่อข้อ <small style="color:var(--gray-400)">(เช่น EQ / ภาวะผู้นำ) — ไม่ติ๊ก = ถูก/ผิด</small></span>
+          <span data-i18n-html="t_graded_label">ให้คะแนนแบบไล่ระดับ 0–2 ต่อข้อ <small data-i18n="t_graded_hint" style="color:var(--gray-400)">(เช่น EQ / ภาวะผู้นำ) — ไม่ติ๊ก = ถูก/ผิด</small></span>
         </label>
       </div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-secondary" onclick="closeModal('mod-add-category')">ยกเลิก</button>
-      <button class="btn btn-primary" onclick="submitNewCategory()">สร้างหมวดหมู่</button>
+      <button data-i18n="t_cancel" class="btn btn-secondary" onclick="closeModal('mod-add-category')">ยกเลิก</button>
+      <button data-i18n="t_create_cat" class="btn btn-primary" onclick="submitNewCategory()">สร้างหมวดหมู่</button>
     </div>
   </div>
 </div>

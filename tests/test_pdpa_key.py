@@ -992,3 +992,44 @@ def test_result_dashboard_never_scrolls_sideways(open_exam):
         assert page.evaluate(
             "() => document.documentElement.scrollWidth <= window.innerWidth"), \
             f"หน้าเลื่อนแนวนอนที่ {width}x{height}"
+
+
+# ── สองภาษา ──
+#
+# ปุ่มสลับภาษามีอยู่ทุกหน้า แต่ฝั่งผู้ดูแลเคยไม่ผูกคำแปลไว้เลย กดแล้วไม่มีอะไรเปลี่ยน
+
+
+def test_the_admin_tables_follow_the_language_toggle(open_exam):
+    page = open_exam()
+    page.evaluate("() => nav('p-admin')")
+    heads = lambda: page.evaluate(
+        "() => [...document.querySelectorAll('#p-admin table th')]"
+        ".map(t => t.textContent.trim()).filter(Boolean)")
+    th = heads()
+    assert "ผู้สมัคร" in th and "คะแนนเฉลี่ย" in th
+    page.click("#lang-fab")
+    en = heads()
+    assert "Candidate" in en and "Average score" in en, f"หัวตารางไม่เปลี่ยนภาษา: {en}"
+    page.click("#lang-fab")
+    assert heads() == th, "กลับมาภาษาไทยแล้วไม่เหมือนเดิม"
+
+
+def test_every_translated_key_has_both_languages(open_exam):
+    # คีย์ที่มีแต่ภาษาไทยจะทำให้ผู้ใช้ที่เลือกอังกฤษเห็นไทยค้างโดยไม่มีใครรู้
+    page = open_exam()
+    bad = page.evaluate("""() => Object.entries(I18N)
+        .filter(([k, v]) => !v || !v.th || !v.en)
+        .map(([k]) => k)""")
+    assert bad == [], f"คีย์ที่ขาดภาษา: {bad}"
+
+
+def test_no_translation_key_is_referenced_without_being_defined(open_exam):
+    page = open_exam()
+    missing = page.evaluate("""() => {
+        const keys = new Set(Object.keys(I18N));
+        return [...document.querySelectorAll('[data-i18n],[data-i18n-html],[data-i18n-ph]')]
+            .map(e => e.getAttribute('data-i18n') || e.getAttribute('data-i18n-html')
+                     || e.getAttribute('data-i18n-ph'))
+            .filter(k => !keys.has(k));
+    }""")
+    assert missing == [], f"อ้างถึงคีย์ที่ไม่มีในพจนานุกรม: {missing}"
