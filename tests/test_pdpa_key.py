@@ -1023,6 +1023,24 @@ def test_every_translated_key_has_both_languages(open_exam):
     assert bad == [], f"คีย์ที่ขาดภาษา: {bad}"
 
 
+def test_no_translation_key_is_defined_twice():
+    """คีย์ซ้ำจะถูกตัวหลังทับเงียบ ๆ
+
+    JavaScript ไม่เตือนเมื่อ object literal มีคีย์ซ้ำ ตัวที่อยู่ล่างสุดชนะ
+    ที่ผ่านมาเคยทำให้ตัวนับข้อในหน้าสอบเปลี่ยนจาก "ข้อ 3 / 20" เป็น
+    "รายการ 3 / 20" โดยไม่มีเทสต์ไหนจับได้ อ่านจากไฟล์ตรง ๆ เพราะ
+    เบราว์เซอร์จะเหลือให้เห็นแค่ตัวที่ชนะ
+    """
+    import pathlib
+    import re
+    src = (pathlib.Path(__file__).resolve().parent.parent / "index.html").read_text(encoding="utf-8")
+    start = src.index("const I18N = {")
+    body = src[start:src.index("\n};", start)]
+    keys = re.findall(r"^\s{2}([A-Za-z0-9_]+)\s*:\s*\{", body, re.M)
+    dups = sorted({k for k in keys if keys.count(k) > 1})
+    assert dups == [], f"คีย์ที่ประกาศซ้ำ: {dups}"
+
+
 def test_no_translation_key_is_referenced_without_being_defined(open_exam):
     page = open_exam()
     missing = page.evaluate("""() => {

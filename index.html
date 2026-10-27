@@ -1889,10 +1889,9 @@ const I18N = {
   t_probe_body: { th:"ถามเจาะเรื่อง:", en:"Ask about:" },
   t_sent_to_hr: { th:"ผลการทดสอบของท่านจะถูกส่งให้ HR พิจารณาในขั้นตอนถัดไป",
                   en:"Your results go to the HR team for the next stage" },
-  t_date_taken: { th:"วันที่ทดสอบ:", en:"Taken on:" },
+  t_date_taken_lbl: { th:"วันที่ทดสอบ:", en:"Taken on:" },
   t_mins_secs: { th:"{m} นาที {s} วิ", en:"{m} min {s} s" },
   t_mins_only: { th:"{m} นาที", en:"{m} min" },
-  t_attempt_n: { th:"ครั้งที่ {n}", en:"Attempt {n}" },
   t_no_record: { th:"ไม่มีข้อมูล", en:"no record" },
   t_n_times: { th:"{n} ครั้ง", en:"{n} times" },
   t_never_left: { th:"ไม่ออกจากหน้าสอบ", en:"never left the exam window" },
@@ -1942,7 +1941,6 @@ const I18N = {
   // ── Busy labels and shared words ──
   t_building: { th:"กำลังสร้าง...", en:"Building…" },
   t_building_preview: { th:"กำลังสร้างพรีวิว...", en:"Building the preview…" },
-  t_close: { th:"ปิด", en:"Close" },
   t_illustration: { th:"รูปประกอบ", en:"Illustration" },
   t_instr_for: { th:"คำชี้แจงการสอบ —", en:"Instructions —" },
   t_cand_results: { th:"ผลการทดสอบผู้สมัคร", en:"Candidate results" },
@@ -1972,11 +1970,26 @@ const I18N = {
   m_https_only: { th:"ต้องเปิดหน้านี้ผ่าน https เท่านั้น (ระบบตรวจคะแนนต้องใช้)",
                   en:"This page has to be served over https — the scoring service requires it." },
   m_not_signed_in: { th:"ยังไม่ได้ล็อกอิน", en:"Not signed in" },
+  // ── Position editor ──
+  pe_name_th: { th:"ชื่อตำแหน่ง (ไทย)", en:"Position name (Thai)" },
+  pe_name_en: { th:"ชื่อตำแหน่ง (อังกฤษ)", en:"Position name (English)" },
+  pe_ph_th: { th:"เช่น พนักงานบัญชี", en:"e.g. พนักงานบัญชี" },
+  pe_del: { th:"ลบตำแหน่งนี้", en:"Delete this position" },
+  pe_tests_req: { th:"ชุดข้อสอบที่ต้องทำ", en:"Tests this position must take" },
+  pe_pick_one: { th:"ต้องเลือกอย่างน้อย 1 ชุด", en:"Pick at least one test" },
+  t_saved: { th:"บันทึกแล้ว", en:"Saved" },
   m_firestore_hung: { th:"⏱️ การเชื่อมต่อ Firestore ค้าง (เกิน 10 วินาที)\n\nเครือข่าย/เบราว์เซอร์นี้น่าจะบล็อก Firestore\n\nลองวิธีใดวิธีหนึ่ง:\n• ใช้เน็ตอื่น (มือถือ 4G/5G)\n• ปิด ad-blocker / privacy extension แล้วลองใหม่\n• ลองเครื่อง/เบราว์เซอร์อื่น",
                       en:"⏱️ The connection to Firestore has hung (over 10 seconds).\n\nThis network or browser is most likely blocking Firestore.\n\nTry one of these:\n• a different connection (phone 4G/5G)\n• turn off any ad-blocker or privacy extension and retry\n• another device or browser" },
 };
 
 function t18n(key){ const e = I18N[key]; return e ? (e[LANG] || e.th) : key; }
+
+// A test's display name in the current language. Every test carries an English
+// `name`; `nameTH` is optional, so fall back rather than render "undefined".
+function testName(t){
+  if (!t) return '';
+  return LANG === 'th' ? (t.nameTH || t.name || '') : (t.name || t.nameTH || '');
+}
 
 // Section-name translations for the question badge
 const SECMAP = {
@@ -2178,22 +2191,22 @@ function renderPositionEditor(){
       const on = g.tests.includes(t.code);
       return `<label style="display:flex;align-items:center;gap:7px;padding:7px 10px;border:1.5px solid ${on?'var(--teal)':'var(--gray-200)'};border-radius:8px;cursor:pointer;background:${on?'var(--teal-l)':'var(--white)'};font-size:12.5px;transition:all .12s">
         <input type="checkbox" ${on?'checked':''} onchange="peToggle(${gi},'${t.code}')" style="width:15px;height:15px;accent-color:var(--teal);flex-shrink:0">
-        <span>${t.nameTH||t.name}</span>
+        <span>${testName(t)}</span>
       </label>`;
     }).join('');
     return `<div class="card" style="margin-bottom:12px;padding:16px">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px">
         <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div class="field" style="margin:0"><label style="font-size:11px">ชื่อตำแหน่ง (ไทย)</label>
-            <input value="${(g.labelTH||'').replace(/"/g,'&quot;')}" oninput="peSetLabel(${gi},'th',this.value)" placeholder="เช่น พนักงานบัญชี"></div>
-          <div class="field" style="margin:0"><label style="font-size:11px">Position name (EN)</label>
+          <div class="field" style="margin:0"><label style="font-size:11px">${t18n('pe_name_th')}</label>
+            <input value="${(g.labelTH||'').replace(/"/g,'&quot;')}" oninput="peSetLabel(${gi},'th',this.value)" placeholder="${t18n('pe_ph_th')}"></div>
+          <div class="field" style="margin:0"><label style="font-size:11px">${t18n('pe_name_en')}</label>
             <input value="${(g.labelEN||'').replace(/"/g,'&quot;')}" oninput="peSetLabel(${gi},'en',this.value)" placeholder="e.g. Accountant"></div>
         </div>
-        <button class="btn btn-secondary btn-sm" style="color:var(--red);flex-shrink:0" onclick="peDeleteGroup(${gi})" title="ลบตำแหน่งนี้">🗑</button>
+        <button class="btn btn-secondary btn-sm" style="color:var(--red);flex-shrink:0" onclick="peDeleteGroup(${gi})" title="${t18n('pe_del')}">🗑</button>
       </div>
-      <p style="font-size:11px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">ชุดข้อสอบที่ต้องทำ (${g.tests.length}/${TESTS.length})</p>
+      <p style="font-size:11px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">${t18n('pe_tests_req')} (${g.tests.length}/${TESTS.length})</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px">${checks}</div>
-      ${g.tests.length===0?'<p style="font-size:11px;color:var(--red);margin-top:8px">⚠ ต้องเลือกอย่างน้อย 1 ชุด</p>':''}
+      ${g.tests.length===0?`<p style="font-size:11px;color:var(--red);margin-top:8px">⚠ ${t18n('pe_pick_one')}</p>`:''}
     </div>`;
   }).join('');
 }
@@ -2208,6 +2221,7 @@ function peToggle(gi, code){
 }
 function peSetLabel(gi, lang, val){ if(lang==='th') peDraft[gi].labelTH=val; else peDraft[gi].labelEN=val; }
 function peAddGroup(){
+  // Seeded in both languages so the row reads sensibly whichever is on.
   peDraft.push({ id:'grp_'+Date.now().toString(36), labelTH:'ตำแหน่งใหม่', labelEN:'New position', tests:['IQ','EQ'] });
   renderPositionEditor();
 }
@@ -2228,7 +2242,7 @@ function savePositionEditor(btn){
   } else if (typeof cloudEnabled === 'function' && cloudEnabled() && !cloudSignedIn()) {
     showToast(t18n('m_saved_local'), 5000);
   }
-  if (btn){ const o=btn.textContent; btn.textContent='✓ บันทึกแล้ว'; setTimeout(()=>btn.textContent=o,1500); }
+  if (btn){ const o=btn.textContent; btn.textContent='✓ ' + t18n('t_saved'); setTimeout(()=>btn.textContent=o,1500); }
   showToast(t18n('m_pos_saved'));
 }
 function resetPositionPresets(){
@@ -2581,7 +2595,7 @@ function getRandomizedQs(s) {
 
 function openTest() {
   const s = sessions[curSess];
-  document.getElementById('t-testname').textContent = (LANG==='th' ? (s.test.nameTH||s.test.name) : s.test.name);
+  document.getElementById('t-testname').textContent = testName(s.test);
   clearInterval(timerInterval);
   timerSecs = s.remainSecs ?? (s.test.mins * 60);
   if (!s.remainSecs) s.remainSecs = timerSecs;
@@ -2845,7 +2859,7 @@ function renderReview(idx) {
   }).length;
   const skippedCount = s.answers.slice(0, totalQ).filter(a=>a===null).length;
 
-  document.getElementById('rv-testname').textContent = (LANG==='th' ? (s.test.nameTH||s.test.name) : s.test.name);
+  document.getElementById('rv-testname').textContent = testName(s.test);
   document.getElementById('rv-score').textContent = `${s.score}/100 — ${s.outcome==='P'? '✓ '+t18n('t_pass') : '✗ '+t18n('t_fail')}`;
   document.getElementById('rv-score').style.color = s.outcome==='P'?'var(--pass)':'var(--red)';
 
@@ -3024,7 +3038,7 @@ function renderResults() {
       if (!secArr.length) return;
       const weak = secArr.filter(x => x.pct < 70);
       sbHtml += `<div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--gray-100)">
-        <p style="font-size:12px;font-weight:600;margin-bottom:8px">${s.test.nameTH||s.test.name}</p>
+        <p style="font-size:12px;font-weight:600;margin-bottom:8px">${testName(s.test)}</p>
         <div style="display:flex;flex-direction:column;gap:7px">`;
       secArr.forEach(sec => {
         const c = sec.pct>=70 ? 'var(--pass)' : sec.pct>=50 ? 'var(--amber)' : 'var(--red)';
@@ -3059,7 +3073,7 @@ function renderResults() {
       <div>
         <p style="font-weight:600;font-size:13px;margin-bottom:3px;color:${allPass?'#085041':'var(--amber)'}">${allPass?t18n('t_passed_all'):t18n('t_passed_n_of').replace('{n}', pass).replace('{total}', done.length)}</p>
         <p style="font-size:12px;color:${allPass?'#0f6e56':'var(--amber)'}">${t18n('t_sent_to_hr')}</p>
-        <p style="font-size:11px;color:var(--gray-400);margin-top:5px">${t18n('t_date_taken')} ${new Date().toLocaleDateString(LANG === 'th' ? 'th-TH' : 'en-GB',{day:'2-digit',month:'long',year:'numeric'})}</p>
+        <p style="font-size:11px;color:var(--gray-400);margin-top:5px">${t18n('t_date_taken_lbl')} ${new Date().toLocaleDateString(LANG === 'th' ? 'th-TH' : 'en-GB',{day:'2-digit',month:'long',year:'numeric'})}</p>
       </div>
     </div>`;
 }
@@ -4962,7 +4976,7 @@ function submitNewCategory(){
 function deleteTestCategory(code){
   const tdef = TESTS.find(t => t.code === code);
   if (!tdef || !tdef.custom) { showToast(t18n('m_del_custom_only')); return; }
-  if (!confirm(t18n('c_del_category').replace('{name}', tdef.nameTH||code) + '\n' + t18n('c_irreversible'))) return;
+  if (!confirm(t18n('c_del_category').replace('{name}', testName(tdef) || code) + '\n' + t18n('c_irreversible'))) return;
   const idx = TESTS.indexOf(tdef);
   if (idx >= 0) TESTS.splice(idx, 1);
   delete ALL_QUESTIONS[code];
@@ -5872,7 +5886,7 @@ window.startTest = function(idx) {
 
 function showIntro(test, instr) {
   window._introCtx = { test, instr };
-  document.getElementById('intro-brand').textContent = (LANG==='th' ? (test.nameTH||test.name) : test.name);
+  document.getElementById('intro-brand').textContent = testName(test);
   document.getElementById('intro-title').textContent = instr.title || t18n('intro_default_title');
 
   // The intro page is entirely admin-authored: show ONLY the instruction the
@@ -5943,7 +5957,7 @@ function renderInstructionEditor() {
   }).join('');
   const cur  = instr[instrActiveSet] || {};
   const tdef = TESTS.find(t => t.code === instrActiveSet) || {};
-  document.getElementById('instr-title').value = cur.title || (t18n('t_instr_for') + ' ' + (tdef.nameTH || tdef.name || instrActiveSet));
+  document.getElementById('instr-title').value = cur.title || (t18n('t_instr_for') + ' ' + (testName(tdef) || instrActiveSet));
   document.getElementById('instr-body').value  = cur.body || defaultInstrBody(tdef);
   document.getElementById('instr-img-preview').innerHTML = cur.image
     ? `<img src="${cur.image}" class="instruction-img" style="max-height:120px">` : '';
